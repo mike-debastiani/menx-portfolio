@@ -1,8 +1,4 @@
-export default function CaseStudy({
-  params,
-}: {
-  params: { slug: string };
-}) {
+export default function CaseStudy({ params }: { params: { slug: string } }) {
   return (
     <main>
       <h1>Case Study</h1>
@@ -10,4 +6,3 @@ export default function CaseStudy({
     </main>
   );
 }
-
