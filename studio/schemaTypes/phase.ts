@@ -1,0 +1,36 @@
+import {defineField, defineType} from 'sanity'
+
+export default defineType({
+  name: 'phase',
+  title: 'Phase',
+  type: 'document',
+  fields: [
+    defineField({
+      name: 'name',
+      title: 'Name',
+      type: 'string',
+      validation: (Rule) => Rule.required(),
+    }),
+    defineField({
+      name: 'order',
+      title: 'Order',
+      type: 'number',
+      validation: (Rule) => Rule.required(),
+    }),
+    defineField({
+      name: 'slug',
+      title: 'Slug',
+      type: 'slug',
+      options: {
+        source: 'name',
+      },
+      validation: (Rule) => Rule.required(),
+    }),
+    defineField({
+      name: 'color',
+      title: 'Color',
+      type: 'string',
+    }),
+  ],
+})
+
