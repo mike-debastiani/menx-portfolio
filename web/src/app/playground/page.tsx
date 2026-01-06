@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { Pill, Button, StatItem, SubInfo } from '@/components/atoms';
 import { SegmentedControl, AccordionItem, SectionDescription, InfoRows, InfoColumns, SubInfoGroup, CaseStudyDescription, CaseStudyMeta } from '@/components/molecules';
-import { RoleBasedHero, StatsGroup } from '@/components/organisms';
+import { RoleBasedHero, StatsGroup, AccordionGroup } from '@/components/organisms';
 
 export default function PlaygroundPage() {
   const primaryColors = [
@@ -2303,6 +2303,196 @@ export default function PlaygroundPage() {
                       { value: '5', label: 'Years experience' },
                     ]}
                   />
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Organisms / AccordionGroup */}
+        <section>
+          <h2 className="text-2xl font-semibold text-primary-950 mb-4">Organisms / AccordionGroup</h2>
+          
+          <div className="space-y-6">
+            {/* Description */}
+            <div>
+              <p className="text-base text-primary-700 max-w-3xl">
+                A single-open accordion group where only one item can be open at a time. Built from AccordionItem 
+                molecules with automatic state management. Opening a new item automatically closes the previously 
+                open item. Supports both controlled and uncontrolled modes.
+              </p>
+            </div>
+
+            {/* Props Table */}
+            <div>
+              <h3 className="text-lg font-medium text-primary-950 mb-3">Props</h3>
+              <div className="overflow-x-auto">
+                <table className="min-w-full border border-primary-200 rounded-lg">
+                  <thead>
+                    <tr className="bg-primary-50">
+                      <th className="px-4 py-2 text-left text-sm font-medium text-primary-950 border-b border-primary-200">
+                        Prop
+                      </th>
+                      <th className="px-4 py-2 text-left text-sm font-medium text-primary-950 border-b border-primary-200">
+                        Type
+                      </th>
+                      <th className="px-4 py-2 text-left text-sm font-medium text-primary-950 border-b border-primary-200">
+                        Default
+                      </th>
+                      <th className="px-4 py-2 text-left text-sm font-medium text-primary-950 border-b border-primary-200">
+                        Description
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100 font-mono">
+                        items
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        AccordionGroupItem[]
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-500 border-b border-primary-100">
+                        —
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        Array of accordion items, each with id, title, and content
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100 font-mono">
+                        defaultOpenId
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        string
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-500 border-b border-primary-100 font-mono">
+                        undefined
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        Initial open item ID for uncontrolled mode
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100 font-mono">
+                        openId
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        string
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-500 border-b border-primary-100 font-mono">
+                        undefined
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        Controlled open item ID (use with onOpenIdChange)
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100 font-mono">
+                        onOpenIdChange
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        (id: string | null) =&gt; void
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-500 border-b border-primary-100 font-mono">
+                        undefined
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        Callback when open item changes (id is null when all closed)
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="px-4 py-2 text-sm text-primary-700 font-mono">
+                        className
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700">
+                        string
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-500 font-mono">
+                        ""
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700">
+                        Additional CSS classes
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            {/* Type Definitions */}
+            <div className="bg-primary-50 border border-primary-200 rounded-lg p-4">
+              <p className="text-sm text-primary-700 mb-2">
+                <strong className="font-medium text-primary-950">Type Definitions:</strong>
+              </p>
+              <div className="text-xs font-mono text-primary-700 space-y-1">
+                <div>AccordionGroupItem: {'{ id: string; title: string; content: React.ReactNode }'}</div>
+              </div>
+              <p className="text-sm text-primary-700 mt-3">
+                The component automatically ensures only one item is open at a time. When an item is opened, 
+                any previously open item is automatically closed. Use <code className="font-mono text-xs">openId</code> and 
+                <code className="font-mono text-xs">onOpenIdChange</code> for controlled mode, or 
+                <code className="font-mono text-xs">defaultOpenId</code> for uncontrolled mode.
+              </p>
+            </div>
+
+            {/* Examples */}
+            <div>
+              <h3 className="text-lg font-medium text-primary-950 mb-3">Examples</h3>
+              
+              {/* 5-item example */}
+              <div>
+                <div className="max-w-2xl">
+                  <AccordionGroup
+                    defaultOpenId="item-1"
+                    items={[
+                      {
+                        id: 'item-1',
+                        title: 'Accordion Header One',
+                        content: (
+                          <p>
+                            Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
+                          </p>
+                        ),
+                      },
+                      {
+                        id: 'item-2',
+                        title: 'Accordion Header Two',
+                        content: (
+                          <p>
+                            Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.
+                          </p>
+                        ),
+                      },
+                      {
+                        id: 'item-3',
+                        title: 'Accordion Header Three',
+                        content: (
+                          <p>
+                            Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.
+                          </p>
+                        ),
+                      },
+                      {
+                        id: 'item-4',
+                        title: 'Accordion Header Four',
+                        content: (
+                          <p>
+                            Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat.
+                          </p>
+                        ),
+                      },
+                      {
+                        id: 'item-5',
+                        title: 'Accordion Header Five',
+                        content: (
+                          <p>
+                            Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores.
+                          </p>
+                        ),
+                      },
+                    ]}
+                  />
+                </div>
               </div>
             </div>
           </div>
