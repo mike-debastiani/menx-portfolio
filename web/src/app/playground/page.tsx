@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { Pill, Button, StatItem, SubInfo } from '@/components/atoms';
 import { SegmentedControl, AccordionItem, SectionDescription, InfoRows, InfoColumns, SubInfoGroup, CaseStudyDescription, CaseStudyMeta } from '@/components/molecules';
+import { RoleBasedHero } from '@/components/organisms';
 
 export default function PlaygroundPage() {
   const primaryColors = [
@@ -2058,6 +2059,133 @@ export default function PlaygroundPage() {
                     team="3 Designer (Co-Students)"
                     outcome="High Fidelity Prototype"
                   />
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Organisms / RoleBasedHero */}
+        <section>
+          <h2 className="text-2xl font-semibold text-primary-950 mb-4">Organisms / RoleBasedHero</h2>
+          
+          <div className="space-y-6">
+            {/* Description */}
+            <div>
+              <p className="text-base text-primary-700 max-w-3xl">
+                A segmented role selector with dynamic hero content. Selecting a role updates the content below. 
+                The first four roles display headline-style text, while the Engineers role shows a fake code snippet 
+                with syntax-like coloring. Perfect for personalized messaging based on audience type.
+              </p>
+            </div>
+
+            {/* Props Table */}
+            <div>
+              <h3 className="text-lg font-medium text-primary-950 mb-3">Props</h3>
+              <div className="overflow-x-auto">
+                <table className="min-w-full border border-primary-200 rounded-lg">
+                  <thead>
+                    <tr className="bg-primary-50">
+                      <th className="px-4 py-2 text-left text-sm font-medium text-primary-950 border-b border-primary-200">
+                        Prop
+                      </th>
+                      <th className="px-4 py-2 text-left text-sm font-medium text-primary-950 border-b border-primary-200">
+                        Type
+                      </th>
+                      <th className="px-4 py-2 text-left text-sm font-medium text-primary-950 border-b border-primary-200">
+                        Default
+                      </th>
+                      <th className="px-4 py-2 text-left text-sm font-medium text-primary-950 border-b border-primary-200">
+                        Description
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100 font-mono">
+                        defaultRoleId
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        RoleId
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-500 border-b border-primary-100 font-mono">
+                        "for-anyone"
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        Initial role to display
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100 font-mono">
+                        tabs
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        RoleTab[]
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-500 border-b border-primary-100 font-mono">
+                        defaultTabs
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        Optional override for role tabs (defaults to 5 standard roles)
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100 font-mono">
+                        contentByRole
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        Record&lt;RoleId, RoleHeroContent&gt;
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-500 border-b border-primary-100 font-mono">
+                        defaultContent
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        Optional override for role content (defaults to Figma text)
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="px-4 py-2 text-sm text-primary-700 font-mono">
+                        className
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700">
+                        string
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-500 font-mono">
+                        ""
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700">
+                        Additional CSS classes
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            {/* Type Definitions */}
+            <div className="bg-primary-50 border border-primary-200 rounded-lg p-4">
+              <p className="text-sm text-primary-700 mb-2">
+                <strong className="font-medium text-primary-950">Type Definitions:</strong>
+              </p>
+              <div className="text-xs font-mono text-primary-700 space-y-1">
+                <div>RoleId: "for-anyone" | "recruiters" | "hiring-managers" | "product-designers" | "engineers"</div>
+                <div>RoleTab: {'{ id: RoleId; label: string }'}</div>
+                <div>RoleHeroContent: {'{ type: "headline"; text: string } | { type: "code"; lines: Array&lt;...&gt; }'}</div>
+              </div>
+              <p className="text-sm text-primary-700 mt-3">
+                Headline content displays large text (40px, Inter Medium). Code content renders a fake code snippet 
+                with syntax-like coloring (purple for keywords, green for strings, orange for variables, etc.) and line numbers.
+              </p>
+            </div>
+
+            {/* Examples */}
+            <div>
+              <h3 className="text-lg font-medium text-primary-950 mb-3">Examples</h3>
+              
+              {/* Interactive Example */}
+              <div>
+                <div className="max-w-5xl">
+                  <RoleBasedHero />
                 </div>
               </div>
             </div>
