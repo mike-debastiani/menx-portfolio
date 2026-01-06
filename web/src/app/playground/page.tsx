@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { Pill, Button, StatItem, SubInfo } from '@/components/atoms';
-import { SegmentedControl, AccordionItem, SectionDescription, InfoRows, InfoColumns, SubInfoGroup } from '@/components/molecules';
+import { SegmentedControl, AccordionItem, SectionDescription, InfoRows, InfoColumns, SubInfoGroup, CaseStudyDescription } from '@/components/molecules';
 
 export default function PlaygroundPage() {
   const primaryColors = [
@@ -1774,6 +1774,134 @@ export default function PlaygroundPage() {
                       { label: 'Location:', value: 'Zürich, Switzerland' },
                       { label: 'Status:', value: 'Available for Work', showDot: true },
                     ]}
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Molecules / CaseStudyDescription */}
+        <section>
+          <h2 className="text-2xl font-semibold text-primary-950 mb-4">Molecules / CaseStudyDescription</h2>
+          
+          <div className="space-y-6">
+            {/* Description */}
+            <div>
+              <p className="text-base text-primary-700 max-w-3xl">
+                CMS-driven case study header block. Displays a project title, statement headline, description paragraph, 
+                and optional attribute pills. Perfect for introducing case studies with a clear visual hierarchy.
+              </p>
+            </div>
+
+            {/* Props Table */}
+            <div>
+              <h3 className="text-lg font-medium text-primary-950 mb-3">Props</h3>
+              <div className="overflow-x-auto">
+                <table className="min-w-full border border-primary-200 rounded-lg">
+                  <thead>
+                    <tr className="bg-primary-50">
+                      <th className="px-4 py-2 text-left text-sm font-medium text-primary-950 border-b border-primary-200">
+                        Prop
+                      </th>
+                      <th className="px-4 py-2 text-left text-sm font-medium text-primary-950 border-b border-primary-200">
+                        Type
+                      </th>
+                      <th className="px-4 py-2 text-left text-sm font-medium text-primary-950 border-b border-primary-200">
+                        Default
+                      </th>
+                      <th className="px-4 py-2 text-left text-sm font-medium text-primary-950 border-b border-primary-200">
+                        Description
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100 font-mono">
+                        projectTitle
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        string
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-500 border-b border-primary-100">
+                        —
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        Small muted project title displayed at the top
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100 font-mono">
+                        statement
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        string
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-500 border-b border-primary-100">
+                        —
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        Large statement/headline text (multi-line supported)
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100 font-mono">
+                        description
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        string
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-500 border-b border-primary-100">
+                        —
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        Paragraph description text
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100 font-mono">
+                        attributes
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        string[]
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-500 border-b border-primary-100 font-mono">
+                        undefined
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        Optional array of attribute tags rendered as Pill components
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="px-4 py-2 text-sm text-primary-700 font-mono">
+                        className
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700">
+                        string
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-500 font-mono">
+                        ""
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700">
+                        Additional CSS classes
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            {/* Examples */}
+            <div>
+              <h3 className="text-lg font-medium text-primary-950 mb-3">Examples</h3>
+              
+              <div>
+                <div className="max-w-3xl">
+                  <CaseStudyDescription
+                    projectTitle="Adjusto"
+                    statement="Automating price discovery in the secondhand market through Dutch Auction mechanics."
+                    description="Adjusto addresses the inherent inefficiency of C2C marketplaces: the friction of negotiation. By implementing a Dutch Auction mechanic where prices decay over time, the app replaces manual haggling with algorithmic price discovery. This shifts the user experience from social confrontation to strategic timing, ensuring items find their true market equilibrium while maximizing the clearance rate for sellers."
+                    attributes={['User Experience', 'Prototyping', 'Testing', 'Innovation']}
                   />
                 </div>
               </div>
