@@ -1,4 +1,8 @@
+'use client';
+
+import { useState } from 'react';
 import { Pill, Button, StatItem, SubInfo } from '@/components/atoms';
+import { SegmentedControl } from '@/components/molecules';
 
 export default function PlaygroundPage() {
   const primaryColors = [
@@ -748,8 +752,170 @@ export default function PlaygroundPage() {
             </div>
           </div>
         </section>
+
+        {/* Molecules / SegmentedControl */}
+        <section>
+          <h2 className="text-2xl font-semibold text-primary-950 mb-4">Molecules / SegmentedControl</h2>
+          
+          <div className="space-y-6">
+            {/* Description */}
+            <div>
+              <p className="text-base text-primary-700 max-w-3xl">
+                The SegmentedControl component displays a horizontal group of selectable segments, allowing users 
+                to choose a single option from multiple choices. It features active and inactive states with hover 
+                effects, keyboard navigation support, and two size variants (base and sm).
+              </p>
+            </div>
+
+            {/* Props Table */}
+            <div>
+              <h3 className="text-lg font-medium text-primary-950 mb-3">Props</h3>
+              <div className="overflow-x-auto">
+                <table className="min-w-full border border-primary-200 rounded-lg">
+                  <thead>
+                    <tr className="bg-primary-50">
+                      <th className="px-4 py-2 text-left text-sm font-medium text-primary-950 border-b border-primary-200">
+                        Prop
+                      </th>
+                      <th className="px-4 py-2 text-left text-sm font-medium text-primary-950 border-b border-primary-200">
+                        Type
+                      </th>
+                      <th className="px-4 py-2 text-left text-sm font-medium text-primary-950 border-b border-primary-200">
+                        Default
+                      </th>
+                      <th className="px-4 py-2 text-left text-sm font-medium text-primary-950 border-b border-primary-200">
+                        Description
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100 font-mono">
+                        items
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        SegmentedControlItem[]
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-500 border-b border-primary-100">
+                        —
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        Array of segment items with id and label
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100 font-mono">
+                        value
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        string
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-500 border-b border-primary-100">
+                        —
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        ID of the currently selected segment
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100 font-mono">
+                        onChange
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        (id: string) =&gt; void
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-500 border-b border-primary-100">
+                        —
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        Callback fired when a segment is selected
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100 font-mono">
+                        size
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        SegmentedControlSize
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-500 border-b border-primary-100 font-mono">
+                        "base"
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        Size variant: base or sm
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="px-4 py-2 text-sm text-primary-700 font-mono">
+                        className
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700">
+                        string
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-500 font-mono">
+                        ""
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700">
+                        Additional CSS classes
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            {/* States Note */}
+            <div className="bg-primary-50 border border-primary-200 rounded-lg p-4">
+              <p className="text-sm text-primary-700">
+                <strong className="font-medium text-primary-950">States:</strong> The component implements four visual states: 
+                <strong className="font-medium"> inactive</strong> (transparent background, muted text), 
+                <strong className="font-medium"> inactive:hover</strong> (light background, darker text), 
+                <strong className="font-medium"> active</strong> (gray background, dark text), and 
+                <strong className="font-medium"> active:hover</strong> (darker gray background, dark text). 
+                All states use CSS hover pseudo-classes for smooth transitions.
+              </p>
+            </div>
+
+            {/* Examples */}
+            <div>
+              <h3 className="text-lg font-medium text-primary-950 mb-3">Examples</h3>
+              
+              {/* Base size */}
+              <div className="mb-6">
+                <h4 className="text-sm font-medium text-primary-600 mb-3">Size: base (default)</h4>
+                <SegmentedControlExample size="base" />
+              </div>
+
+              {/* Small size */}
+              <div>
+                <h4 className="text-sm font-medium text-primary-600 mb-3">Size: sm</h4>
+                <SegmentedControlExample size="sm" />
+              </div>
+            </div>
+          </div>
+        </section>
       </div>
     </div>
+  );
+}
+
+function SegmentedControlExample({ size }: { size: 'base' | 'sm' }) {
+  const [value, setValue] = useState('segment-1');
+  
+  const items = [
+    { id: 'segment-1', label: 'Segment 1' },
+    { id: 'segment-2', label: 'Segment 2' },
+    { id: 'segment-3', label: 'Segment 3' },
+    { id: 'segment-4', label: 'Segment 4' },
+  ];
+
+  return (
+    <SegmentedControl
+      items={items}
+      value={value}
+      onChange={setValue}
+      size={size}
+    />
   );
 }
 
