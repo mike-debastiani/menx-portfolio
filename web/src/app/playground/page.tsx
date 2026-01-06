@@ -1,4 +1,4 @@
-import { Pill, Button } from '@/components/atoms';
+import { Pill, Button, StatItem, SubInfo } from '@/components/atoms';
 
 export default function PlaygroundPage() {
   const primaryColors = [
@@ -432,6 +432,317 @@ export default function PlaygroundPage() {
                   <Button variant="secondary" size="sm" icon="right">View All Projects</Button>
                   <Button variant="secondary" size="sm" icon="none" disabled>View All Projects</Button>
                   <Button variant="secondary" size="sm" icon="right" disabled>View All Projects</Button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Atoms / StatItem */}
+        <section>
+          <h2 className="text-2xl font-semibold text-primary-950 mb-4">Atoms / StatItem</h2>
+          
+          <div className="space-y-6">
+            {/* Description */}
+            <div>
+              <p className="text-base text-primary-700 max-w-3xl">
+                The StatItem component displays statistical information in two variants. The large "section" variant 
+                is used in StatsGroup components at the beginning of sections as a metrics summary. The small "meta" 
+                variant is used for compact metadata contexts like CaseStudyMeta, with two text-size options (lg and base).
+              </p>
+            </div>
+
+            {/* Props Table */}
+            <div>
+              <h3 className="text-lg font-medium text-primary-950 mb-3">Props</h3>
+              <div className="overflow-x-auto">
+                <table className="min-w-full border border-primary-200 rounded-lg">
+                  <thead>
+                    <tr className="bg-primary-50">
+                      <th className="px-4 py-2 text-left text-sm font-medium text-primary-950 border-b border-primary-200">
+                        Prop
+                      </th>
+                      <th className="px-4 py-2 text-left text-sm font-medium text-primary-950 border-b border-primary-200">
+                        Type
+                      </th>
+                      <th className="px-4 py-2 text-left text-sm font-medium text-primary-950 border-b border-primary-200">
+                        Default
+                      </th>
+                      <th className="px-4 py-2 text-left text-sm font-medium text-primary-950 border-b border-primary-200">
+                        Description
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100 font-mono">
+                        value
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        string
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-500 border-b border-primary-100">
+                        —
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        Main value to display (for section variant) or fallback for meta variant
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100 font-mono">
+                        label
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        string
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-500 border-b border-primary-100">
+                        —
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        Label text (for section variant) or fallback for meta variant
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100 font-mono">
+                        metaLabel
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        string
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-500 border-b border-primary-100">
+                        —
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        Optional label for meta variant (falls back to label if not provided)
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100 font-mono">
+                        metaValue
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        string
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-500 border-b border-primary-100">
+                        —
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        Optional value for meta variant (falls back to value if not provided)
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100 font-mono">
+                        variant
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        StatItemVariant
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-500 border-b border-primary-100 font-mono">
+                        "section"
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        Variant: section (large, for StatsGroup) or meta (small, for CaseStudyMeta)
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100 font-mono">
+                        size
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        StatItemSize
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-500 border-b border-primary-100 font-mono">
+                        "base"
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        Size: lg or base (only applies when variant="meta", ignored for section variant)
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="px-4 py-2 text-sm text-primary-700 font-mono">
+                        className
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700">
+                        string
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-500 font-mono">
+                        ""
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700">
+                        Additional CSS classes
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            {/* Examples */}
+            <div>
+              <h3 className="text-lg font-medium text-primary-950 mb-3">Examples</h3>
+              
+              {/* Section Variant */}
+              <div className="mb-6">
+                <h4 className="text-sm font-medium text-primary-600 mb-3">Variant: section (large)</h4>
+                <div className="flex flex-wrap gap-6">
+                  <StatItem variant="section" value="130+" label="Application examples" />
+                </div>
+              </div>
+
+              {/* Meta Variant - lg */}
+              <div className="mb-6">
+                <h4 className="text-sm font-medium text-primary-600 mb-3">Variant: meta / size: lg</h4>
+                <div className="flex flex-wrap gap-6">
+                  <StatItem 
+                    variant="meta" 
+                    size="lg" 
+                    value="Product Design"
+                    label="Scope of Work"
+                    metaLabel="Scope of Work" 
+                    metaValue="Product Design" 
+                  />
+                </div>
+              </div>
+
+              {/* Meta Variant - base */}
+              <div>
+                <h4 className="text-sm font-medium text-primary-600 mb-3">Variant: meta / size: base</h4>
+                <div className="flex flex-wrap gap-6">
+                  <StatItem 
+                    variant="meta" 
+                    size="base" 
+                    value="Product Design"
+                    label="Scope of Work"
+                    metaLabel="Scope of Work" 
+                    metaValue="Product Design" 
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Atoms / SubInfo */}
+        <section>
+          <h2 className="text-2xl font-semibold text-primary-950 mb-4">Atoms / SubInfo</h2>
+          
+          <div className="space-y-6">
+            {/* Description */}
+            <div>
+              <p className="text-base text-primary-700 max-w-3xl">
+                The SubInfo component displays a single key/value pair with a monospace label and Inter value. 
+                It features two size variants (lg and base) that affect both the label and value font sizes.
+              </p>
+            </div>
+
+            {/* Props Table */}
+            <div>
+              <h3 className="text-lg font-medium text-primary-950 mb-3">Props</h3>
+              <div className="overflow-x-auto">
+                <table className="min-w-full border border-primary-200 rounded-lg">
+                  <thead>
+                    <tr className="bg-primary-50">
+                      <th className="px-4 py-2 text-left text-sm font-medium text-primary-950 border-b border-primary-200">
+                        Prop
+                      </th>
+                      <th className="px-4 py-2 text-left text-sm font-medium text-primary-950 border-b border-primary-200">
+                        Type
+                      </th>
+                      <th className="px-4 py-2 text-left text-sm font-medium text-primary-950 border-b border-primary-200">
+                        Default
+                      </th>
+                      <th className="px-4 py-2 text-left text-sm font-medium text-primary-950 border-b border-primary-200">
+                        Description
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100 font-mono">
+                        label
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        string
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-500 border-b border-primary-100">
+                        —
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        Label text (e.g., "Location:")
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100 font-mono">
+                        value
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        string
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-500 border-b border-primary-100">
+                        —
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        Value text (e.g., "Canton of Aargau, Switzerland")
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100 font-mono">
+                        size
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        SubInfoSize
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-500 border-b border-primary-100 font-mono">
+                        "base"
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        Size variant: lg or base (affects both label and value font sizes)
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="px-4 py-2 text-sm text-primary-700 font-mono">
+                        className
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700">
+                        string
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-500 font-mono">
+                        ""
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700">
+                        Additional CSS classes
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            {/* Examples */}
+            <div>
+              <h3 className="text-lg font-medium text-primary-950 mb-3">Examples</h3>
+              
+              {/* Base size */}
+              <div className="mb-6">
+                <h4 className="text-sm font-medium text-primary-600 mb-3">Size: base (default)</h4>
+                <div className="flex flex-wrap gap-6">
+                  <SubInfo 
+                    size="base" 
+                    label="Location:" 
+                    value="Canton of Aargau, Switzerland" 
+                  />
+                </div>
+              </div>
+
+              {/* Large size */}
+              <div>
+                <h4 className="text-sm font-medium text-primary-600 mb-3">Size: lg</h4>
+                <div className="flex flex-wrap gap-6">
+                  <SubInfo 
+                    size="lg" 
+                    label="Location:" 
+                    value="Canton of Aargau, Switzerland" 
+                  />
                 </div>
               </div>
             </div>
