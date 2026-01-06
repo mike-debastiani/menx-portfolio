@@ -1,3 +1,5 @@
+import { Pill } from '@/components/atoms';
+
 export default function PlaygroundPage() {
   const primaryColors = [
     { name: 'primary-50', value: '50', bg: 'bg-primary-50', text: 'text-primary-950' },
@@ -74,6 +76,138 @@ export default function PlaygroundPage() {
                 <p className="font-mono text-xs text-primary-700">{color.name}</p>
               </div>
             ))}
+          </div>
+        </section>
+
+        {/* Atoms / Pill */}
+        <section>
+          <h2 className="text-2xl font-semibold text-primary-950 mb-4">Atoms / Pill</h2>
+          
+          <div className="space-y-6">
+            {/* Description */}
+            <div>
+              <p className="text-base text-primary-700 max-w-3xl">
+                The Pill component is a small, rounded badge used to display labels, tags, or status indicators. 
+                It features soft, washed background colors with readable text and comes in multiple color variants 
+                and two sizes.
+              </p>
+            </div>
+
+            {/* Props Table */}
+            <div>
+              <h3 className="text-lg font-medium text-primary-950 mb-3">Props</h3>
+              <div className="overflow-x-auto">
+                <table className="min-w-full border border-primary-200 rounded-lg">
+                  <thead>
+                    <tr className="bg-primary-50">
+                      <th className="px-4 py-2 text-left text-sm font-medium text-primary-950 border-b border-primary-200">
+                        Prop
+                      </th>
+                      <th className="px-4 py-2 text-left text-sm font-medium text-primary-950 border-b border-primary-200">
+                        Type
+                      </th>
+                      <th className="px-4 py-2 text-left text-sm font-medium text-primary-950 border-b border-primary-200">
+                        Default
+                      </th>
+                      <th className="px-4 py-2 text-left text-sm font-medium text-primary-950 border-b border-primary-200">
+                        Description
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100 font-mono">
+                        children
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        ReactNode
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-500 border-b border-primary-100">
+                        —
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        Content to display inside the pill
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100 font-mono">
+                        variant
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        PillVariant
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-500 border-b border-primary-100 font-mono">
+                        "default"
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        Color variant: default, blue, purple, magenta, orange, green, darkgrey
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100 font-mono">
+                        size
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        PillSize
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-500 border-b border-primary-100 font-mono">
+                        "sm"
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        Size variant: sm, xs
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="px-4 py-2 text-sm text-primary-700 font-mono">
+                        className
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700">
+                        string
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-500 font-mono">
+                        ""
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700">
+                        Additional CSS classes
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            {/* Examples */}
+            <div>
+              <h3 className="text-lg font-medium text-primary-950 mb-3">Examples</h3>
+              
+              {/* All Variants - sm size */}
+              <div className="mb-6">
+                <h4 className="text-sm font-medium text-primary-600 mb-3">Size: sm (default)</h4>
+                <div className="flex flex-wrap gap-3">
+                  <Pill variant="default" size="sm">Default</Pill>
+                  <Pill variant="blue" size="sm">Blue</Pill>
+                  <Pill variant="purple" size="sm">Purple</Pill>
+                  <Pill variant="magenta" size="sm">Magenta</Pill>
+                  <Pill variant="orange" size="sm">Orange</Pill>
+                  <Pill variant="green" size="sm">Green</Pill>
+                  <Pill variant="darkgrey" size="sm">Dark Grey</Pill>
+                </div>
+              </div>
+
+              {/* All Variants - xs size */}
+              <div>
+                <h4 className="text-sm font-medium text-primary-600 mb-3">Size: xs</h4>
+                <div className="flex flex-wrap gap-3">
+                  <Pill variant="default" size="xs">Default</Pill>
+                  <Pill variant="blue" size="xs">Blue</Pill>
+                  <Pill variant="purple" size="xs">Purple</Pill>
+                  <Pill variant="magenta" size="xs">Magenta</Pill>
+                  <Pill variant="orange" size="xs">Orange</Pill>
+                  <Pill variant="green" size="xs">Green</Pill>
+                  <Pill variant="darkgrey" size="xs">Dark Grey</Pill>
+                </div>
+              </div>
+            </div>
           </div>
         </section>
       </div>

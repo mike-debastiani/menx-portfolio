@@ -69,4 +69,3 @@ export interface Impression extends SanityDocument {
   description?: string;
   order?: number;
 }
-

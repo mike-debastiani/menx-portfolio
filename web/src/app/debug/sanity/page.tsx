@@ -54,11 +54,7 @@ export default async function SanityDebugPage() {
       </main>
     );
   } catch (error) {
-    const errorMessage =
-      error instanceof Error ? error.message : String(error);
-    return (
-      <pre>{errorMessage}</pre>
-    );
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    return <pre>{errorMessage}</pre>;
   }
 }
-

@@ -4,7 +4,7 @@ import type { Phase, Method, Project, Impression } from '@/types/sanity';
 
 export async function testSanityConnection() {
   const result = await sanityClient.fetch<unknown | null>(
-    `*[_type match "*"][0]`
+    `*[_type match "*"][0]`,
   );
   return result;
 }
@@ -64,7 +64,9 @@ export interface ImpressionWithRelations extends Impression {
   project: Project;
 }
 
-export async function getImpressionsByMethod(): Promise<ImpressionWithRelations[]> {
+export async function getImpressionsByMethod(): Promise<
+  ImpressionWithRelations[]
+> {
   const query = `
     *[_type == "impression"] | order(method->order asc, order asc, _createdAt asc) {
       _id,
@@ -118,4 +120,3 @@ export async function getImpressionsCount(): Promise<number> {
   const query = `count(*[_type == "impression"])`;
   return fetchSanity<number>(query);
 }
-

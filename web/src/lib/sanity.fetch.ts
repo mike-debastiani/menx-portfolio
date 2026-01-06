@@ -8,8 +8,7 @@ import { sanityClient } from './sanity.client';
  */
 export async function fetchSanity<T>(
   query: string,
-  params?: Record<string, any>
+  params?: Record<string, any>,
 ): Promise<T> {
   return sanityClient.fetch<T>(query, params || {});
 }
-

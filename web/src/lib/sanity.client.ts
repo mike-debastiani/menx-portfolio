@@ -17,4 +17,3 @@ export const sanityClient = createClient({
   apiVersion: '2025-01-01',
   useCdn: true,
 });
-
