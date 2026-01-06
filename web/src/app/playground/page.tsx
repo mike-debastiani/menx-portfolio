@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { Pill, Button, StatItem, SubInfo } from '@/components/atoms';
-import { SegmentedControl, AccordionItem, SectionDescription, InfoRows, InfoColumns, SubInfoGroup, CaseStudyDescription, CaseStudyMeta } from '@/components/molecules';
+import { SegmentedControl, AccordionItem, SectionDescription, InfoRows, InfoColumns, SubInfoGroup, CaseStudyDescription, CaseStudyMeta, ImpressionDetailCard, ImpressionCard, ImpressionItem } from '@/components/molecules';
 import { RoleBasedHero, StatsGroup, AccordionGroup, ProjectCard } from '@/components/organisms';
 
 export default function PlaygroundPage() {
@@ -2060,6 +2060,571 @@ export default function PlaygroundPage() {
                     outcome="High Fidelity Prototype"
                   />
                 </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Molecules / ImpressionDetailCard */}
+        <section>
+          <h2 className="text-2xl font-semibold text-primary-950 mb-4">Molecules / ImpressionDetailCard</h2>
+          
+          <div className="space-y-6">
+            {/* Description */}
+            <div>
+              <p className="text-base text-primary-700 max-w-3xl">
+                A detail card component for displaying impression information. Shows project label, example title, description, 
+                and a CTA button pinned to the bottom-left. The button navigates to the project detail page. Perfect for 
+                showcasing individual impressions within an expanded view.
+              </p>
+            </div>
+
+            {/* Props Table */}
+            <div>
+              <h3 className="text-lg font-medium text-primary-950 mb-3">Props</h3>
+              <div className="overflow-x-auto">
+                <table className="min-w-full border border-primary-200 rounded-lg">
+                  <thead>
+                    <tr className="bg-primary-50">
+                      <th className="px-4 py-2 text-left text-sm font-medium text-primary-950 border-b border-primary-200">
+                        Prop
+                      </th>
+                      <th className="px-4 py-2 text-left text-sm font-medium text-primary-950 border-b border-primary-200">
+                        Type
+                      </th>
+                      <th className="px-4 py-2 text-left text-sm font-medium text-primary-950 border-b border-primary-200">
+                        Default
+                      </th>
+                      <th className="px-4 py-2 text-left text-sm font-medium text-primary-950 border-b border-primary-200">
+                        Description
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100 font-mono">
+                        projectTitle
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        string
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-500 border-b border-primary-100">
+                        —
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        Project name displayed in the label (e.g., "Adjusto")
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100 font-mono">
+                        exampleTitle
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        string
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-500 border-b border-primary-100">
+                        —
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        Main title/heading for the impression (e.g., "Method Card Title")
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100 font-mono">
+                        description
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        string
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-500 border-b border-primary-100">
+                        —
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        Description paragraph text for the impression
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100 font-mono">
+                        projectSlug
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        string
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-500 border-b border-primary-100">
+                        —
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        URL slug for the project detail page (used in /projects/[slug])
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="px-4 py-2 text-sm text-primary-700 font-mono">
+                        className
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700">
+                        string
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-500 font-mono">
+                        ""
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700">
+                        Additional CSS classes
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            {/* Examples */}
+            <div>
+              <h3 className="text-lg font-medium text-primary-950 mb-3">Examples</h3>
+              
+              <div>
+                <div className="max-w-md">
+                  <ImpressionDetailCard
+                    projectTitle="Adjusto"
+                    exampleTitle="Method Card Title"
+                    description="Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua."
+                    projectSlug="adjusto"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Molecules / ImpressionCard */}
+        <section>
+          <h2 className="text-2xl font-semibold text-primary-950 mb-4">Molecules / ImpressionCard</h2>
+          
+          <div className="space-y-6">
+            {/* Description */}
+            <div>
+              <p className="text-base text-primary-700 max-w-3xl">
+                Collapsed impression tile: preview image + method pill. Phase color drives pill variant. Used for displaying 
+                individual impression cards in a gallery grid. The card shows an image with rounded corners and a method name 
+                pill below it, colored according to the phase variant.
+              </p>
+            </div>
+
+            {/* Props Table */}
+            <div>
+              <h3 className="text-lg font-medium text-primary-950 mb-3">Props</h3>
+              <div className="overflow-x-auto">
+                <table className="min-w-full border border-primary-200 rounded-lg">
+                  <thead>
+                    <tr className="bg-primary-50">
+                      <th className="px-4 py-2 text-left text-sm font-medium text-primary-950 border-b border-primary-200">
+                        Prop
+                      </th>
+                      <th className="px-4 py-2 text-left text-sm font-medium text-primary-950 border-b border-primary-200">
+                        Type
+                      </th>
+                      <th className="px-4 py-2 text-left text-sm font-medium text-primary-950 border-b border-primary-200">
+                        Default
+                      </th>
+                      <th className="px-4 py-2 text-left text-sm font-medium text-primary-950 border-b border-primary-200">
+                        Description
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100 font-mono">
+                        imageSrc
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        string
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-500 border-b border-primary-100">
+                        —
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        Source URL for the impression image
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100 font-mono">
+                        imageAlt
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        string
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-500 border-b border-primary-100">
+                        —
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        Alt text for the impression image
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100 font-mono">
+                        methodName
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        string
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-500 border-b border-primary-100">
+                        —
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        Method name displayed in the pill (e.g., "User Interviews", "Prototyping")
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100 font-mono">
+                        phaseColorVariant
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        PhaseColorVariant
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-500 border-b border-primary-100">
+                        —
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        Color variant for the pill: default, blue, purple, magenta, orange, green, darkgrey
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100 font-mono">
+                        priority
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        boolean
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-500 border-b border-primary-100 font-mono">
+                        false
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        Passed to next/image for priority loading
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100 font-mono">
+                        sizes
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        string
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-500 border-b border-primary-100">
+                        —
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        Passed to next/image for responsive sizing
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="px-4 py-2 text-sm text-primary-700 font-mono">
+                        className
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700">
+                        string
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-500 font-mono">
+                        ""
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700">
+                        Additional CSS classes
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            {/* Examples */}
+            <div>
+              <h3 className="text-lg font-medium text-primary-950 mb-3">Examples</h3>
+              
+              <div className="flex flex-wrap gap-6">
+                <div className="w-[324px]">
+                  <ImpressionCard
+                    imageSrc=""
+                    imageAlt="User Interviews method"
+                    methodName="User Interviews"
+                    phaseColorVariant="blue"
+                  />
+                </div>
+                <div className="w-[324px]">
+                  <ImpressionCard
+                    imageSrc=""
+                    imageAlt="Prototyping method"
+                    methodName="Prototyping"
+                    phaseColorVariant="purple"
+                  />
+                </div>
+                <div className="w-[324px]">
+                  <ImpressionCard
+                    imageSrc=""
+                    imageAlt="Usability Testing method"
+                    methodName="Usability Testing"
+                    phaseColorVariant="orange"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Molecules / ImpressionItem */}
+        <section>
+          <h2 className="text-2xl font-semibold text-primary-950 mb-4">Molecules / ImpressionItem</h2>
+          
+          <div className="space-y-6">
+            {/* Description */}
+            <div>
+              <p className="text-base text-primary-700 max-w-3xl">
+                Stateful tile: collapsed impression preview expands inline to show detail card. Click anywhere on the item 
+                to toggle between collapsed and expanded states. In collapsed state, shows only the image preview with pill. 
+                In expanded state, shows image on left and detail card on right. Supports keyboard navigation (Enter/Space to toggle).
+              </p>
+            </div>
+
+            {/* Props Table */}
+            <div>
+              <h3 className="text-lg font-medium text-primary-950 mb-3">Props</h3>
+              <div className="overflow-x-auto">
+                <table className="min-w-full border border-primary-200 rounded-lg">
+                  <thead>
+                    <tr className="bg-primary-50">
+                      <th className="px-4 py-2 text-left text-sm font-medium text-primary-950 border-b border-primary-200">
+                        Prop
+                      </th>
+                      <th className="px-4 py-2 text-left text-sm font-medium text-primary-950 border-b border-primary-200">
+                        Type
+                      </th>
+                      <th className="px-4 py-2 text-left text-sm font-medium text-primary-950 border-b border-primary-200">
+                        Default
+                      </th>
+                      <th className="px-4 py-2 text-left text-sm font-medium text-primary-950 border-b border-primary-200">
+                        Description
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100 font-mono">
+                        id
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        string
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-500 border-b border-primary-100">
+                        —
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        Unique identifier for the impression item
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100 font-mono">
+                        imageSrc
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        string
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-500 border-b border-primary-100">
+                        —
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        Source URL for the impression image
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100 font-mono">
+                        imageAlt
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        string
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-500 border-b border-primary-100">
+                        —
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        Alt text for the impression image
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100 font-mono">
+                        methodName
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        string
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-500 border-b border-primary-100">
+                        —
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        Method name displayed in the pill (e.g., "User Interviews", "Prototyping")
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100 font-mono">
+                        phaseColorVariant
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        PhaseColorVariant
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-500 border-b border-primary-100">
+                        —
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        Color variant for the pill: default, blue, purple, magenta, orange, green, darkgrey
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100 font-mono">
+                        projectTitle
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        string
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-500 border-b border-primary-100">
+                        —
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        Project name displayed in the detail card
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100 font-mono">
+                        exampleTitle
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        string
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-500 border-b border-primary-100">
+                        —
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        Main title/heading for the impression in the detail card
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100 font-mono">
+                        description
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        string
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-500 border-b border-primary-100">
+                        —
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        Description paragraph text for the impression
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100 font-mono">
+                        projectSlug
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        string
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-500 border-b border-primary-100">
+                        —
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        URL slug for the project detail page (used in /projects/[slug])
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100 font-mono">
+                        defaultExpanded
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        boolean
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-500 border-b border-primary-100 font-mono">
+                        false
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        Initial expanded state
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100 font-mono">
+                        onToggle
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        (id: string, expanded: boolean) =&gt; void
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-500 border-b border-primary-100">
+                        —
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        Callback function called when item is toggled
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100 font-mono">
+                        priority
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        boolean
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-500 border-b border-primary-100 font-mono">
+                        false
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        Passed to next/image for priority loading
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100 font-mono">
+                        sizes
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        string
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-500 border-b border-primary-100">
+                        —
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        Passed to next/image for responsive sizing
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="px-4 py-2 text-sm text-primary-700 font-mono">
+                        className
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700">
+                        string
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-500 font-mono">
+                        ""
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700">
+                        Additional CSS classes
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            {/* Examples */}
+            <div>
+              <h3 className="text-lg font-medium text-primary-950 mb-3">Examples</h3>
+              
+              {/* Expanded example */}
+              <div>
+                <h4 className="text-sm font-medium text-primary-600 mb-3">Interactive example (click to expand/collapse)</h4>
+                <div className="w-full">
+                  <ImpressionItem
+                    id="imp-1"
+                    imageSrc=""
+                    imageAlt="Prototyping method"
+                    methodName="Prototyping"
+                    phaseColorVariant="purple"
+                    projectTitle="Adjusto"
+                    exampleTitle="Method Card Title"
+                    description="Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua."
+                    projectSlug="adjusto"
+                  />
+                </div>
+                <p className="text-sm text-primary-600 mt-2 italic">Click the card to toggle between collapsed and expanded states. The item will center itself when expanded.</p>
               </div>
             </div>
           </div>
