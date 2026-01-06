@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { Pill, Button, StatItem, SubInfo } from '@/components/atoms';
-import { SegmentedControl, AccordionItem, SectionDescription, InfoRows, InfoColumns } from '@/components/molecules';
+import { SegmentedControl, AccordionItem, SectionDescription, InfoRows, InfoColumns, SubInfoGroup } from '@/components/molecules';
 
 export default function PlaygroundPage() {
   const primaryColors = [
@@ -1595,6 +1595,184 @@ export default function PlaygroundPage() {
                           { label: 'Item 2' },
                         ],
                       },
+                    ]}
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Molecules / SubInfoGroup */}
+        <section>
+          <h2 className="text-2xl font-semibold text-primary-950 mb-4">Molecules / SubInfoGroup</h2>
+          
+          <div className="space-y-6">
+            {/* Description */}
+            <div>
+              <p className="text-base text-primary-700 max-w-3xl">
+                The SubInfoGroup component composes multiple SubInfo atoms in either a row or column layout. 
+                It forwards the size prop to each SubInfo atom and supports an optional status dot for specific items 
+                (e.g., Status rows). Perfect for displaying related metadata in a structured format.
+              </p>
+            </div>
+
+            {/* Props Table */}
+            <div>
+              <h3 className="text-lg font-medium text-primary-950 mb-3">Props</h3>
+              <div className="overflow-x-auto">
+                <table className="min-w-full border border-primary-200 rounded-lg">
+                  <thead>
+                    <tr className="bg-primary-50">
+                      <th className="px-4 py-2 text-left text-sm font-medium text-primary-950 border-b border-primary-200">
+                        Prop
+                      </th>
+                      <th className="px-4 py-2 text-left text-sm font-medium text-primary-950 border-b border-primary-200">
+                        Type
+                      </th>
+                      <th className="px-4 py-2 text-left text-sm font-medium text-primary-950 border-b border-primary-200">
+                        Default
+                      </th>
+                      <th className="px-4 py-2 text-left text-sm font-medium text-primary-950 border-b border-primary-200">
+                        Description
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100 font-mono">
+                        items
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        SubInfoGroupItem[]
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-500 border-b border-primary-100">
+                        —
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        Array of items, each with label, value, and optional showDot
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100 font-mono">
+                        variant
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        SubInfoGroupVariant
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-500 border-b border-primary-100 font-mono">
+                        "row"
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        Layout variant: row (horizontal) or column (vertical)
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100 font-mono">
+                        size
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        SubInfoSize
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-500 border-b border-primary-100 font-mono">
+                        "base"
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        Size variant: lg (18px) or base (16px), forwarded to SubInfo atoms
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="px-4 py-2 text-sm text-primary-700 font-mono">
+                        className
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700">
+                        string
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-500 font-mono">
+                        ""
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700">
+                        Additional CSS classes
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            {/* Type Definitions */}
+            <div className="bg-primary-50 border border-primary-200 rounded-lg p-4">
+              <p className="text-sm text-primary-700 mb-2">
+                <strong className="font-medium text-primary-950">Type Definitions:</strong>
+              </p>
+              <div className="text-xs font-mono text-primary-700 space-y-1">
+                <div>SubInfoGroupItem: {'{ label: string; value: string; showDot?: boolean }'}</div>
+              </div>
+              <p className="text-sm text-primary-700 mt-3">
+                When <code className="font-mono text-xs">showDot</code> is true, a blue status dot is displayed 
+                between the label and value. The dot uses accent-blue with a soft outer circle and solid inner dot.
+              </p>
+            </div>
+
+            {/* Examples */}
+            <div>
+              <h3 className="text-lg font-medium text-primary-950 mb-3">Examples</h3>
+              
+              {/* Row, size="base" */}
+              <div className="mb-6">
+                <h4 className="text-sm font-medium text-primary-600 mb-3">Row, size="base"</h4>
+                <div className="max-w-2xl">
+                  <SubInfoGroup
+                    variant="row"
+                    size="base"
+                    items={[
+                      { label: 'Location:', value: 'Canton of Aargau, Switzerland' },
+                      { label: 'Status:', value: 'Available for Work', showDot: true },
+                    ]}
+                  />
+                </div>
+              </div>
+
+              {/* Row, size="lg" */}
+              <div className="mb-6">
+                <h4 className="text-sm font-medium text-primary-600 mb-3">Row, size="lg"</h4>
+                <div className="max-w-2xl">
+                  <SubInfoGroup
+                    variant="row"
+                    size="lg"
+                    items={[
+                      { label: 'Location:', value: 'Canton of Aargau, Switzerland' },
+                      { label: 'Status:', value: 'Available for Work', showDot: true },
+                    ]}
+                  />
+                </div>
+              </div>
+
+              {/* Column, size="base" */}
+              <div className="mb-6">
+                <h4 className="text-sm font-medium text-primary-600 mb-3">Column, size="base"</h4>
+                <div className="max-w-2xl">
+                  <SubInfoGroup
+                    variant="column"
+                    size="base"
+                    items={[
+                      { label: 'Location:', value: 'Zürich, Switzerland' },
+                      { label: 'Status:', value: 'Available for Work', showDot: true },
+                    ]}
+                  />
+                </div>
+              </div>
+
+              {/* Column, size="lg" */}
+              <div>
+                <h4 className="text-sm font-medium text-primary-600 mb-3">Column, size="lg"</h4>
+                <div className="max-w-2xl">
+                  <SubInfoGroup
+                    variant="column"
+                    size="lg"
+                    items={[
+                      { label: 'Location:', value: 'Zürich, Switzerland' },
+                      { label: 'Status:', value: 'Available for Work', showDot: true },
                     ]}
                   />
                 </div>

@@ -3,4 +3,5 @@ export { default as AccordionItem, type AccordionItemProps } from './AccordionIt
 export { default as SectionDescription, type SectionDescriptionProps, type SectionDescriptionCTA } from './SectionDescription';
 export { default as InfoRows, type InfoRowsProps, type InfoRow, type InfoRowItem, type InfoRowsSize } from './InfoRows';
 export { default as InfoColumns, type InfoColumnsProps, type InfoColumn, type InfoColumnItem, type InfoColumnsSize } from './InfoColumns';
+export { default as SubInfoGroup, type SubInfoGroupProps, type SubInfoGroupItem, type SubInfoGroupVariant } from './SubInfoGroup';
 
