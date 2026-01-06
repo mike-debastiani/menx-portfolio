@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { Pill, Button, StatItem, SubInfo } from '@/components/atoms';
 import { SegmentedControl, AccordionItem, SectionDescription, InfoRows, InfoColumns, SubInfoGroup, CaseStudyDescription, CaseStudyMeta } from '@/components/molecules';
-import { RoleBasedHero } from '@/components/organisms';
+import { RoleBasedHero, StatsGroup } from '@/components/organisms';
 
 export default function PlaygroundPage() {
   const primaryColors = [
@@ -2187,6 +2187,122 @@ export default function PlaygroundPage() {
                 <div className="max-w-5xl">
                   <RoleBasedHero />
                 </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Organisms / StatsGroup */}
+        <section>
+          <h2 className="text-2xl font-semibold text-primary-950 mb-4">Organisms / StatsGroup</h2>
+          
+          <div className="space-y-6">
+            {/* Description */}
+            <div>
+              <p className="text-base text-primary-700 max-w-3xl">
+                A horizontal group of 2–4 statistics, evenly distributed across full width. Built from StatItem 
+                components with the section variant. Perfect for displaying key metrics or achievements in a 
+                balanced, scannable layout.
+              </p>
+            </div>
+
+            {/* Props Table */}
+            <div>
+              <h3 className="text-lg font-medium text-primary-950 mb-3">Props</h3>
+              <div className="overflow-x-auto">
+                <table className="min-w-full border border-primary-200 rounded-lg">
+                  <thead>
+                    <tr className="bg-primary-50">
+                      <th className="px-4 py-2 text-left text-sm font-medium text-primary-950 border-b border-primary-200">
+                        Prop
+                      </th>
+                      <th className="px-4 py-2 text-left text-sm font-medium text-primary-950 border-b border-primary-200">
+                        Type
+                      </th>
+                      <th className="px-4 py-2 text-left text-sm font-medium text-primary-950 border-b border-primary-200">
+                        Default
+                      </th>
+                      <th className="px-4 py-2 text-left text-sm font-medium text-primary-950 border-b border-primary-200">
+                        Description
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100 font-mono">
+                        items
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        StatsGroupItem[]
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-500 border-b border-primary-100">
+                        —
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        Array of 2–4 stat items, each with value and label (subLabel and subValue are optional)
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="px-4 py-2 text-sm text-primary-700 font-mono">
+                        className
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700">
+                        string
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-500 font-mono">
+                        ""
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700">
+                        Additional CSS classes
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            {/* Type Definitions */}
+            <div className="bg-primary-50 border border-primary-200 rounded-lg p-4">
+              <p className="text-sm text-primary-700 mb-2">
+                <strong className="font-medium text-primary-950">Type Definitions:</strong>
+              </p>
+              <div className="text-xs font-mono text-primary-700 space-y-1">
+                <div>StatsGroupItem: {'{ value: string; label: string; subLabel?: string; subValue?: string }'}</div>
+              </div>
+              <p className="text-sm text-primary-700 mt-3">
+                The component automatically adjusts grid columns based on item count (2 items = 2 columns, 3 items = 3 columns, 4 items = 4 columns). 
+                In development mode, a console warning is shown if the item count is outside the 2–4 range, but the component will still render.
+              </p>
+            </div>
+
+            {/* Examples */}
+            <div>
+              <h3 className="text-lg font-medium text-primary-950 mb-3">Examples</h3>
+              
+              {/* 4-item example */}
+              <div className="mb-6">
+                <h4 className="text-sm font-medium text-primary-600 mb-3">4-item example</h4>
+                <div className="max-w-4xl">
+                  <StatsGroup
+                    items={[
+                      { value: '130+', label: 'Application examples' },
+                      { value: '37', label: 'Methods' },
+                      { value: '6', label: 'Phases' },
+                      { value: '7', label: 'Projects' },
+                    ]}
+                  />
+                </div>
+              </div>
+
+              {/* 2-item example */}
+              <div>
+                <h4 className="text-sm font-medium text-primary-600 mb-3">2-item example</h4>
+                  <StatsGroup
+                    items={[
+                      { value: '50+', label: 'Projects completed' },
+                      { value: '5', label: 'Years experience' },
+                    ]}
+                  />
               </div>
             </div>
           </div>
