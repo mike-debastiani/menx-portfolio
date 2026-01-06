@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { Pill, Button, StatItem, SubInfo } from '@/components/atoms';
-import { SegmentedControl, AccordionItem } from '@/components/molecules';
+import { SegmentedControl, AccordionItem, SectionDescription } from '@/components/molecules';
 
 export default function PlaygroundPage() {
   const primaryColors = [
@@ -1090,6 +1090,152 @@ export default function PlaygroundPage() {
                       This accordion is controlled externally. The open state is managed by the parent component.
                     </p>
                   </AccordionItem>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Molecules / SectionDescription */}
+        <section>
+          <h2 className="text-2xl font-semibold text-primary-950 mb-4">Molecules / SectionDescription</h2>
+          
+          <div className="space-y-6">
+            {/* Description */}
+            <div>
+              <p className="text-base text-primary-700 max-w-3xl">
+                The SectionDescription component displays a section title with optional description text and 
+                an optional call-to-action button. The title is always shown, while the description and CTA 
+                button can be independently included or omitted.
+              </p>
+            </div>
+
+            {/* Props Table */}
+            <div>
+              <h3 className="text-lg font-medium text-primary-950 mb-3">Props</h3>
+              <div className="overflow-x-auto">
+                <table className="min-w-full border border-primary-200 rounded-lg">
+                  <thead>
+                    <tr className="bg-primary-50">
+                      <th className="px-4 py-2 text-left text-sm font-medium text-primary-950 border-b border-primary-200">
+                        Prop
+                      </th>
+                      <th className="px-4 py-2 text-left text-sm font-medium text-primary-950 border-b border-primary-200">
+                        Type
+                      </th>
+                      <th className="px-4 py-2 text-left text-sm font-medium text-primary-950 border-b border-primary-200">
+                        Default
+                      </th>
+                      <th className="px-4 py-2 text-left text-sm font-medium text-primary-950 border-b border-primary-200">
+                        Description
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100 font-mono">
+                        title
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        string
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-500 border-b border-primary-100">
+                        —
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        Section title (always displayed)
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100 font-mono">
+                        description
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        string
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-500 border-b border-primary-100">
+                        —
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        Optional description text (muted color)
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100 font-mono">
+                        cta
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        SectionDescriptionCTA
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-500 border-b border-primary-100">
+                        —
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        Optional CTA button with label, href, and/or onClick
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="px-4 py-2 text-sm text-primary-700 font-mono">
+                        className
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700">
+                        string
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-500 font-mono">
+                        ""
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700">
+                        Additional CSS classes
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            {/* CTA Type Note */}
+            <div className="bg-primary-50 border border-primary-200 rounded-lg p-4">
+              <p className="text-sm text-primary-700">
+                <strong className="font-medium text-primary-950">CTA Behavior:</strong> If both <code className="font-mono text-xs">href</code> and <code className="font-mono text-xs">onClick</code> are provided, 
+                <code className="font-mono text-xs">href</code> takes precedence (renders as Link). The CTA button uses the Button atom with 
+                variant="primary", size="base", and icon="none".
+              </p>
+            </div>
+
+            {/* Examples */}
+            <div>
+              <h3 className="text-lg font-medium text-primary-950 mb-3">Examples</h3>
+              
+              {/* Title only */}
+              <div className="mb-6">
+                <h4 className="text-sm font-medium text-primary-600 mb-3">Title only</h4>
+                <div className="max-w-2xl">
+                  <SectionDescription
+                    title="Sparked your interest? Let's turn that into a conversation."
+                  />
+                </div>
+              </div>
+
+              {/* Title + description */}
+              <div className="mb-6">
+                <h4 className="text-sm font-medium text-primary-600 mb-3">Title + description</h4>
+                <div className="max-w-2xl">
+                  <SectionDescription
+                    title="Sparked your interest? Let's turn that into a conversation."
+                    description="Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum."
+                  />
+                </div>
+              </div>
+
+              {/* Full example */}
+              <div>
+                <h4 className="text-sm font-medium text-primary-600 mb-3">Title + description + CTA button (full)</h4>
+                <div className="max-w-2xl">
+                  <SectionDescription
+                    title="Sparked your interest? Let's turn that into a conversation."
+                    description="Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum."
+                    cta={{ label: 'CONTACT ME' }}
+                  />
                 </div>
               </div>
             </div>
