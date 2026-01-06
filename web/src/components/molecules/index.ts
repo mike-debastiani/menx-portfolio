@@ -2,4 +2,5 @@ export { default as SegmentedControl, type SegmentedControlProps, type Segmented
 export { default as AccordionItem, type AccordionItemProps } from './AccordionItem';
 export { default as SectionDescription, type SectionDescriptionProps, type SectionDescriptionCTA } from './SectionDescription';
 export { default as InfoRows, type InfoRowsProps, type InfoRow, type InfoRowItem, type InfoRowsSize } from './InfoRows';
+export { default as InfoColumns, type InfoColumnsProps, type InfoColumn, type InfoColumnItem, type InfoColumnsSize } from './InfoColumns';
 

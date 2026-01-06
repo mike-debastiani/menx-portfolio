@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { Pill, Button, StatItem, SubInfo } from '@/components/atoms';
-import { SegmentedControl, AccordionItem, SectionDescription, InfoRows } from '@/components/molecules';
+import { SegmentedControl, AccordionItem, SectionDescription, InfoRows, InfoColumns } from '@/components/molecules';
 
 export default function PlaygroundPage() {
   const primaryColors = [
@@ -1392,6 +1392,207 @@ export default function PlaygroundPage() {
                         items: [
                           { label: 'hello@mikedebastiani.ch', href: 'mailto:hello@mikedebastiani.ch' },
                           { label: 'Book a Call', href: '/contact' },
+                        ],
+                      },
+                    ]}
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Molecules / InfoColumns */}
+        <section>
+          <h2 className="text-2xl font-semibold text-primary-950 mb-4">Molecules / InfoColumns</h2>
+          
+          <div className="space-y-6">
+            {/* Description */}
+            <div>
+              <p className="text-base text-primary-700 max-w-3xl">
+                The InfoColumns component displays an optional description text at the top, followed by 1–4 columns 
+                of information. Each column has a title with a divider line and a list of items. Supports size variants 
+                (lg and base) and items can optionally be links.
+              </p>
+            </div>
+
+            {/* Props Table */}
+            <div>
+              <h3 className="text-lg font-medium text-primary-950 mb-3">Props</h3>
+              <div className="overflow-x-auto">
+                <table className="min-w-full border border-primary-200 rounded-lg">
+                  <thead>
+                    <tr className="bg-primary-50">
+                      <th className="px-4 py-2 text-left text-sm font-medium text-primary-950 border-b border-primary-200">
+                        Prop
+                      </th>
+                      <th className="px-4 py-2 text-left text-sm font-medium text-primary-950 border-b border-primary-200">
+                        Type
+                      </th>
+                      <th className="px-4 py-2 text-left text-sm font-medium text-primary-950 border-b border-primary-200">
+                        Default
+                      </th>
+                      <th className="px-4 py-2 text-left text-sm font-medium text-primary-950 border-b border-primary-200">
+                        Description
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100 font-mono">
+                        description
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        string
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-500 border-b border-primary-100">
+                        —
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        Optional description text displayed at the top (full width)
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100 font-mono">
+                        columns
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        InfoColumn[]
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-500 border-b border-primary-100">
+                        —
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        Array of 1–4 columns, each with a title and items array
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100 font-mono">
+                        size
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        InfoColumnsSize
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-500 border-b border-primary-100 font-mono">
+                        "lg"
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        Size variant: lg (18px) or base (16px)
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="px-4 py-2 text-sm text-primary-700 font-mono">
+                        className
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700">
+                        string
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-500 font-mono">
+                        ""
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700">
+                        Additional CSS classes
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            {/* Type Definitions */}
+            <div className="bg-primary-50 border border-primary-200 rounded-lg p-4">
+              <p className="text-sm text-primary-700 mb-2">
+                <strong className="font-medium text-primary-950">Type Definitions:</strong>
+              </p>
+              <div className="text-xs font-mono text-primary-700 space-y-1">
+                <div>InfoColumn: {'{ title: string; items: InfoColumnItem[] }'}</div>
+                <div>InfoColumnItem: {'{ label: string; href?: string }'}</div>
+              </div>
+              <p className="text-sm text-primary-700 mt-3">
+                Items with <code className="font-mono text-xs">href</code> are rendered as links. External URLs 
+                (http/https) open in a new tab with <code className="font-mono text-xs">rel="noreferrer"</code>. 
+                Internal URLs use Next.js Link. Columns automatically adjust to 1–4 columns based on the array length.
+              </p>
+            </div>
+
+            {/* Examples */}
+            <div>
+              <h3 className="text-lg font-medium text-primary-950 mb-3">Examples</h3>
+              
+              {/* Size: lg with description + 2 columns */}
+              <div className="mb-6">
+                <h4 className="text-sm font-medium text-primary-600 mb-3">Size: lg with description + 2 columns</h4>
+                <div className="max-w-2xl">
+                  <InfoColumns
+                    size="lg"
+                    description="Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum."
+                    columns={[
+                      {
+                        title: 'Skills',
+                        items: [
+                          { label: 'UX Research' },
+                          { label: 'Analysis & Synthesis' },
+                          { label: 'Personas & User Journeys' },
+                          { label: 'Design Thinking & Ideation' },
+                          { label: 'Low - High Fidelity Prototyping' },
+                          { label: 'Design Systems' },
+                          { label: 'Testing & Validation' },
+                          { label: 'Agile Product Development' },
+                          { label: 'Presentation & Communication' },
+                        ],
+                      },
+                      {
+                        title: 'Tools & Technologies',
+                        items: [
+                          { label: 'Figma' },
+                          { label: 'Adobe Creative Suite' },
+                          { label: 'HTML, CSS, JavaScript' },
+                          { label: 'Next.js' },
+                          { label: 'Webflow' },
+                          { label: 'GitHub' },
+                          { label: 'Jira' },
+                          { label: 'Notion' },
+                          { label: 'v0, Lovable, Bolt' },
+                        ],
+                      },
+                    ]}
+                  />
+                </div>
+              </div>
+
+              {/* Size: base with description + 4 columns */}
+              <div>
+                <h4 className="text-sm font-medium text-primary-600 mb-3">Size: base with description + 4 columns</h4>
+                <div className="max-w-2xl">
+                  <InfoColumns
+                    size="base"
+                    columns={[
+                      {
+                        title: 'Col 1',
+                        items: [
+                          { label: 'Item 1' },
+                          { label: 'Item 2' },
+                        ],
+                      },
+                      {
+                        title: 'Col 2',
+                        items: [
+                          { label: 'Item 1' },
+                          { label: 'Item 2' },
+                        ],
+                      },
+                      {
+                        title: 'Col 3',
+                        items: [
+                          { label: 'Item 1' },
+                          { label: 'Item 2' },
+                        ],
+                      },
+                      {
+                        title: 'Col 4',
+                        items: [
+                          { label: 'Item 1' },
+                          { label: 'Item 2' },
                         ],
                       },
                     ]}
