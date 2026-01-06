@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { Pill, Button, StatItem, SubInfo } from '@/components/atoms';
 import { SegmentedControl, AccordionItem, SectionDescription, InfoRows, InfoColumns, SubInfoGroup, CaseStudyDescription, CaseStudyMeta } from '@/components/molecules';
-import { RoleBasedHero, StatsGroup, AccordionGroup } from '@/components/organisms';
+import { RoleBasedHero, StatsGroup, AccordionGroup, ProjectCard } from '@/components/organisms';
 
 export default function PlaygroundPage() {
   const primaryColors = [
@@ -2493,6 +2493,117 @@ export default function PlaygroundPage() {
                     ]}
                   />
                 </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Organisms / ProjectCard */}
+        <section>
+          <h2 className="text-2xl font-semibold text-primary-950 mb-4">Organisms / ProjectCard</h2>
+          
+          <div className="space-y-6">
+            {/* Description */}
+            <div>
+              <p className="text-base text-primary-700 max-w-3xl">
+                The ProjectCard component is a CMS-driven project preview card that displays project information with an image, tags, title, and description. 
+                The entire card is clickable and navigates to the project detail page. On hover or focus, a button overlay appears in the top-right of the image area.
+              </p>
+            </div>
+
+            {/* Props Table */}
+            <div>
+              <h3 className="text-lg font-medium text-primary-950 mb-3">Props</h3>
+              <div className="overflow-x-auto">
+                <table className="min-w-full border border-primary-200 rounded-lg">
+                  <thead>
+                    <tr className="bg-primary-50">
+                      <th className="px-4 py-2 text-left text-sm font-medium text-primary-950 border-b border-primary-200">
+                        Prop
+                      </th>
+                      <th className="px-4 py-2 text-left text-sm font-medium text-primary-950 border-b border-primary-200">
+                        Type
+                      </th>
+                      <th className="px-4 py-2 text-left text-sm font-medium text-primary-950 border-b border-primary-200">
+                        Default
+                      </th>
+                      <th className="px-4 py-2 text-left text-sm font-medium text-primary-950 border-b border-primary-200">
+                        Description
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100 font-mono">
+                        project
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        ProjectCardData
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-500 border-b border-primary-100">
+                        —
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        Project data object containing slug, title, excerpt, tags, and image
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="px-4 py-2 text-sm text-primary-700 font-mono">
+                        className
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700">
+                        string
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-500 font-mono">
+                        ""
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700">
+                        Additional CSS classes
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            {/* Type Definitions */}
+            <div className="bg-primary-50 border border-primary-200 rounded-lg p-4">
+              <p className="text-sm text-primary-700 mb-2">
+                <strong className="font-medium text-primary-950">Type Definitions:</strong>
+              </p>
+              <div className="text-xs font-mono text-primary-700 space-y-1">
+                <div>ProjectCardData: {'{'}</div>
+                <div className="pl-4">slug: string;</div>
+                <div className="pl-4">title: string;</div>
+                <div className="pl-4">excerpt: string;</div>
+                <div className="pl-4">tags?: string[];</div>
+                <div className="pl-4">image?: {'{'} src: string; alt?: string; {'}'} | null;</div>
+                <div>{'}'}</div>
+              </div>
+              <p className="text-sm text-primary-700 mt-3">
+                The component uses a Next.js Link wrapper to make the entire card clickable, navigating to <code className="font-mono text-xs">/projects/[slug]</code>. 
+                The hover button is a visual overlay and does not create a separate link—clicking it still navigates via the card link.
+              </p>
+            </div>
+
+            {/* Examples */}
+            <div>
+              <h3 className="text-lg font-medium text-primary-950 mb-3">Examples</h3>
+              
+              {/* Sample project card */}
+              <div className="max-w-2xl">
+                <p className="text-sm text-primary-600 mb-4 italic">
+                  Hover or focus the card to see the button overlay appear in the top-right of the image area.
+                </p>
+                <ProjectCard
+                  project={{
+                    slug: 'ux-meets-web-penda',
+                    title: 'UX meets Web – Penda',
+                    excerpt: 'A student carpooling platform built from scratch. I bridged the gap between UX and Engineering by delivering a scalable design system, validated prototypes, and a fully functional frontend implementation.',
+                    tags: ['User Experience', 'UI Design', 'Design System', 'Frontend Development'],
+                    image: null,
+                  }}
+                />
               </div>
             </div>
           </div>
