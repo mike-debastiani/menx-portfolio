@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { Pill, Button, StatItem, SubInfo } from '@/components/atoms';
-import { SegmentedControl } from '@/components/molecules';
+import { SegmentedControl, AccordionItem } from '@/components/molecules';
 
 export default function PlaygroundPage() {
   const primaryColors = [
@@ -890,6 +890,207 @@ export default function PlaygroundPage() {
               <div>
                 <h4 className="text-sm font-medium text-primary-600 mb-3">Size: sm</h4>
                 <SegmentedControlExample size="sm" />
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Molecules / AccordionItem */}
+        <section>
+          <h2 className="text-2xl font-semibold text-primary-950 mb-4">Molecules / AccordionItem</h2>
+          
+          <div className="space-y-6">
+            {/* Description */}
+            <div>
+              <p className="text-base text-primary-700 max-w-3xl">
+                The AccordionItem component displays collapsible content with a header and expandable body. 
+                It features smooth animations for height expansion, content fade-in, and icon rotation. 
+                Supports both controlled and uncontrolled modes for flexible usage.
+              </p>
+            </div>
+
+            {/* Props Table */}
+            <div>
+              <h3 className="text-lg font-medium text-primary-950 mb-3">Props</h3>
+              <div className="overflow-x-auto">
+                <table className="min-w-full border border-primary-200 rounded-lg">
+                  <thead>
+                    <tr className="bg-primary-50">
+                      <th className="px-4 py-2 text-left text-sm font-medium text-primary-950 border-b border-primary-200">
+                        Prop
+                      </th>
+                      <th className="px-4 py-2 text-left text-sm font-medium text-primary-950 border-b border-primary-200">
+                        Type
+                      </th>
+                      <th className="px-4 py-2 text-left text-sm font-medium text-primary-950 border-b border-primary-200">
+                        Default
+                      </th>
+                      <th className="px-4 py-2 text-left text-sm font-medium text-primary-950 border-b border-primary-200">
+                        Description
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100 font-mono">
+                        title
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        string
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-500 border-b border-primary-100">
+                        —
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        Header text displayed in the accordion button
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100 font-mono">
+                        children
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        ReactNode
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-500 border-b border-primary-100">
+                        —
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        Content displayed when accordion is expanded
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100 font-mono">
+                        defaultOpen
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        boolean
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-500 border-b border-primary-100 font-mono">
+                        false
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        Initial open state (uncontrolled mode)
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100 font-mono">
+                        open
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        boolean
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-500 border-b border-primary-100">
+                        —
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        Controlled open state (when provided, component becomes controlled)
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100 font-mono">
+                        onOpenChange
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        (open: boolean) =&gt; void
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-500 border-b border-primary-100">
+                        —
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        Callback fired when open state changes
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100 font-mono">
+                        id
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        string
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-500 border-b border-primary-100">
+                        —
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        Optional ID for ARIA attributes
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="px-4 py-2 text-sm text-primary-700 font-mono">
+                        className
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700">
+                        string
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-500 font-mono">
+                        ""
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700">
+                        Additional CSS classes
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            {/* Behavior Note */}
+            <div className="bg-primary-50 border border-primary-200 rounded-lg p-4">
+              <p className="text-sm text-primary-700">
+                <strong className="font-medium text-primary-950">Animations:</strong> The component features smooth 300ms transitions for height expansion, 
+                content opacity fade-in, and icon rotation. The height is dynamically calculated based on content size, 
+                and automatically adjusts when content changes while open.
+              </p>
+            </div>
+
+            {/* Examples */}
+            <div>
+              <h3 className="text-lg font-medium text-primary-950 mb-3">Examples</h3>
+              
+              {/* Default closed */}
+              <div className="mb-6">
+                <h4 className="text-sm font-medium text-primary-600 mb-3">Default closed</h4>
+                <div className="max-w-2xl">
+                  <AccordionItem title="Accordion Header">
+                    <p>
+                      Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor 
+                      invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et 
+                      accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata 
+                      sanctus est Lorem ipsum dolor sit amet.
+                    </p>
+                  </AccordionItem>
+                </div>
+              </div>
+
+              {/* Default open */}
+              <div className="mb-6">
+                <h4 className="text-sm font-medium text-primary-600 mb-3">Default open</h4>
+                <div className="max-w-2xl">
+                  <AccordionItem title="Accordion Header" defaultOpen>
+                    <p>
+                      Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor 
+                      invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et 
+                      accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata 
+                      sanctus est Lorem ipsum dolor sit amet.
+                    </p>
+                  </AccordionItem>
+                </div>
+              </div>
+
+              {/* Controlled example */}
+              <div>
+                <h4 className="text-sm font-medium text-primary-600 mb-3">Controlled example</h4>
+                <div className="max-w-2xl space-y-4">
+                  <AccordionItem
+                    title="Controlled Accordion"
+                    open={true}
+                    onOpenChange={(open) => console.log('Open state:', open)}
+                  >
+                    <p>
+                      This accordion is controlled externally. The open state is managed by the parent component.
+                    </p>
+                  </AccordionItem>
+                </div>
               </div>
             </div>
           </div>
