@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { Pill, Button, StatItem, SubInfo } from '@/components/atoms';
 import { SegmentedControl, AccordionItem, SectionDescription, InfoRows, InfoColumns, SubInfoGroup, CaseStudyDescription, CaseStudyMeta, ImpressionCard, ImpressionDetailCard } from '@/components/molecules';
-import { RoleBasedHero, StatsGroup, AccordionGroup, ProjectCard, ImpressionItem } from '@/components/organisms';
+import { RoleBasedHero, StatsGroup, AccordionGroup, ProjectCard, ImpressionItem, WorkflowAtlasTimeline, type WorkflowSegment } from '@/components/organisms';
 
 export default function PlaygroundPage() {
   const primaryColors = [
@@ -3066,6 +3066,169 @@ export default function PlaygroundPage() {
           </div>
         </section>
 
+        {/* Organisms / WorkflowAtlasTimeline */}
+        <section>
+          <h2 className="text-2xl font-semibold text-primary-950 mb-4">Organisms / WorkflowAtlasTimeline</h2>
+          
+          <div className="space-y-6">
+            {/* Description */}
+            <div>
+              <p className="text-base text-primary-700 max-w-3xl">
+                The WorkflowAtlasTimeline component renders a non-scrollable horizontal timeline made of many small segments. 
+                Each segment represents a method, color-coded by phase. Segment width is proportional to the number of examples 
+                for that method. One segment can be active at a time, with hover and active states for interaction.
+              </p>
+              <ul className="list-disc list-inside text-sm text-primary-700 mt-3 space-y-1">
+                <li>Segments are color-coded by phase (research, analysis, ideation, design, testing, development)</li>
+                <li>Width is proportional to count (number of CMS examples)</li>
+                <li>Hover increases opacity; active segment has 100% opacity and is slightly taller</li>
+                <li>Emits onSegmentSelect for future ImpressionGallery syncing</li>
+              </ul>
+            </div>
+
+            {/* Props Table */}
+            <div>
+              <h3 className="text-lg font-medium text-primary-950 mb-3">Props</h3>
+              <div className="overflow-x-auto">
+                <table className="min-w-full border border-primary-200 rounded-lg">
+                  <thead>
+                    <tr className="bg-primary-50">
+                      <th className="px-4 py-2 text-left text-sm font-medium text-primary-950 border-b border-primary-200">
+                        Prop
+                      </th>
+                      <th className="px-4 py-2 text-left text-sm font-medium text-primary-950 border-b border-primary-200">
+                        Type
+                      </th>
+                      <th className="px-4 py-2 text-left text-sm font-medium text-primary-950 border-b border-primary-200">
+                        Default
+                      </th>
+                      <th className="px-4 py-2 text-left text-sm font-medium text-primary-950 border-b border-primary-200">
+                        Description
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100 font-mono">
+                        segments
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        WorkflowSegment[]
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-500 border-b border-primary-100">
+                        —
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        Array of segments, each with id, methodName, phase, count, and optional galleryIndex
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100 font-mono">
+                        defaultActiveId
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        string
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-500 border-b border-primary-100">
+                        —
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        Initial active segment ID (uncontrolled mode)
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100 font-mono">
+                        activeId
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        string
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-500 border-b border-primary-100">
+                        —
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        Controlled active segment ID
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100 font-mono">
+                        onActiveChange
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        (id: string, segment: WorkflowSegment) =&gt; void
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-500 border-b border-primary-100">
+                        —
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        Callback when active segment changes
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100 font-mono">
+                        onSegmentSelect
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        (segment: WorkflowSegment) =&gt; void
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-500 border-b border-primary-100">
+                        —
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        Callback for segment selection (for future ImpressionGallery syncing)
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100 font-mono">
+                        phaseLabels
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        Partial&lt;Record&lt;WorkflowPhaseKey, string&gt;&gt;
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-500 border-b border-primary-100">
+                        —
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        Optional legend label overrides for phases
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="px-4 py-2 text-sm text-primary-700 font-mono">
+                        className
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700">
+                        string
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-500 font-mono">
+                        ""
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700">
+                        Additional CSS classes
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            {/* Examples */}
+            <div>
+              <h3 className="text-lg font-medium text-primary-950 mb-3">Examples</h3>
+              
+              {/* Default example */}
+              <div className="mb-6">
+                <h4 className="text-sm font-medium text-primary-600 mb-3">Default Example</h4>
+                <p className="text-sm text-primary-500 mb-3">
+                  Timeline with 30 segments across all phases, with mixed counts (1-12 examples per method).
+                </p>
+                <div className="w-full">
+                  <WorkflowAtlasTimelineExample1 />
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
       </div>
     </div>
   );
@@ -3091,3 +3254,50 @@ function SegmentedControlExample({ size }: { size: 'base' | 'sm' }) {
   );
 }
 
+// WorkflowAtlasTimeline Example 1: Default with many segments
+function WorkflowAtlasTimelineExample1() {
+  const segments: WorkflowSegment[] = [
+    // Research phase (blue)
+    { id: 'r1', methodName: 'User Interviews', phase: 'research', count: 8 },
+    { id: 'r2', methodName: 'Surveys', phase: 'research', count: 7 },
+    { id: 'r3', methodName: 'Field Studies', phase: 'research', count: 4 },
+    { id: 'r4', methodName: 'Competitive Analysis', phase: 'research', count: 5 },
+    { id: 'r5', methodName: 'Stakeholder Interviews', phase: 'research', count: 3 },
+    { id: 'r6', methodName: 'Desk Research', phase: 'research', count: 2 },
+    { id: 'r7', methodName: 'Literature Review', phase: 'research', count: 1 },
+    // Analysis phase (purple)
+    { id: 'a1', methodName: 'Affinity Mapping', phase: 'analysis', count: 7 },
+    { id: 'a2', methodName: 'Journey Mapping', phase: 'analysis', count: 6 },
+    { id: 'a3', methodName: 'Persona Development', phase: 'analysis', count: 5 },
+    { id: 'a4', methodName: 'Data Synthesis', phase: 'analysis', count: 4 },
+    { id: 'a5', methodName: 'Problem Framing', phase: 'analysis', count: 5 },
+    { id: 'a6', methodName: 'Insight Extraction', phase: 'analysis', count: 3 },
+    { id: 'a7', methodName: 'Pattern Recognition', phase: 'analysis', count: 2 },
+    // Ideation phase (magenta)
+    { id: 'i1', methodName: 'Brainstorming', phase: 'ideation', count: 8 },
+    { id: 'i2', methodName: 'Sketching', phase: 'ideation', count: 7 },
+    { id: 'i3', methodName: 'Rapid Prototyping', phase: 'ideation', count: 3 },
+    { id: 'i4', methodName: 'Concept Testing', phase: 'ideation', count: 2 },
+    { id: 'i5', methodName: 'Storyboarding', phase: 'ideation', count: 1 },
+    // Design phase (orange)
+    { id: 'd1', methodName: 'Wireframing', phase: 'design', count: 7 },
+    { id: 'd2', methodName: 'Visual Design', phase: 'design', count: 7 },
+    { id: 'd3', methodName: 'Interaction Design', phase: 'design', count: 7 },
+    { id: 'd4', methodName: 'Design System', phase: 'design', count: 5 },
+    { id: 'd5', methodName: 'Prototype Refinement', phase: 'design', count: 2 },
+    { id: 'd6', methodName: 'Usability Testing', phase: 'design', count: 1 },
+    // Testing phase (green)
+    { id: 't1', methodName: 'A/B Testing', phase: 'testing', count: 7 },
+    { id: 't2', methodName: 'User Testing', phase: 'testing', count: 6 },
+    { id: 't3', methodName: 'Accessibility Audit', phase: 'testing', count: 4 },
+    { id: 't4', methodName: 'Performance Testing', phase: 'testing', count: 2 },
+    { id: 't5', methodName: 'Quality Assurance', phase: 'testing', count: 1 },
+    // Development phase (darkgrey)
+    { id: 'dev1', methodName: 'Frontend Development', phase: 'development', count: 9 },
+    { id: 'dev2', methodName: 'Backend Development', phase: 'development', count: 2 },
+    { id: 'dev3', methodName: 'Deployment', phase: 'development', count: 1 },
+    { id: 'dev4', methodName: 'Maintenance', phase: 'development', count: 1 },
+  ];
+
+  return <WorkflowAtlasTimeline segments={segments} defaultActiveId="d3" />;
+}
