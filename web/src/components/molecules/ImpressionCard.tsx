@@ -8,6 +8,7 @@ export interface ImpressionCardProps {
   methodLabel: string;
   methodColorVariant?: MethodColorVariant;
   className?: string;
+  imageScale?: number;
 }
 
 export default function ImpressionCard({
@@ -15,11 +16,18 @@ export default function ImpressionCard({
   methodLabel,
   methodColorVariant = 'default',
   className = '',
+  imageScale = 1,
 }: ImpressionCardProps) {
   return (
     <div className={`flex flex-col gap-3 items-start ${className}`}>
-      {/* Image Container - no border, rounded corners */}
-      <div className="relative h-[429px] w-[292px] rounded-xl overflow-hidden bg-primary-50">
+      {/* Image Container - scales down in size, border radius stays at 12px */}
+      <div 
+        className="relative rounded-xl overflow-hidden bg-primary-50 transition-all duration-300 ease-out"
+        style={{
+          height: `${429 * imageScale}px`,
+          width: `${292 * imageScale}px`,
+        }}
+      >
         {image?.src ? (
           <Image
             src={image.src}

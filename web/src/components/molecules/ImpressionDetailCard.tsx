@@ -40,7 +40,7 @@ export default function ImpressionDetailCard({
       </div>
 
       {/* Button - bottom-right aligned */}
-      <div className="self-end">
+      <div className="self-end relative z-20">
         <Button variant="primary" icon="right" size="sm" href={buttonHref}>
           {buttonLabel}
         </Button>
