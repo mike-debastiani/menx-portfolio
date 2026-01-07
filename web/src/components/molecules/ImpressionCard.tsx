@@ -1,55 +1,42 @@
 import Image from 'next/image';
 import Pill from '@/components/atoms/Pill';
 
-export type PhaseColorVariant = 'default' | 'blue' | 'purple' | 'magenta' | 'orange' | 'green' | 'darkgrey';
+export type MethodColorVariant = 'default' | 'blue' | 'purple' | 'magenta' | 'orange' | 'green' | 'darkgrey';
 
 export interface ImpressionCardProps {
-  imageSrc: string;
-  imageAlt: string;
-  methodName: string;
-  phaseColorVariant: PhaseColorVariant;
+  image?: { src: string; alt: string };
+  methodLabel: string;
+  methodColorVariant?: MethodColorVariant;
   className?: string;
-  priority?: boolean;
-  sizes?: string;
-  hidePill?: boolean;
-  imageBorderRadius?: string;
 }
 
 export default function ImpressionCard({
-  imageSrc,
-  imageAlt,
-  methodName,
-  phaseColorVariant,
+  image,
+  methodLabel,
+  methodColorVariant = 'default',
   className = '',
-  priority = false,
-  sizes,
-  hidePill = false,
-  imageBorderRadius = 'rounded-xl',
 }: ImpressionCardProps) {
   return (
-    <div className={`flex flex-col gap-3 items-start w-full ${className}`}>
-      {/* Image Container */}
-      <div className={`relative w-full aspect-[324/475] border border-primary-100 ${imageBorderRadius} overflow-hidden`}>
-        {imageSrc ? (
+    <div className={`flex flex-col gap-3 items-start ${className}`}>
+      {/* Image Container - no border, rounded corners */}
+      <div className="relative h-[429px] w-[292px] rounded-xl overflow-hidden bg-primary-50">
+        {image?.src ? (
           <Image
-            src={imageSrc}
-            alt={imageAlt}
+            src={image.src}
+            alt={image.alt}
             fill
             className="object-cover"
-            priority={priority}
-            sizes={sizes}
+            sizes="292px"
           />
         ) : (
-          <div className="w-full h-full bg-primary-50" aria-hidden="true" />
+          <div className="w-full h-full bg-primary-100" aria-hidden="true" />
         )}
       </div>
 
-      {/* Pill */}
-      {!hidePill && (
-        <Pill variant={phaseColorVariant} size="sm">
-          {methodName}
-        </Pill>
-      )}
+      {/* Method Pill - always visible, does not scale */}
+      <Pill variant={methodColorVariant} size="sm">
+        {methodLabel}
+      </Pill>
     </div>
   );
 }

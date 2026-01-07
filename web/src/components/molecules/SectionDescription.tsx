@@ -26,7 +26,7 @@ export default function SectionDescription({
       </h2>
 
       {description && (
-        <p className="font-sans font-normal text-base leading-[1.5] text-primary-300">
+        <p className="font-sans font-normal text-base leading-[1.5] text-primary-500">
           {description}
         </p>
       )}
@@ -34,7 +34,7 @@ export default function SectionDescription({
       {cta && (
         <Button
           variant="primary"
-          size="base"
+          size="sm"
           icon="none"
           href={cta.href}
           onClick={cta.onClick}

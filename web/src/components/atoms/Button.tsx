@@ -74,8 +74,8 @@ const sizeStyles: Record<ButtonSize, { text: string; px: string; py: string; pyS
   sm: {
     text: 'text-sm',
     px: 'px-4',
-    py: 'py-2',
-    pySecondary: 'py-[6.5px]', // py-2 (8px) - 1.5px border = 6.5px
+    py: 'py-3',
+    pySecondary: 'py-[10.5px]', // py-3 (12px) - 1.5px border = 10.5px
     iconGap: 'gap-1.5',
   },
 };

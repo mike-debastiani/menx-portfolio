@@ -1,45 +1,48 @@
-import Link from 'next/link';
 import Button from '@/components/atoms/Button';
 
 export interface ImpressionDetailCardProps {
-  projectTitle: string;
-  exampleTitle: string;
+  projectLabel: string;
+  title: string;
   description: string;
-  projectSlug: string;
+  buttonLabel: string;
+  buttonHref: string;
   className?: string;
 }
 
 export default function ImpressionDetailCard({
-  projectTitle,
-  exampleTitle,
+  projectLabel,
+  title,
   description,
-  projectSlug,
+  buttonLabel,
+  buttonHref,
   className = '',
 }: ImpressionDetailCardProps) {
   return (
-    <div
-      className={`bg-white flex flex-col justify-between pt-8 px-6 pb-6 rounded-tr-xl rounded-br-xl border border-primary-100 ${className}`}
-    >
+    <div className={`bg-primary-50 flex flex-col h-[429px] items-end justify-between overflow-hidden pl-12 pr-6 py-6 rounded-xl shrink-0 w-[316px] ${className}`}>
       {/* Text Container */}
-      <div className="flex flex-col gap-6 w-full">
+      <div className="flex flex-col gap-6 h-[212px] items-start w-full">
         {/* Title Container */}
-        <div className="flex flex-col gap-2 w-full">
+        <div className="flex flex-col gap-1 items-start w-full">
           {/* Project Label */}
-          <p className="font-mono text-base font-normal text-primary-300 leading-[1.5]">
-            Project: {projectTitle}
+          <p className="font-mono font-normal text-base leading-[1.5] text-primary-300">
+            Project: {projectLabel}
           </p>
-          {/* Example Title */}
-          <h3 className="text-2xl font-medium text-primary-950 leading-[1.5]">{exampleTitle}</h3>
+          {/* Title */}
+          <h3 className="font-medium text-2xl leading-[1.5] text-primary-950">
+            {title}
+          </h3>
         </div>
 
         {/* Description */}
-        <p className="text-base font-normal text-primary-950 leading-[1.5]">{description}</p>
+        <p className="font-normal text-base leading-[1.5] text-primary-950 w-full whitespace-pre-wrap">
+          {description}
+        </p>
       </div>
 
-      {/* CTA Button */}
-      <div className="mt-auto pt-6 self-end">
-        <Button variant="primary" icon="right" size="base" href={`/projects/${projectSlug}`}>
-          View Project
+      {/* Button - bottom-right aligned */}
+      <div className="self-end">
+        <Button variant="primary" icon="right" size="sm" href={buttonHref}>
+          {buttonLabel}
         </Button>
       </div>
     </div>

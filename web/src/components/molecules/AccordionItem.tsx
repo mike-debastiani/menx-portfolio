@@ -121,7 +121,7 @@ export default function AccordionItem({
           maxHeight: contentHeight,
         }}
       >
-        <div ref={contentRef} className="font-sans font-normal text-base leading-[1.5] text-primary-300">
+        <div ref={contentRef} className="font-sans font-normal text-base leading-[1.5] text-primary-500">
           {children}
         </div>
       </div>
