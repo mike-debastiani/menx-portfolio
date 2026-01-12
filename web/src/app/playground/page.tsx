@@ -84,6 +84,123 @@ export default function PlaygroundPage() {
           </div>
         </section>
 
+        {/* Layout / Header */}
+        <section>
+          <h2 className="text-2xl font-semibold text-primary-950 mb-4">Layout / Header</h2>
+          
+          <div className="space-y-6">
+            {/* Description */}
+            <div>
+              <p className="text-base text-primary-700 max-w-3xl">
+                Global header component with responsive navigation. Desktop view shows wordmark, navigation links, and CTA button 
+                in a horizontal layout. Mobile view switches to a hamburger menu with slide-out panel. Includes full accessibility 
+                support with ARIA attributes, focus trap, scroll lock, and keyboard navigation.
+              </p>
+              <ul className="list-disc list-inside text-sm text-primary-700 mt-3 space-y-1">
+                <li>Desktop: wordmark left, nav links center-right, CTA button far right</li>
+                <li>Mobile: hamburger menu with slide-out panel</li>
+                <li>Active route highlighting</li>
+                <li>Accessibility: ARIA labels, focus trap, scroll lock, ESC key support</li>
+                <li>Smooth animations for menu open/close</li>
+              </ul>
+            </div>
+
+            {/* Features */}
+            <div>
+              <h3 className="text-lg font-medium text-primary-950 mb-3">Features</h3>
+              <div className="bg-primary-50 border border-primary-200 rounded-lg p-4 space-y-3">
+                <div>
+                  <strong className="font-medium text-primary-950">Responsive Design:</strong>
+                  <p className="text-sm text-primary-700 mt-1">
+                    Automatically switches between desktop and mobile layouts based on viewport width (breakpoint: lg/1024px).
+                  </p>
+                </div>
+                <div>
+                  <strong className="font-medium text-primary-950">Accessibility:</strong>
+                  <p className="text-sm text-primary-700 mt-1">
+                    Full ARIA support, focus trap in mobile menu, body scroll lock when menu is open, keyboard navigation 
+                    (ESC to close, Tab navigation), and click-outside-to-close functionality.
+                  </p>
+                </div>
+                <div>
+                  <strong className="font-medium text-primary-950">Active State:</strong>
+                  <p className="text-sm text-primary-700 mt-1">
+                    Automatically highlights the active route using Next.js usePathname hook. Active links have darker text color.
+                  </p>
+                </div>
+                <div>
+                  <strong className="font-medium text-primary-950">Smooth Animations:</strong>
+                  <p className="text-sm text-primary-700 mt-1">
+                    Menu panel slides in from the right with fade, backdrop fades in/out, and hamburger icon animates to X.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Demo */}
+            <div>
+              <h3 className="text-lg font-medium text-primary-950 mb-3">Demo</h3>
+              <p className="text-sm text-primary-600 italic mb-4">
+                Note: The Header is integrated into the global layout and appears at the top of all pages. 
+                Resize your viewport to see the hamburger menu on mobile/tablet sizes.
+              </p>
+              <div className="bg-primary-50 border border-primary-200 rounded-lg p-4">
+                <p className="text-sm text-primary-700">
+                  The Header component is automatically rendered in the root layout. To see it in action, 
+                  navigate to any page in the application. The header will appear at the top with:
+                </p>
+                <ul className="list-disc list-inside text-sm text-primary-700 mt-2 space-y-1">
+                  <li>Wordmark linking to home page</li>
+                  <li>Navigation links (Work, Lab, Workflow, About)</li>
+                  <li>CONTACT button with arrow icon</li>
+                  <li>Hamburger menu on mobile/tablet (below 1024px width)</li>
+                </ul>
+              </div>
+            </div>
+
+            {/* Usage */}
+            <div>
+              <h3 className="text-lg font-medium text-primary-950 mb-3">Usage</h3>
+              <div className="bg-primary-50 border border-primary-200 rounded-lg p-4">
+                <p className="text-sm text-primary-700 mb-2">
+                  The Header is integrated into the root layout (<code className="font-mono text-xs">app/layout.tsx</code>):
+                </p>
+                <pre className="text-sm text-primary-700 font-mono overflow-x-auto">
+{`import { Header } from '@/components/layout/Header';
+
+export default function RootLayout({ children }) {
+  return (
+    <html lang="en">
+      <body>
+        <Header />
+        {children}
+      </body>
+    </html>
+  );
+}`}
+                </pre>
+              </div>
+            </div>
+
+            {/* Navigation Items */}
+            <div>
+              <h3 className="text-lg font-medium text-primary-950 mb-3">Navigation Items</h3>
+              <div className="bg-primary-50 border border-primary-200 rounded-lg p-4">
+                <p className="text-sm text-primary-700 mb-2">
+                  Current navigation structure (defined in Header component):
+                </p>
+                <ul className="list-disc list-inside text-sm text-primary-700 space-y-1">
+                  <li><strong>Work</strong> → <code className="font-mono text-xs">/</code> (home page)</li>
+                  <li><strong>Lab</strong> → <code className="font-mono text-xs">/lab</code></li>
+                  <li><strong>Workflow</strong> → <code className="font-mono text-xs">/workflow</code></li>
+                  <li><strong>About</strong> → <code className="font-mono text-xs">/about</code></li>
+                  <li><strong>CONTACT</strong> → <code className="font-mono text-xs">/contact</code> (CTA button)</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </section>
+
         {/* Atoms / Pill */}
         <section>
           <h2 className="text-2xl font-semibold text-primary-950 mb-4">Atoms / Pill</h2>
