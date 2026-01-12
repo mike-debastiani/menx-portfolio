@@ -7,6 +7,8 @@ export interface ImpressionDetailCardProps {
   buttonLabel: string;
   buttonHref: string;
   className?: string;
+  height?: number;
+  width?: number;
 }
 
 export default function ImpressionDetailCard({
@@ -16,9 +18,17 @@ export default function ImpressionDetailCard({
   buttonLabel,
   buttonHref,
   className = '',
+  height,
+  width,
 }: ImpressionDetailCardProps) {
   return (
-    <div className={`bg-primary-50 flex flex-col h-[429px] items-end justify-between overflow-hidden pl-12 pr-6 py-6 rounded-xl shrink-0 w-[316px] ${className}`}>
+    <div 
+      className={`bg-primary-50 flex flex-col items-end justify-between overflow-hidden pl-12 pr-6 py-6 rounded-xl shrink-0 ${className}`}
+      style={{
+        height: height ? `${height}px` : undefined,
+        width: width ? `${width}px` : undefined,
+      }}
+    >
       {/* Text Container */}
       <div className="flex flex-col gap-6 h-[212px] items-start w-full">
         {/* Title Container */}

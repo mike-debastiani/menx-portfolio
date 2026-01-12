@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { Pill, Button, StatItem, SubInfo } from '@/components/atoms';
 import { SegmentedControl, AccordionItem, SectionDescription, InfoRows, InfoColumns, SubInfoGroup, CaseStudyDescription, CaseStudyMeta, ImpressionCard, ImpressionDetailCard } from '@/components/molecules';
-import { RoleBasedHero, StatsGroup, AccordionGroup, ProjectCard, ImpressionItem, WorkflowAtlasTimeline, type WorkflowSegment } from '@/components/organisms';
+import { RoleBasedHero, StatsGroup, AccordionGroup, ProjectCard, ImpressionItem, ImpressionGallery, WorkflowAtlasTimeline, type WorkflowSegment } from '@/components/organisms';
 
 export default function PlaygroundPage() {
   const primaryColors = [
@@ -3059,6 +3059,264 @@ export default function PlaygroundPage() {
                       buttonLabel: 'View Project',
                       buttonHref: '/projects/adjusto',
                     }}
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Organisms / ImpressionGallery */}
+        <section>
+          <h2 className="text-2xl font-semibold text-primary-950 mb-4">Organisms / ImpressionGallery</h2>
+          
+          <div className="space-y-6">
+            {/* Description */}
+            <div>
+              <p className="text-base text-primary-700 max-w-3xl">
+                A horizontally scrollable gallery of ImpressionItem components. Clicking an item smoothly scrolls it to the center 
+                of the gallery and then expands it. Only one item can be expanded at a time. If a user manually scrolls while an item 
+                is expanded, it automatically collapses to allow smooth scrolling. Items are bottom-aligned so that method pills sit 
+                on the same baseline across the row.
+              </p>
+              <ul className="list-disc list-inside text-sm text-primary-700 mt-3 space-y-1">
+                <li>Always maintains 24px gap between items (collapsed and expanded)</li>
+                <li>Clicking an item: collapses any open item, scrolls clicked item to center, then opens it</li>
+                <li>Manual scrolling automatically collapses the open item</li>
+                <li>Bottom-aligned layout ensures pills align across all items</li>
+                <li>Smooth transitions for both scrolling and expand/collapse animations</li>
+              </ul>
+            </div>
+
+            {/* Props Table */}
+            <div>
+              <h3 className="text-lg font-medium text-primary-950 mb-3">Props</h3>
+              <div className="overflow-x-auto">
+                <table className="min-w-full border border-primary-200 rounded-lg">
+                  <thead>
+                    <tr className="bg-primary-50">
+                      <th className="px-4 py-2 text-left text-sm font-medium text-primary-950 border-b border-primary-200">
+                        Prop
+                      </th>
+                      <th className="px-4 py-2 text-left text-sm font-medium text-primary-950 border-b border-primary-200">
+                        Type
+                      </th>
+                      <th className="px-4 py-2 text-left text-sm font-medium text-primary-950 border-b border-primary-200">
+                        Default
+                      </th>
+                      <th className="px-4 py-2 text-left text-sm font-medium text-primary-950 border-b border-primary-200">
+                        Description
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100 font-mono">
+                        items
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        ImpressionGalleryItem[]
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-500 border-b border-primary-100">
+                        —
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        Array of impression items to display in the gallery. Each item includes id, card props, detail props, and optional imageScale.
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100 font-mono">
+                        className
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        string
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-500 border-b border-primary-100 font-mono">
+                        ""
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700 border-b border-primary-100">
+                        Additional CSS classes for the gallery container
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="px-4 py-2 text-sm text-primary-700 font-mono">
+                        initialActiveId
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700">
+                        string | null
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-500 font-mono">
+                        null
+                      </td>
+                      <td className="px-4 py-2 text-sm text-primary-700">
+                        Optional ID of the item that should be initially expanded
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            {/* Behavior */}
+            <div>
+              <h3 className="text-lg font-medium text-primary-950 mb-3">Behavior</h3>
+              <div className="bg-primary-50 border border-primary-200 rounded-lg p-4 space-y-3">
+                <div>
+                  <strong className="font-medium text-primary-950">Click to Expand:</strong>
+                  <p className="text-sm text-primary-700 mt-1">
+                    When clicking an item, the gallery first collapses any currently open item, then smoothly scrolls the clicked item 
+                    to the horizontal center of the viewport, and finally expands it. This sequence ensures no visual jumps.
+                  </p>
+                </div>
+                <div>
+                  <strong className="font-medium text-primary-950">Auto-Collapse on Scroll:</strong>
+                  <p className="text-sm text-primary-700 mt-1">
+                    If an item is expanded and the user manually scrolls (via mouse wheel, trackpad, or drag), the expanded item 
+                    automatically collapses without blocking the scroll action. This allows users to freely browse the gallery.
+                  </p>
+                </div>
+                <div>
+                  <strong className="font-medium text-primary-950">Single Active Item:</strong>
+                  <p className="text-sm text-primary-700 mt-1">
+                    Only one item can be expanded at a time. Clicking a different item immediately collapses the previous one.
+                  </p>
+                </div>
+                <div>
+                  <strong className="font-medium text-primary-950">Bottom Alignment:</strong>
+                  <p className="text-sm text-primary-700 mt-1">
+                    All items are bottom-aligned so that method pills sit on the same baseline. When an item expands, it grows 
+                    downward without affecting the alignment of other items.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Examples */}
+            <div>
+              <h3 className="text-lg font-medium text-primary-950 mb-3">Examples</h3>
+              
+              {/* Default gallery */}
+              <div className="space-y-4 mb-6">
+                <h4 className="text-base font-medium text-primary-950">Default Gallery</h4>
+                <p className="text-sm text-primary-600 italic">
+                  Click any item to see it scroll to center and expand. Try scrolling manually while an item is open to see it auto-collapse.
+                </p>
+                <div className="w-full overflow-hidden">
+                  <ImpressionGallery
+                    items={[
+                      {
+                        id: 'gallery-1',
+                        card: {
+                          methodLabel: 'User Research',
+                          methodColorVariant: 'blue',
+                        },
+                        detail: {
+                          projectLabel: 'Adjusto',
+                          title: 'Discovery Phase Insights',
+                          description: 'Comprehensive user research and analysis to understand user needs and behaviors. This phase involved interviews, surveys, and data analysis to identify key pain points and opportunities.',
+                          buttonLabel: 'View Project',
+                          buttonHref: '/projects/adjusto',
+                        },
+                      },
+                      {
+                        id: 'gallery-2',
+                        card: {
+                          methodLabel: 'Data Analysis',
+                          methodColorVariant: 'purple',
+                        },
+                        detail: {
+                          projectLabel: 'TechFlow',
+                          title: 'Quantitative Metrics Review',
+                          description: 'Deep dive into user engagement metrics, conversion rates, and behavioral patterns. Analyzed over 10,000 user sessions to identify optimization opportunities.',
+                          buttonLabel: 'Learn More',
+                          buttonHref: '/projects/techflow',
+                        },
+                      },
+                      {
+                        id: 'gallery-3',
+                        card: {
+                          methodLabel: 'Ideation',
+                          methodColorVariant: 'magenta',
+                        },
+                        detail: {
+                          projectLabel: 'DesignSystem',
+                          title: 'Concept Development Workshop',
+                          description: 'Facilitated collaborative ideation sessions with cross-functional teams. Generated 50+ concepts, refined through rapid prototyping and user feedback loops.',
+                          buttonLabel: 'Explore',
+                          buttonHref: '/projects/designsystem',
+                        },
+                      },
+                      {
+                        id: 'gallery-4',
+                        card: {
+                          methodLabel: 'Prototyping',
+                          methodColorVariant: 'orange',
+                        },
+                        detail: {
+                          projectLabel: 'AppFlow',
+                          title: 'Interactive Prototype Testing',
+                          description: 'Created high-fidelity interactive prototypes using Figma and tested with 15 users. Iterated based on feedback to improve usability and reduce cognitive load.',
+                          buttonLabel: 'View Case Study',
+                          buttonHref: '/projects/appflow',
+                        },
+                      },
+                      {
+                        id: 'gallery-5',
+                        card: {
+                          methodLabel: 'User Testing',
+                          methodColorVariant: 'green',
+                        },
+                        detail: {
+                          projectLabel: 'DataViz',
+                          title: 'Usability Testing Sessions',
+                          description: 'Conducted moderated usability tests with 20 participants. Collected qualitative feedback and quantitative metrics to validate design decisions and identify areas for improvement.',
+                          buttonLabel: 'Read Report',
+                          buttonHref: '/projects/dataviz',
+                        },
+                      },
+                      {
+                        id: 'gallery-6',
+                        card: {
+                          methodLabel: 'Implementation',
+                          methodColorVariant: 'darkgrey',
+                        },
+                        detail: {
+                          projectLabel: 'CloudSync',
+                          title: 'Development Handoff',
+                          description: 'Collaborated with engineering team to ensure pixel-perfect implementation. Provided detailed specifications, design tokens, and interactive prototypes for seamless handoff.',
+                          buttonLabel: 'See Details',
+                          buttonHref: '/projects/cloudsync',
+                        },
+                      },
+                      {
+                        id: 'gallery-7',
+                        card: {
+                          methodLabel: 'User Research',
+                          methodColorVariant: 'blue',
+                        },
+                        detail: {
+                          projectLabel: 'MarketPlace',
+                          title: 'Ethnographic Study',
+                          description: 'Spent two weeks observing users in their natural environment. Documented workflows, pain points, and opportunities for innovation through contextual inquiry methods.',
+                          buttonLabel: 'View Study',
+                          buttonHref: '/projects/marketplace',
+                        },
+                      },
+                      {
+                        id: 'gallery-8',
+                        card: {
+                          methodLabel: 'Data Analysis',
+                          methodColorVariant: 'purple',
+                        },
+                        detail: {
+                          projectLabel: 'Analytics Pro',
+                          title: 'A/B Testing Results',
+                          description: 'Designed and analyzed A/B tests across multiple variants. Achieved 23% improvement in conversion rates through data-driven design decisions and iterative optimization.',
+                          buttonLabel: 'View Results',
+                          buttonHref: '/projects/analytics-pro',
+                        },
+                      },
+                    ]}
                   />
                 </div>
               </div>

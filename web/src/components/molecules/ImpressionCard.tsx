@@ -3,6 +3,11 @@ import Pill from '@/components/atoms/Pill';
 
 export type MethodColorVariant = 'default' | 'blue' | 'purple' | 'magenta' | 'orange' | 'green' | 'darkgrey';
 
+// Dimension constants for ImpressionCard
+export const IMPRESSION_CARD_HEIGHT = 436;
+export const IMPRESSION_CARD_WIDTH = 398;
+export const IMPRESSION_CARD_OVERLAP_MARGIN = 24;
+
 export interface ImpressionCardProps {
   image?: { src: string; alt: string };
   methodLabel: string;
@@ -24,8 +29,8 @@ export default function ImpressionCard({
       <div 
         className="relative rounded-xl overflow-hidden bg-primary-50 transition-all duration-300 ease-out"
         style={{
-          height: `${429 * imageScale}px`,
-          width: `${292 * imageScale}px`,
+          height: `${IMPRESSION_CARD_HEIGHT * imageScale}px`,
+          width: `${IMPRESSION_CARD_WIDTH * imageScale}px`,
         }}
       >
         {image?.src ? (
@@ -34,7 +39,7 @@ export default function ImpressionCard({
             alt={image.alt}
             fill
             className="object-cover"
-            sizes="292px"
+            sizes={`${IMPRESSION_CARD_WIDTH}px`}
           />
         ) : (
           <div className="w-full h-full bg-primary-100" aria-hidden="true" />
