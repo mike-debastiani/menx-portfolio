@@ -222,7 +222,7 @@ export default function WorkflowAtlasTimeline({
                 rounded-full
                 transition-all duration-200 ease-out
                 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-950 focus-visible:ring-offset-2
-                ${isActive ? 'opacity-100' : 'opacity-60 hover:opacity-80'}
+                ${isActive ? 'opacity-100' : 'opacity-60 hover:opacity-80 hover:scale-y-[1.3]'}
               `}
               style={{
                 width: `${width}px`,
