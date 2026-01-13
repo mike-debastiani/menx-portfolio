@@ -257,16 +257,22 @@ export async function getWorkflowAtlasData(): Promise<WorkflowAtlasData> {
   
   const data = await fetchSanity<WorkflowAtlasData>(query);
   
-  // Debug: Log raw data count
-  if (process.env.NODE_ENV === 'development') {
-    console.log('[getWorkflowAtlasData] Raw impressions count:', data.impressions.length);
-    console.log('[getWorkflowAtlasData] Impressions with method:', data.impressions.filter(i => i.method && typeof i.method === 'object' && 'name' in i.method).length);
-    console.log('[getWorkflowAtlasData] Impressions with project:', data.impressions.filter(i => i.project && typeof i.project === 'object' && 'title' in i.project).length);
-    console.log('[getWorkflowAtlasData] Impressions with phase:', data.impressions.filter(i => {
-      const method = i.method as WorkflowAtlasMethod | null;
-      return method && method.phase && typeof method.phase === 'object' && 'name' in method.phase;
-    }).length);
-  }
+  // Debug: Log raw data count (also in production for Vercel debugging)
+  const rawCount = data.impressions.length;
+  const withMethod = data.impressions.filter(i => i.method && typeof i.method === 'object' && 'name' in i.method).length;
+  const withProject = data.impressions.filter(i => i.project && typeof i.project === 'object' && 'title' in i.project).length;
+  const withPhase = data.impressions.filter(i => {
+    const method = i.method as WorkflowAtlasMethod | null;
+    return method && method.phase && typeof method.phase === 'object' && 'name' in method.phase;
+  }).length;
+  
+  // Log in all environments (especially important for Vercel debugging)
+  console.log('[getWorkflowAtlasData] Environment:', process.env.NODE_ENV);
+  console.log('[getWorkflowAtlasData] Raw impressions count:', rawCount);
+  console.log('[getWorkflowAtlasData] Impressions with method:', withMethod);
+  console.log('[getWorkflowAtlasData] Impressions with project:', withProject);
+  console.log('[getWorkflowAtlasData] Impressions with phase:', withPhase);
+  console.log('[getWorkflowAtlasData] Token present:', !!process.env.SANITY_API_READ_TOKEN);
   
   // Filter out any impressions with invalid method or project references (safety check)
   data.impressions = data.impressions.filter((impression) => {

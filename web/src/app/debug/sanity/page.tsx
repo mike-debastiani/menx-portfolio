@@ -135,9 +135,20 @@ export default async function SanityDebugPage() {
               <li><strong>Project ID:</strong> {process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || 'NOT SET'}</li>
               <li><strong>Dataset:</strong> {process.env.NEXT_PUBLIC_SANITY_DATASET || 'NOT SET'}</li>
               <li><strong>API Token:</strong> {hasToken ? '✓ Set' : '✗ Not set'}</li>
+              <li><strong>Token Length:</strong> {hasToken ? `${process.env.SANITY_API_READ_TOKEN?.length || 0} chars` : 'N/A'}</li>
+              <li><strong>Environment:</strong> {process.env.NODE_ENV || 'unknown'}</li>
+              <li><strong>Vercel:</strong> {process.env.VERCEL ? '✓ Yes' : '✗ No'}</li>
               <li><strong>Perspective:</strong> raw (includes drafts)</li>
               <li><strong>Use CDN:</strong> false</li>
             </ul>
+            {!hasToken && process.env.VERCEL && (
+              <div className="mt-4 p-3 bg-red-100 border border-red-300 rounded text-sm">
+                <p className="font-semibold text-red-800">⚠ Wichtig für Vercel:</p>
+                <p className="text-red-700 mt-1">
+                  Der API Token fehlt in Vercel Environment Variables. Gehe zu Vercel Dashboard → Settings → Environment Variables und füge <code className="bg-red-200 px-1 rounded">SANITY_API_READ_TOKEN</code> hinzu.
+                </p>
+              </div>
+            )}
           </div>
         </section>
 
