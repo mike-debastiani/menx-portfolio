@@ -30,6 +30,7 @@ export default function SubInfoGroup({
             label={item.label}
             value={item.value}
             size={size}
+            dot={item.showDot}
           />
         ))}
       </div>
@@ -45,6 +46,7 @@ export default function SubInfoGroup({
           label={item.label}
           value={item.value}
           size={size}
+          dot={item.showDot}
         />
       ))}
     </div>

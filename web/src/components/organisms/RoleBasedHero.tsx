@@ -1,9 +1,9 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import SegmentedControl from '@/components/molecules/SegmentedControl';
 
-export type RoleId = 'for-anyone' | 'recruiters' | 'hiring-managers' | 'product-designers' | 'engineers';
+export type RoleId = 'for-anyone' | 'recruiters' | 'hiring-managers' | 'designers' | 'engineers';
 
 export interface RoleTab {
   id: RoleId;
@@ -28,13 +28,17 @@ export interface RoleBasedHeroProps {
   tabs?: RoleTab[];
   contentByRole?: Record<RoleId, RoleHeroContent>;
   className?: string;
+  showControlsOnly?: boolean;
+  showContentOnly?: boolean;
+  onRoleChange?: (roleId: RoleId) => void;
+  activeRoleId?: RoleId;
 }
 
 const defaultTabs: RoleTab[] = [
   { id: 'for-anyone', label: 'For anyone' },
   { id: 'recruiters', label: 'Recruiters' },
   { id: 'hiring-managers', label: 'Hiring Managers' },
-  { id: 'product-designers', label: 'Product Designers' },
+  { id: 'designers', label: 'Designers' },
   { id: 'engineers', label: 'Engineers' },
 ];
 
@@ -51,7 +55,7 @@ const defaultContent: Record<RoleId, RoleHeroContent> = {
     type: 'headline',
     text: 'I reduce the friction between design and dev. By understanding the technical constraints early on, I create intuitive products that are not just beautiful, but actually shippable.',
   },
-  'product-designers': {
+  'designers': {
     type: 'headline',
     text: 'I love the messy middle of the design process. From deep-dive research to high-fidelity prototyping, I care about the details that make a product feel right.',
   },
@@ -100,18 +104,14 @@ const defaultContent: Record<RoleId, RoleHeroContent> = {
           { text: '];', tone: 'default' },
         ],
       },
-      /*{
-        lineNumber: 4,
-        segments: [{ text: ' ', tone: 'default' }],
-      },*/
       {
-        lineNumber: 5,
+        lineNumber: 4,
         segments: [
           { text: '  // I speak code. In fact, I built this site myself in Next.js', tone: 'muted' },
         ],
       },
       {
-        lineNumber: 6,
+        lineNumber: 5,
         segments: [
           { text: '  ', tone: 'default' },
           { text: 'return', tone: 'purple' },
@@ -125,7 +125,7 @@ const defaultContent: Record<RoleId, RoleHeroContent> = {
         ],
       },
       {
-        lineNumber: 7,
+        lineNumber: 6,
         segments: [{ text: '}', tone: 'default' }],
       },
     ],
@@ -143,22 +143,163 @@ const toneColors: Record<CodeTone, string> = {
   red: '#ed050e',
 };
 
+// Component to render code with auto-scaling
+function AutoScaleCode({ 
+  lines, 
+  className = '' 
+}: { 
+  lines: Array<{
+    lineNumber: number;
+    segments: Array<{
+      text: string;
+      tone: 'default' | 'purple' | 'green' | 'orange' | 'gray' | 'muted' | 'red';
+    }>;
+  }>;
+  className?: string;
+}) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
+  const [scale, setScale] = useState(1);
+
+  useEffect(() => {
+    const updateScale = () => {
+      if (containerRef.current && contentRef.current) {
+        const containerWidth = containerRef.current.offsetWidth;
+        const contentWidth = contentRef.current.scrollWidth;
+        
+        if (contentWidth > containerWidth && containerWidth > 0) {
+          const newScale = containerWidth / contentWidth;
+          setScale(Math.min(newScale, 1)); // Never scale up, only down
+        } else {
+          setScale(1);
+        }
+      }
+    };
+
+    updateScale();
+    window.addEventListener('resize', updateScale);
+    
+    // Use ResizeObserver for more accurate measurements
+    const resizeObserver = new ResizeObserver(updateScale);
+    if (containerRef.current) {
+      resizeObserver.observe(containerRef.current);
+    }
+
+    return () => {
+      window.removeEventListener('resize', updateScale);
+      resizeObserver.disconnect();
+    };
+  }, [lines]);
+
+  return (
+    <div ref={containerRef} className={`flex items-start relative shrink-0 flex-1 min-w-0 overflow-hidden ${className}`}>
+      <div 
+        ref={contentRef}
+        className="font-mono font-medium leading-[2] text-[20px] text-primary-950"
+        style={{
+          transform: `scale(${scale})`,
+          transformOrigin: 'left top',
+          width: 'fit-content',
+        }}
+      >
+        {lines.map((line, idx) => (
+          <p 
+            key={line.lineNumber} 
+            className="block"
+            style={{ 
+              margin: 0, 
+              whiteSpace: 'pre',
+              fontFamily: 'inherit',
+            }}
+          >
+            {line.segments.map((segment, segIdx) => {
+              const color = segment.tone === 'default' ? undefined : toneColors[segment.tone as CodeTone];
+              return (
+                <span key={segIdx} style={color ? { color } : undefined}>
+                  {segment.text}
+                </span>
+              );
+            })}
+          </p>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export default function RoleBasedHero({
   defaultRoleId = 'for-anyone',
   tabs = defaultTabs,
   contentByRole = defaultContent,
   className = '',
+  showControlsOnly = false,
+  showContentOnly = false,
+  onRoleChange,
+  activeRoleId: externalActiveRoleId,
 }: RoleBasedHeroProps) {
-  const [activeRoleId, setActiveRoleId] = useState<RoleId>(defaultRoleId);
+  const [internalActiveRoleId, setInternalActiveRoleId] = useState<RoleId>(defaultRoleId);
+  const activeRoleId = externalActiveRoleId ?? internalActiveRoleId;
   const content = contentByRole[activeRoleId];
 
+  const handleRoleChange = (id: string) => {
+    const newRoleId = id as RoleId;
+    setInternalActiveRoleId(newRoleId);
+    onRoleChange?.(newRoleId);
+  };
+
+  // Render only controls
+  if (showControlsOnly) {
+    return (
+      <div className={className}>
+        <SegmentedControl
+          items={tabs}
+          value={activeRoleId}
+          onChange={handleRoleChange}
+          size="base"
+        />
+      </div>
+    );
+  }
+
+  // Render only content
+  if (showContentOnly) {
+    return (
+      <div className={className}>
+        {content.type === 'headline' ? (
+          <div className="flex items-center pl-[21px] pr-0 py-0 w-full">
+            <p className="flex-1 font-sans font-medium leading-[1.25] text-4xl text-primary-950 whitespace-pre-wrap">
+              {content.text}
+            </p>
+          </div>
+        ) : content.type === 'code' ? (
+          <div className="flex gap-[10px] h-full items-start overflow-clip pl-[23px] pr-0 py-0 w-full">
+            {/* Line Numbers */}
+            <div className="flex flex-col h-full items-end overflow-clip shrink-0">
+              <div className="font-mono font-medium leading-[2] text-[20px] text-primary-950 whitespace-nowrap pr-4">
+                {content.lines.map((line, idx) => (
+                  <p key={line.lineNumber} className={idx < content.lines.length - 1 ? 'mb-0' : ''}>
+                    {line.lineNumber}
+                  </p>
+                ))}
+              </div>
+            </div>
+
+            {/* Code */}
+            <AutoScaleCode lines={content.lines} />
+          </div>
+        ) : null}
+      </div>
+    );
+  }
+
+  // Render both (default behavior)
   return (
     <div className={`flex flex-col gap-8 items-start ${className}`}>
       {/* SegmentedControl */}
       <SegmentedControl
         items={tabs}
         value={activeRoleId}
-        onChange={(id) => setActiveRoleId(id as RoleId)}
+        onChange={handleRoleChange}
         size="base"
       />
 
@@ -170,7 +311,7 @@ export default function RoleBasedHero({
           </p>
         </div>
       ) : content.type === 'code' ? (
-        <div className="flex gap-[10px] h-[280px] items-start overflow-clip pl-[23px] pr-0 py-0 w-full">
+        <div className="flex gap-[10px] h-full items-start overflow-clip pl-[23px] pr-0 py-0 w-full">
           {/* Line Numbers */}
           <div className="flex flex-col h-full items-end overflow-clip shrink-0">
             <div className="font-mono font-medium leading-[2] text-[20px] text-primary-950 whitespace-nowrap pr-4">
@@ -183,22 +324,7 @@ export default function RoleBasedHero({
           </div>
 
           {/* Code */}
-          <div className="flex items-start relative shrink-0 flex-1 min-w-0">
-            <div className="font-mono font-medium leading-[2] text-[20px] text-primary-950 whitespace-pre-wrap">
-              {content.lines.map((line, idx) => (
-                <p key={line.lineNumber} className={idx < content.lines.length - 1 ? 'mb-0' : ''}>
-                  {line.segments.map((segment, segIdx) => {
-                    const color = segment.tone === 'default' ? undefined : toneColors[segment.tone as CodeTone];
-                    return (
-                      <span key={segIdx} style={color ? { color } : undefined}>
-                        {segment.text}
-                      </span>
-                    );
-                  })}
-                </p>
-              ))}
-            </div>
-          </div>
+          <AutoScaleCode lines={content.lines} />
         </div>
       ) : null}
     </div>

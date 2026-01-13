@@ -38,11 +38,10 @@ export default function SubInfo({
     <div className={`flex gap-4 items-center ${className}`}>
       <p className={styles.label}>{label}</p>
       {dot && (
-        <div className="flex items-center justify-center shrink-0">
-          <div className="w-2 h-2 rounded-full bg-accent-blue/20 flex items-center justify-center">
-            <div className="w-1.5 h-1.5 rounded-full bg-accent-blue" />
-          </div>
-        </div>
+        <span className="relative flex size-[9px] shrink-0 -mr-2">
+          <span className="absolute inline-flex h-full w-full animate-ping-slow rounded-full bg-accent-green opacity-75"></span>
+          <span className="relative inline-flex size-[9px] rounded-full bg-accent-green"></span>
+        </span>
       )}
       <p className={styles.value}>{value}</p>
     </div>

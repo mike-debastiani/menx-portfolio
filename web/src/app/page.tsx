@@ -1,4 +1,5 @@
 import { Container } from '@/components/layout';
+import HomeHeroSection from '@/components/organisms/HomeHeroSection';
 import WorkflowAtlasSection from '@/components/organisms/WorkflowAtlasSection';
 import { getWorkflowAtlasData } from '@/lib/sanity.queries';
 
@@ -12,9 +13,7 @@ export default async function Home() {
   return (
     <main>
       <Container>
-        <h1>Home</h1>
-        <p>HOME PAGE - MENX</p>
-        <p>This is the home page placeholder.</p>
+        <HomeHeroSection />
       </Container>
       
       <WorkflowAtlasSection data={workflowAtlasData} />
