@@ -52,7 +52,7 @@ export function phaseToWorkflowPhaseKey(phase: Phase): WorkflowPhaseKey {
   if (name.includes('research') || slug.includes('research')) {
     return 'research';
   }
-  if (name.includes('analysis') || name.includes('synthesis') || slug.includes('analysis')) {
+  if (name.includes('analysis') || name.includes('synthesis') || name.includes('define') || slug.includes('analysis') || slug.includes('define')) {
     return 'analysis';
   }
   if (name.includes('ideation') || name.includes('concept') || slug.includes('ideation')) {

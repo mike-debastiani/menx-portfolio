@@ -82,33 +82,66 @@ export default function WorkflowAtlasSection({ data, className = '' }: WorkflowA
 
   // Convert methods to timeline segments
   const timelineSegments: WorkflowSegment[] = useMemo(() => {
-    const segments: WorkflowSegment[] = [];
-    let galleryIndex = 0;
-
+    // Create a map from method ID to first impression index in the gallery
+    const methodToFirstImpressionIndex = new Map<string, number>();
     data.impressions.forEach((impression, index) => {
-      const method = impression.method as WorkflowAtlasMethod & { phase: { color?: string } };
-      const methodId = method._id;
-
-      // Check if this is the first impression for this method
-      const isFirstForMethod = index === 0 || 
-        (data.impressions[index - 1].method as WorkflowAtlasMethod)._id !== methodId;
-
-      if (isFirstForMethod) {
-        const phase = method.phase;
-        const phaseKey = phaseToWorkflowPhaseKey(phase);
-        const methodData = data.methods.find((m) => m._id === methodId);
-
-        segments.push({
-          id: methodId,
-          methodName: method.name,
-          phase: phaseKey,
-          count: methodData?.impressionCount || 0,
-          galleryIndex,
-        });
+      const methodId = (impression.method as WorkflowAtlasMethod)._id;
+      if (!methodToFirstImpressionIndex.has(methodId)) {
+        methodToFirstImpressionIndex.set(methodId, index);
       }
-
-      galleryIndex++;
     });
+
+    // Ensure methods are sorted by phase.order -> method.order
+    // This is critical: methods must be ordered by their "order" field from Sanity, not by impression count
+    const sortedMethods = [...data.methods].sort((a, b) => {
+      // First sort by phase order
+      if (a.phase.order !== b.phase.order) {
+        return a.phase.order - b.phase.order;
+      }
+      // Then sort by method order within the same phase
+      return a.order - b.order;
+    });
+
+    // Create segments from sorted methods
+    const segments: WorkflowSegment[] = sortedMethods.map((method) => {
+      const phase = method.phase;
+      const phaseKey = phaseToWorkflowPhaseKey(phase);
+      const galleryIndex = methodToFirstImpressionIndex.get(method._id) ?? 0;
+
+      return {
+        id: method._id,
+        methodName: method.name,
+        phase: phaseKey,
+        count: method.impressionCount,
+        galleryIndex,
+      };
+    });
+
+    // Debug: Log segment order in development
+    if (process.env.NODE_ENV === 'development') {
+      console.log('[WorkflowAtlasSection] Timeline segments order:', segments.map(s => {
+        const method = sortedMethods.find(m => m._id === s.id);
+        return {
+          method: s.methodName,
+          methodId: s.id,
+          phase: s.phase,
+          order: method?.order,
+          phaseOrder: method?.phase.order,
+          phaseName: method?.phase.name,
+          impressionCount: s.count,
+        };
+      }));
+      
+      // Also log the raw methods data to compare
+      console.log('[WorkflowAtlasSection] Raw methods from Sanity:', data.methods.map(m => ({
+        _id: m._id,
+        name: m.name,
+        order: m.order,
+        phaseId: m.phase._id,
+        phaseName: m.phase.name,
+        phaseOrder: m.phase.order,
+      })));
+    }
 
     return segments;
   }, [data.impressions, data.methods]);

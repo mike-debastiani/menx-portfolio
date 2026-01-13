@@ -210,6 +210,7 @@ export async function getWorkflowAtlasData(): Promise<WorkflowAtlasData> {
       },
       
       // Get all methods that have impressions, with phase data
+      // Note: Sorting by phase->order in GROQ may not work reliably, so we sort in JavaScript instead
       "methods": *[_type == "method" && count(*[_type == "impression" && references(^._id)]) > 0] {
         _id,
         _type,
