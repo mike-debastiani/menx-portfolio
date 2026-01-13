@@ -159,7 +159,7 @@ export default function Header() {
                 {item.label}
               </Link>
             ))}
-            <Button variant="primary" size="base" icon="right" href="/contact">
+            <Button variant="primary" size="sm" icon="right" href="/contact">
               CONTACT
             </Button>
           </div>

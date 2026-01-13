@@ -2399,7 +2399,7 @@ export default function RootLayout({ children }) {
               {/* 4-item example */}
               <div className="mb-6">
                 <h4 className="text-sm font-medium text-primary-600 mb-3">4-item example</h4>
-                <div className="max-w-4xl">
+                <div>
                   <StatsGroup
                     items={[
                       { value: '130+', label: 'Application examples' },

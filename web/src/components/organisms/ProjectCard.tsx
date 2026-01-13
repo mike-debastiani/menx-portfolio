@@ -41,9 +41,18 @@ export default function ProjectCard({ project, className = '' }: ProjectCardProp
           <div className="w-full h-full bg-primary-50" aria-hidden="true" />
         )}
 
+        {/* Hover Overlay - Subtle gradient fade over entire image */}
+        <div 
+          className="absolute inset-0 opacity-0 group-hover:opacity-25 group-focus-within:opacity-25 transition-opacity duration-150 pointer-events-none rounded-xl"
+          style={{
+            background: 'radial-gradient(100% 100% at 100% 0%, rgb(10, 10, 10) 0%, rgba(0, 0, 0, 0) 100%)',
+          }}
+          aria-hidden="true"
+        />
+
         {/* Hover Button Overlay */}
-        <div className="absolute top-6 right-6 opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity duration-150 pointer-events-none">
-          <Button variant="secondary" icon="right" size="base">
+        <div className="absolute top-6 right-6 opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity duration-150 pointer-events-none z-10">
+          <Button variant="secondary" icon="right" size="sm">
             VIEW PROJECTS
           </Button>
         </div>
