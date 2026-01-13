@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef, useCallback, useEffect } from 'react';
+import { useState, useRef, useCallback, useEffect, forwardRef, useImperativeHandle } from 'react';
 import ImpressionItem, { type ImpressionItemProps } from './ImpressionItem';
 import { IMPRESSION_CARD_WIDTH, IMPRESSION_CARD_OVERLAP_MARGIN } from '@/components/molecules/ImpressionCard';
 
@@ -15,34 +15,97 @@ export interface ImpressionGalleryProps {
   items: ImpressionGalleryItem[];
   className?: string;
   initialActiveId?: string | null;
+  // Controlled expanded state
+  expandedImpressionId?: string | null;
+  onExpandedChange?: (id: string | null) => void;
+  // Focus tracking
+  onFocusChange?: (impressionId: string | null) => void;
 }
 
-export default function ImpressionGallery({
-  items,
-  className = '',
-  initialActiveId = null,
-}: ImpressionGalleryProps) {
-  const [activeId, setActiveId] = useState<string | null>(initialActiveId ?? null);
-  const containerRef = useRef<HTMLDivElement>(null);
-  const programmaticScrollRef = useRef(false);
-  const scrollSettleTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-  const targetScrollLeftRef = useRef<number | null>(null);
-  const lastScrollPositionRef = useRef<number>(0);
-  const scrollThreshold = 50; // Minimum scroll distance to trigger collapse
+export interface ImpressionGalleryRef {
+  scrollToImpressionId: (id: string, options?: { align?: 'center' | 'start'; behavior?: 'smooth' | 'auto' }) => void;
+  scrollToIndex: (index: number, options?: { align?: 'center' | 'start'; behavior?: 'smooth' | 'auto' }) => void;
+}
+
+const ImpressionGallery = forwardRef<ImpressionGalleryRef, ImpressionGalleryProps>(
+  function ImpressionGallery(
+    {
+      items,
+      className = '',
+      initialActiveId = null,
+      expandedImpressionId: controlledExpandedId,
+      onExpandedChange,
+      onFocusChange,
+    },
+    ref
+  ) {
+    const [internalActiveId, setInternalActiveId] = useState<string | null>(initialActiveId ?? null);
+    const containerRef = useRef<HTMLDivElement>(null);
+    const programmaticScrollRef = useRef(false);
+    const scrollSettleTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+    const targetScrollLeftRef = useRef<number | null>(null);
+    const lastScrollPositionRef = useRef<number>(0);
+    const focusCheckTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+    const scrollThreshold = 50; // Minimum scroll distance to trigger collapse
+
+    // Determine if expanded state is controlled
+    const isExpandedControlled = controlledExpandedId !== undefined;
+    const activeId = isExpandedControlled ? controlledExpandedId : internalActiveId;
+
+    const setActiveId = useCallback(
+      (id: string | null) => {
+        if (isExpandedControlled) {
+          onExpandedChange?.(id ?? null);
+        } else {
+          setInternalActiveId(id);
+        }
+      },
+      [isExpandedControlled, onExpandedChange]
+    );
+
+  // Find the impression closest to viewport center
+  const findFocusedImpression = useCallback((): string | null => {
+    const container = containerRef.current;
+    if (!container || items.length === 0) return null;
+
+    const containerRect = container.getBoundingClientRect();
+    const viewportCenter = containerRect.left + containerRect.width / 2;
+
+    let closestId: string | null = null;
+    let closestDistance = Infinity;
+
+    items.forEach((item) => {
+      const itemElement = container.querySelector(`[data-impression-item-id="${item.id}"]`) as HTMLElement;
+      if (!itemElement) return;
+
+      const itemRect = itemElement.getBoundingClientRect();
+      const itemCenter = itemRect.left + itemRect.width / 2;
+      const distance = Math.abs(itemCenter - viewportCenter);
+
+      if (distance < closestDistance) {
+        closestDistance = distance;
+        closestId = item.id;
+      }
+    });
+
+    return closestId;
+  }, [items]);
+
+  // Update focus when scrolling
+  const updateFocus = useCallback(() => {
+    if (programmaticScrollRef.current) return; // Don't update focus during programmatic scroll
+
+    const focusedId = findFocusedImpression();
+    onFocusChange?.(focusedId);
+  }, [findFocusedImpression, onFocusChange]);
 
   // Scroll to center helper - centers item with its expanded width
-  const scrollToCenter = useCallback((itemId: string, imageScale: number = 1) => {
+  const scrollToCenter = useCallback((itemId: string, imageScale: number = 1, align: 'center' | 'start' = 'center', behavior: 'smooth' | 'auto' = 'smooth') => {
     const container = containerRef.current;
     if (!container) return;
 
     const itemElement = container.querySelector(`[data-impression-item-id="${itemId}"]`) as HTMLElement;
     if (!itemElement) return;
-
-    // Calculate expanded width: card width + detail card width
-    // Detail card width = card width + overlap margin (for the negative margin overlap)
-    const cardWidth = IMPRESSION_CARD_WIDTH * imageScale;
-    const detailCardWidth = cardWidth + IMPRESSION_CARD_OVERLAP_MARGIN;
-    const expandedWidth = cardWidth + detailCardWidth;
 
     const containerRect = container.getBoundingClientRect();
     const itemRect = itemElement.getBoundingClientRect();
@@ -50,19 +113,35 @@ export default function ImpressionGallery({
     // Get the item's position relative to the scroll container
     const itemLeftRelativeToContainer = itemRect.left - containerRect.left + container.scrollLeft;
     
-    // Calculate the center of the expanded item
-    const itemExpandedCenter = itemLeftRelativeToContainer + expandedWidth / 2;
+    let targetScrollLeft: number;
     
-    // Target scroll position to center the expanded item in the viewport
-    const containerCenter = containerRect.width / 2;
-    const targetScrollLeft = itemExpandedCenter - containerCenter;
+    if (align === 'start') {
+      // Align to start (left edge)
+      targetScrollLeft = itemLeftRelativeToContainer;
+    } else {
+      // Center alignment
+      // Calculate expanded width: card width + detail card width
+      const cardWidth = IMPRESSION_CARD_WIDTH * imageScale;
+      const detailCardWidth = cardWidth + IMPRESSION_CARD_OVERLAP_MARGIN;
+      const expandedWidth = cardWidth + detailCardWidth;
+      
+      // Calculate the center of the expanded item
+      const itemExpandedCenter = itemLeftRelativeToContainer + expandedWidth / 2;
+      
+      // Target scroll position to center the expanded item in the viewport
+      const containerCenter = containerRect.width / 2;
+      targetScrollLeft = itemExpandedCenter - containerCenter;
+    }
 
     targetScrollLeftRef.current = targetScrollLeft;
     programmaticScrollRef.current = true;
 
+    const prefersReducedMotion = typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const scrollBehavior = prefersReducedMotion ? 'auto' : behavior;
+
     container.scrollTo({
       left: targetScrollLeft,
-      behavior: 'smooth',
+      behavior: scrollBehavior,
     });
 
     // Detect scroll settle
@@ -90,6 +169,8 @@ export default function ImpressionGallery({
           programmaticScrollRef.current = false;
           targetScrollLeftRef.current = null;
           stableFrames = 0;
+          // Update focus after scroll settles
+          updateFocus();
           return;
         }
       } else {
@@ -116,8 +197,9 @@ export default function ImpressionGallery({
       }
       programmaticScrollRef.current = false;
       targetScrollLeftRef.current = null;
+      updateFocus();
     }, 900);
-  }, []);
+  }, [updateFocus]);
 
   // Handle item click
   const handleItemClick = useCallback(
@@ -158,7 +240,7 @@ export default function ImpressionGallery({
     [activeId, scrollToCenter]
   );
 
-  // Handle manual scroll (auto-collapse)
+  // Handle manual scroll (auto-collapse + focus update)
   const handleScroll = useCallback(() => {
     const container = containerRef.current;
     if (!container) return;
@@ -168,7 +250,7 @@ export default function ImpressionGallery({
       return;
     }
 
-    // Only collapse if there's an active item and user has scrolled significantly
+    // Auto-collapse expanded item on user scroll
     if (activeId !== null) {
       const currentScroll = container.scrollLeft;
       const scrollDistance = Math.abs(currentScroll - lastScrollPositionRef.current);
@@ -182,7 +264,15 @@ export default function ImpressionGallery({
       // Update last scroll position even when no item is open
       lastScrollPositionRef.current = container.scrollLeft;
     }
-  }, [activeId, scrollThreshold]);
+
+    // Update focus (debounced)
+    if (focusCheckTimeoutRef.current) {
+      clearTimeout(focusCheckTimeoutRef.current);
+    }
+    focusCheckTimeoutRef.current = setTimeout(() => {
+      updateFocus();
+    }, 50);
+  }, [activeId, scrollThreshold, updateFocus]);
 
   // Initialize last scroll position
   useEffect(() => {
@@ -192,11 +282,33 @@ export default function ImpressionGallery({
     }
   }, []);
 
-  // Cleanup timeout on unmount
+  // Expose imperative API via ref
+  useImperativeHandle(ref, () => ({
+    scrollToImpressionId: (id: string, options?: { align?: 'center' | 'start'; behavior?: 'smooth' | 'auto' }) => {
+      const item = items.find((item) => item.id === id);
+      if (!item) return;
+      scrollToCenter(id, item.imageScale || 1, options?.align || 'center', options?.behavior || 'smooth');
+    },
+    scrollToIndex: (index: number, options?: { align?: 'center' | 'start'; behavior?: 'smooth' | 'auto' }) => {
+      if (index < 0 || index >= items.length) return;
+      const item = items[index];
+      scrollToCenter(item.id, item.imageScale || 1, options?.align || 'center', options?.behavior || 'smooth');
+    },
+  }), [items, scrollToCenter]);
+
+  // Initial focus update
+  useEffect(() => {
+    updateFocus();
+  }, [updateFocus]);
+
+  // Cleanup timeouts on unmount
   useEffect(() => {
     return () => {
       if (scrollSettleTimeoutRef.current) {
         clearTimeout(scrollSettleTimeoutRef.current);
+      }
+      if (focusCheckTimeoutRef.current) {
+        clearTimeout(focusCheckTimeoutRef.current);
       }
     };
   }, []);
@@ -230,4 +342,6 @@ export default function ImpressionGallery({
       ))}
     </div>
   );
-}
+});
+
+export default ImpressionGallery;
