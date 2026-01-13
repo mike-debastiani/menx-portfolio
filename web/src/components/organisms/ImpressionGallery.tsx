@@ -40,6 +40,10 @@ const ImpressionGallery = forwardRef<ImpressionGalleryRef, ImpressionGalleryProp
     ref
   ) {
     const [internalActiveId, setInternalActiveId] = useState<string | null>(initialActiveId ?? null);
+    const [containerWidth, setContainerWidth] = useState<number>(0);
+    const [endPaddingWidth, setEndPaddingWidth] = useState<number>(0);
+    const [maxScrollLeft, setMaxScrollLeft] = useState<number>(Infinity);
+    const [startPaddingWidth, setStartPaddingWidth] = useState<number>(0);
     const containerRef = useRef<HTMLDivElement>(null);
     const programmaticScrollRef = useRef(false);
     const scrollSettleTimeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -63,32 +67,63 @@ const ImpressionGallery = forwardRef<ImpressionGalleryRef, ImpressionGalleryProp
       [isExpandedControlled, onExpandedChange]
     );
 
-  // Find the impression closest to viewport center
+  // Find the impression whose left edge is at or closest to the left edge of the container
+  // This determines which method segment should be highlighted
   const findFocusedImpression = useCallback((): string | null => {
     const container = containerRef.current;
     if (!container || items.length === 0) return null;
 
     const containerRect = container.getBoundingClientRect();
-    const viewportCenter = containerRect.left + containerRect.width / 2;
+    const containerLeft = containerRect.left;
+    const scrollLeft = container.scrollLeft;
+    const clientWidth = container.clientWidth;
+    
+    // Threshold for "at the left edge" detection (in pixels)
+    // Items within this threshold are considered "at the left edge"
+    const edgeThreshold = 10;
+    
+    // First, check if we're scrolled into the padding area (past the last item)
+    // If we're in the padding area, return the last item immediately
+    const lastItemElement = container.querySelector(`[data-impression-item-id="${items[items.length - 1]?.id}"]`) as HTMLElement;
+    if (lastItemElement) {
+      // Get the last item's position relative to the scroll container's content
+      const lastItemOffsetLeft = lastItemElement.offsetLeft;
+      const lastItemWidth = lastItemElement.offsetWidth;
+      const lastItemRight = lastItemOffsetLeft + lastItemWidth;
+      
+      // If we've scrolled past the last item's right edge (into padding), return the last item
+      // We check if scrollLeft is greater than or equal to the last item's left position
+      // This means we've scrolled far enough that the last item could be at the left edge
+      if (scrollLeft >= lastItemOffsetLeft) {
+        return items[items.length - 1]?.id || null;
+      }
+    }
+    
+    // Find the item whose left edge is closest to the container's left edge
+    type Match = { id: string; distance: number };
+    let bestMatch: Match | null = null;
 
-    let closestId: string | null = null;
-    let closestDistance = Infinity;
-
-    items.forEach((item) => {
+    for (const item of items) {
       const itemElement = container.querySelector(`[data-impression-item-id="${item.id}"]`) as HTMLElement;
-      if (!itemElement) return;
+      if (!itemElement) continue;
 
       const itemRect = itemElement.getBoundingClientRect();
-      const itemCenter = itemRect.left + itemRect.width / 2;
-      const distance = Math.abs(itemCenter - viewportCenter);
-
-      if (distance < closestDistance) {
-        closestDistance = distance;
-        closestId = item.id;
+      const itemLeft = itemRect.left;
+      
+      // Calculate distance from item's left edge to container's left edge
+      const distance = Math.abs(itemLeft - containerLeft);
+      
+      // Only consider items that are fully visible (left edge is at or to the right of container left)
+      if (itemLeft >= containerLeft - edgeThreshold) {
+        if (!bestMatch || distance < bestMatch.distance) {
+          bestMatch = { id: item.id, distance };
+        }
       }
-    });
+    }
 
-    return closestId;
+    // If we found a match, return it
+    // Fallback: if no item is at the left edge, return the first item
+    return bestMatch?.id ?? items[0]?.id ?? null;
   }, [items]);
 
   // Update focus when scrolling
@@ -116,8 +151,37 @@ const ImpressionGallery = forwardRef<ImpressionGalleryRef, ImpressionGalleryProp
     let targetScrollLeft: number;
     
     if (align === 'start') {
-      // Align to start (left edge)
-      targetScrollLeft = itemLeftRelativeToContainer;
+      // Align to start with container padding offset (same as Timeline)
+      // Get the layout margin from CSS variable (matches container padding)
+      const root = document.documentElement;
+      let layoutMargin = getComputedStyle(root).getPropertyValue('--layout-margin').trim();
+      
+      // Fallback: if CSS variable is not available, determine based on viewport width
+      // Mobile: 16px, Tablet (768px-1279px): 32px, Desktop (>=1280px): 24px
+      if (!layoutMargin) {
+        const viewportWidth = window.innerWidth;
+        layoutMargin = viewportWidth >= 1280 ? '24px' : viewportWidth >= 768 ? '32px' : '16px';
+      }
+      
+      // Parse the value (e.g., "16px", "24px", or "32px") and convert to number
+      const viewportWidth = window.innerWidth;
+      const marginValue = parseFloat(layoutMargin) || (viewportWidth >= 1280 ? 24 : viewportWidth >= 768 ? 32 : 16);
+      
+      // Get the item's offsetLeft relative to the scroll container
+      // Note: Since we added padding at the start, the first item is now at offsetLeft = marginValue
+      const itemOffsetLeft = itemElement.offsetLeft;
+      
+      // Position item so it has the same left offset as the Timeline (container padding)
+      // Since we added padding at the start of the container (marginValue), the first item
+      // is already positioned at marginValue from the container's left edge.
+      // Since the gallery wrapper breaks out of container padding with negative margins,
+      // the scroll container reaches the viewport edge. So when we scroll to position the item
+      // at the container's left edge (scrollLeft = itemOffsetLeft - marginValue), the item
+      // will be at marginValue pixels from the viewport left edge (same as Timeline).
+      targetScrollLeft = itemOffsetLeft - marginValue;
+      
+      // Ensure we don't scroll to negative values
+      targetScrollLeft = Math.max(0, targetScrollLeft);
     } else {
       // Center alignment
       // Calculate expanded width: card width + detail card width
@@ -240,10 +304,16 @@ const ImpressionGallery = forwardRef<ImpressionGalleryRef, ImpressionGalleryProp
     [activeId, scrollToCenter]
   );
 
-  // Handle manual scroll (auto-collapse + focus update)
+  // Handle manual scroll (auto-collapse + focus update + scroll limit)
   const handleScroll = useCallback(() => {
     const container = containerRef.current;
     if (!container) return;
+
+    // Enforce maximum scroll limit - prevent scrolling past the last item's left edge
+    if (maxScrollLeft !== Infinity && container.scrollLeft > maxScrollLeft) {
+      container.scrollLeft = maxScrollLeft;
+      return;
+    }
 
     // Don't collapse during programmatic scrolling
     if (programmaticScrollRef.current) {
@@ -272,15 +342,113 @@ const ImpressionGallery = forwardRef<ImpressionGalleryRef, ImpressionGalleryProp
     focusCheckTimeoutRef.current = setTimeout(() => {
       updateFocus();
     }, 50);
-  }, [activeId, scrollThreshold, updateFocus]);
+  }, [activeId, scrollThreshold, updateFocus, maxScrollLeft]);
 
-  // Initialize last scroll position
+  // Calculate start padding width (matches container padding/Timeline margin)
+  useEffect(() => {
+    const calculateStartPadding = () => {
+      const root = document.documentElement;
+      let layoutMargin = getComputedStyle(root).getPropertyValue('--layout-margin').trim();
+      
+      // Fallback: if CSS variable is not available, determine based on viewport width
+      // Mobile: 16px, Tablet (768px-1279px): 32px, Desktop (>=1280px): 24px
+      if (!layoutMargin) {
+        const width = window.innerWidth;
+        layoutMargin = width >= 1280 ? '24px' : width >= 768 ? '32px' : '16px';
+      }
+      
+      const width = window.innerWidth;
+      const marginValue = parseFloat(layoutMargin) || (width >= 1280 ? 24 : width >= 768 ? 32 : 16);
+      setStartPaddingWidth(marginValue);
+    };
+
+    // Calculate on mount and resize
+    calculateStartPadding();
+    window.addEventListener('resize', calculateStartPadding);
+    
+    return () => {
+      window.removeEventListener('resize', calculateStartPadding);
+    };
+  }, []);
+
+  // Initialize last scroll position and track container width
   useEffect(() => {
     const container = containerRef.current;
     if (container) {
       lastScrollPositionRef.current = container.scrollLeft;
+      // Use offsetWidth instead of clientWidth to get the full width including padding/border
+      const width = container.offsetWidth || container.clientWidth || window.innerWidth;
+      setContainerWidth(width);
     }
   }, []);
+
+  // Update container width and calculate end padding on resize
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container || items.length === 0) {
+      setEndPaddingWidth(0);
+      return;
+    }
+
+    const updateWidthAndPadding = () => {
+      // Use offsetWidth instead of clientWidth to get the full width including padding/border
+      const width = container.offsetWidth || container.clientWidth || window.innerWidth;
+      setContainerWidth(width);
+
+      // Wait for next frame to ensure all items are rendered
+      requestAnimationFrame(() => {
+        const lastItemElement = container.querySelector(`[data-impression-item-id="${items[items.length - 1]?.id}"]`) as HTMLElement;
+        if (lastItemElement) {
+          // Get the last item's position and width
+          const lastItemRect = lastItemElement.getBoundingClientRect();
+          const containerRect = container.getBoundingClientRect();
+          
+          // Calculate position relative to scroll container content
+          const lastItemLeft = lastItemRect.left - containerRect.left + container.scrollLeft;
+          const lastItemWidth = lastItemRect.width;
+          
+          // Calculate maximum scroll position: the last item's left position
+          // This is where the last item's left edge aligns with the container's left edge
+          setMaxScrollLeft(lastItemLeft);
+          
+          // We want: maxScrollLeft = lastItemLeft (so the item's left edge is at container's left edge)
+          // maxScrollLeft = scrollWidth - containerWidth
+          // So: lastItemLeft = scrollWidth - containerWidth
+          // scrollWidth = lastItemLeft + lastItemWidth + padding
+          // Therefore: lastItemLeft = lastItemLeft + lastItemWidth + padding - containerWidth
+          // So: padding = containerWidth - lastItemWidth
+          const padding = Math.max(0, width - lastItemWidth);
+          setEndPaddingWidth(padding);
+        } else {
+          // Fallback: use container width if last item not found
+          setEndPaddingWidth(width);
+          setMaxScrollLeft(Infinity);
+        }
+      });
+    };
+
+    // Initial update with a delay to ensure DOM is ready
+    const timeoutId = setTimeout(updateWidthAndPadding, 100);
+
+    const resizeObserver = new ResizeObserver(() => {
+      clearTimeout(timeoutId);
+      setTimeout(updateWidthAndPadding, 50);
+    });
+    resizeObserver.observe(container);
+
+    // Also listen to window resize as fallback
+    const handleResize = () => {
+      clearTimeout(timeoutId);
+      setTimeout(updateWidthAndPadding, 50);
+    };
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      clearTimeout(timeoutId);
+      resizeObserver.disconnect();
+      window.removeEventListener('resize', handleResize);
+    };
+  }, [items]);
 
   // Expose imperative API via ref
   useImperativeHandle(ref, () => ({
@@ -314,32 +482,73 @@ const ImpressionGallery = forwardRef<ImpressionGalleryRef, ImpressionGalleryProp
   }, []);
 
   return (
-    <div
-      ref={containerRef}
-      onScroll={handleScroll}
-      className={`flex flex-row items-end gap-6 overflow-x-auto overflow-y-visible scroll-smooth ${className}`}
-      style={{
-        scrollbarWidth: 'thin',
-        scrollbarColor: 'transparent transparent',
+    <div 
+      className={`overflow-visible ${className}`} 
+      style={{ 
+        contain: 'none',
+        // Ensure wrapper doesn't clip content
+        overflow: 'visible',
       }}
     >
-      {items.map((item, index) => (
-        <div
-          key={item.id}
-          data-impression-item-id={item.id}
-          className="flex flex-col justify-end shrink-0"
-        >
-          <ImpressionItem
-            id={item.id}
-            card={item.card}
-            detail={item.detail}
-            isOpen={activeId === item.id}
-            onRequestOpen={() => handleItemClick(item.id, item.imageScale || 1)}
-            onRequestClose={() => setActiveId(null)}
-            imageScale={item.imageScale}
+      <div
+        ref={containerRef}
+        onScroll={handleScroll}
+        className="flex flex-row items-end gap-6 overflow-x-auto scroll-smooth"
+        style={{
+          scrollbarWidth: 'thin',
+          scrollbarColor: 'transparent transparent',
+          // Remove any height constraints that might cause clipping
+          height: 'auto',
+          minHeight: 'fit-content',
+          // Ensure container doesn't clip vertically
+          // Note: overflow-y: visible doesn't work with overflow-x: auto in CSS
+          // But by ensuring height: auto, the container adapts to content
+          maxHeight: 'none',
+        }}
+      >
+        {/* Add padding at the start to create margin offset matching Timeline */}
+        {items.length > 0 && startPaddingWidth > 0 && (
+          <div 
+            className="shrink-0"
+            style={{ 
+              width: `${startPaddingWidth}px`,
+              minWidth: `${startPaddingWidth}px`,
+              height: '1px', // Minimal height to not affect layout
+            }}
+            aria-hidden="true"
           />
-        </div>
-      ))}
+        )}
+        {items.map((item, index) => (
+          <div
+            key={item.id}
+            data-impression-item-id={item.id}
+            className="flex flex-col justify-end shrink-0"
+          >
+            <ImpressionItem
+              id={item.id}
+              card={item.card}
+              detail={item.detail}
+              isOpen={activeId === item.id}
+              onRequestOpen={() => handleItemClick(item.id, item.imageScale || 1)}
+              onRequestClose={() => setActiveId(null)}
+              imageScale={item.imageScale}
+            />
+          </div>
+        ))}
+        {/* Add exact padding at the end to allow scrolling the last item to the left edge, but no further */}
+        {/* Padding is calculated so the last item's left edge can reach the container's left edge */}
+        {items.length > 0 && endPaddingWidth > 0 && (
+          <div 
+            className="shrink-0"
+            style={{ 
+              width: `${endPaddingWidth}px`,
+              minWidth: `${endPaddingWidth}px`,
+              height: '1px', // Minimal height to not affect layout
+            }}
+            aria-hidden="true"
+          />
+        )}
+      </div>
     </div>
   );
 });

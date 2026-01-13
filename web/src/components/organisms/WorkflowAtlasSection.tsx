@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef, useCallback, useMemo } from 'react';
+import { useState, useRef, useCallback, useMemo, useEffect } from 'react';
 import { Container } from '@/components/layout';
 import StatsGroup from './StatsGroup';
 import ImpressionGallery, { type ImpressionGalleryRef, type ImpressionGalleryItem } from './ImpressionGallery';
@@ -179,9 +179,9 @@ export default function WorkflowAtlasSection({ data, className = '' }: WorkflowA
     // Find the first impression for this method
     const firstIndex = methodToFirstImpressionIndex.get(segment.id);
     if (firstIndex !== undefined && galleryRef.current) {
-      // Scroll to the first impression of this method
+      // Scroll to the first impression of this method, aligning its left edge to the container's left edge
       galleryRef.current.scrollToIndex(firstIndex, {
-        align: 'center',
+        align: 'start',
         behavior: 'smooth',
       });
       
@@ -189,6 +189,30 @@ export default function WorkflowAtlasSection({ data, className = '' }: WorkflowA
       setActiveMethodId(segment.id);
     }
   }, [methodToFirstImpressionIndex]);
+
+  // Initialize: scroll to first item and highlight first segment
+  useEffect(() => {
+    if (galleryItems.length > 0 && timelineSegments.length > 0 && galleryRef.current) {
+      // Wait for next frame to ensure DOM is fully rendered
+      requestAnimationFrame(() => {
+        // Small additional delay to ensure layout is complete
+        setTimeout(() => {
+          // Scroll gallery to the first item with proper margin offset (same as Timeline)
+          galleryRef.current?.scrollToIndex(0, {
+            align: 'start',
+            behavior: 'auto', // Instant, no animation on initial load
+          });
+        }, 10);
+      });
+      
+      // Highlight the first segment
+      // The focus change handler will update this based on which impression is at the left edge
+      const firstSegment = timelineSegments[0];
+      if (firstSegment) {
+        setActiveMethodId(firstSegment.id);
+      }
+    }
+  }, [galleryItems.length, timelineSegments.length]); // Only run when items/segments are ready
 
   // Prepare stats data
   const statsItems = useMemo(() => [
@@ -211,9 +235,9 @@ export default function WorkflowAtlasSection({ data, className = '' }: WorkflowA
   ], [data.stats]);
 
   return (
-    <section className={`py-24 ${className}`}>
+    <section className={`py-24 overflow-visible ${className}`}>
       <Container>
-        <div className="flex flex-col gap-16">
+        <div className="flex flex-col gap-16 overflow-visible">
           {/* Section Header */}
           <div className="flex flex-col gap-4">
             <h2 className="font-sans font-medium text-4xl leading-[1.25] text-primary-950">
@@ -227,14 +251,29 @@ export default function WorkflowAtlasSection({ data, className = '' }: WorkflowA
           {/* Stats Group */}
           <StatsGroup items={statsItems} />
 
-          {/* Impression Gallery */}
-          <ImpressionGallery
-            ref={galleryRef}
-            items={galleryItems}
-            expandedImpressionId={expandedImpressionId}
-            onExpandedChange={setExpandedImpressionId}
-            onFocusChange={handleGalleryFocusChange}
-          />
+          {/* Impression Gallery - Break out of container padding to reach viewport edges */}
+          <div 
+            className="overflow-visible" 
+            style={{ 
+              overflow: 'visible',
+              contain: 'none',
+              // Ensure no height constraints
+              height: 'auto',
+              minHeight: 'fit-content',
+              // Break out of container padding to reach viewport edges
+              marginLeft: 'calc(-1 * var(--layout-margin))',
+              marginRight: 'calc(-1 * var(--layout-margin))',
+              width: 'calc(100% + 2 * var(--layout-margin))',
+            }}
+          >
+            <ImpressionGallery
+              ref={galleryRef}
+              items={galleryItems}
+              expandedImpressionId={expandedImpressionId}
+              onExpandedChange={setExpandedImpressionId}
+              onFocusChange={handleGalleryFocusChange}
+            />
+          </div>
 
           {/* Timeline */}
           <WorkflowAtlasTimeline
