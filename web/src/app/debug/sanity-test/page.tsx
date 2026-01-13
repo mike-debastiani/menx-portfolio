@@ -53,10 +53,16 @@ export default async function SanityTestPage() {
         </div>
       )}
 
-      {error && (
+      {!hasToken && process.env.VERCEL && (
         <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded">
-          <h3 className="font-semibold text-red-800">Error</h3>
-          <p className="text-red-700 text-sm">{error}</p>
+          <h3 className="font-semibold text-red-800 mb-2">⚠ Token fehlt auf Vercel!</h3>
+          <p className="text-red-700 text-sm mb-2">
+            Der Token ist nicht gesetzt. Gehe zu Vercel Dashboard → Settings → Environment Variables
+            und füge <code className="bg-red-200 px-1 rounded">SANITY_API_READ_TOKEN</code> hinzu.
+          </p>
+          <p className="text-red-700 text-sm">
+            <strong>WICHTIG:</strong> Stelle sicher, dass <strong>Production</strong> aktiviert ist!
+          </p>
         </div>
       )}
 
