@@ -1,4 +1,4 @@
-import {defineField, defineType} from 'sanity'
+import {defineField, defineType, defineArrayMember} from 'sanity'
 
 export default defineType({
   name: 'project',
@@ -138,6 +138,27 @@ export default defineType({
       title: 'Reihenfolge (Lab)',
       type: 'number',
       description: 'Manuelle Reihenfolge für die Anzeige im Lab Archiv (niedrigere Zahlen zuerst)',
+    }),
+    // Content Blocks - Flexible Case Study Content
+    defineField({
+      name: 'contentBlocks',
+      title: 'Case Study Inhalt',
+      type: 'array',
+      description: 'Flexibler Inhalt für die Case Study. Füge beliebig viele Blöcke hinzu und ordne sie individuell an.',
+      of: [
+        defineArrayMember({ type: 'fullImage' }),
+        defineArrayMember({ type: 'imageGallery' }),
+        defineArrayMember({ type: 'textBlock' }),
+        defineArrayMember({ type: 'twoColumn' }),
+        defineArrayMember({ type: 'video' }),
+      ],
+      options: {
+        insertMenu: {
+          views: [
+            { name: 'grid' },
+          ],
+        },
+      },
     }),
   ],
 })

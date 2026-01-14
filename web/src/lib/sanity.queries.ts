@@ -130,6 +130,75 @@ export async function getProjectBySlug(slug: string): Promise<CaseStudyHeaderDat
   return result;
 }
 
+export interface CaseStudyData extends CaseStudyHeaderData {
+  contentBlocks?: any[];
+}
+
+export async function getCaseStudyBySlug(slug: string): Promise<CaseStudyData | null> {
+  const query = `*[_type == "project" && slug.current == $slug][0] {
+    projectTitle,
+    projectStatement,
+    projectDescription,
+    attributePills,
+    role,
+    context,
+    timeframe,
+    year,
+    team,
+    outcome,
+    contentBlocks[] {
+      _key,
+      _type,
+      _type == "fullImage" => {
+        image,
+        alt,
+        caption
+      },
+      _type == "imageGallery" => {
+        images[] {
+          image,
+          alt,
+          caption
+        },
+        layout
+      },
+      _type == "textBlock" => {
+        content,
+        alignment,
+        maxWidth
+      },
+      _type == "twoColumn" => {
+        leftColumn {
+          type,
+          text,
+          image,
+          imageAlt
+        },
+        rightColumn {
+          type,
+          text,
+          image,
+          imageAlt
+        },
+        columnRatio
+      },
+      _type == "video" => {
+        videoType,
+        youtubeId,
+        vimeoId,
+        sanityVideo,
+        videoUrl,
+        caption,
+        autoplay,
+        loop,
+        muted
+      }
+    }
+  }`;
+  const result = await fetchSanity<CaseStudyData | null>(query, { slug });
+  return result;
+}
+
 export async function getSelectedProjects(): Promise<ProjectCardData[]> {
   const query = `
     *[_type == "project" && showOnHomepage == true] | order(selectedWorkOrder asc, _createdAt desc) {
