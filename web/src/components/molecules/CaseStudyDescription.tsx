@@ -16,7 +16,7 @@ export default function CaseStudyDescription({
   className = '',
 }: CaseStudyDescriptionProps) {
   return (
-    <div className={`flex flex-col gap-7 items-start max-w-[961px] ${className}`}>
+    <div className={`flex flex-col gap-6 items-start ${className}`}>
       {/* UpperInfo: Project Title + Statement */}
       <div className="flex flex-col gap-2 items-start w-full">
         {/* Project Title */}

@@ -2,6 +2,7 @@ import { sanityClient, urlForImage } from './sanity.client';
 import { fetchSanity } from './sanity.fetch';
 import type { Phase, Method, Project, Impression } from '@/types/sanity';
 import type { ProjectCardData } from '@/components/organisms/ProjectCard';
+import type { CaseStudyHeaderData } from '@/components/organisms/CaseStudyHeader';
 
 export async function testSanityConnection() {
   const result = await sanityClient.fetch<unknown | null>(
@@ -45,16 +46,13 @@ export async function getLatestProjects(): Promise<Project[]> {
       _createdAt,
       _updatedAt,
       _rev,
-      title,
       slug,
       year,
       timeframe,
       context,
       role,
       team,
-      outcome,
-      statement,
-      description
+      outcome
     }
   `;
   return fetchSanity<Project[]>(query);
@@ -93,16 +91,14 @@ export async function getImpressionsByMethod(): Promise<
         _createdAt,
         _updatedAt,
         _rev,
-        title,
+        projectTitle,
         slug,
         year,
         timeframe,
         context,
         role,
         team,
-        outcome,
-        statement,
-        description
+        outcome
       },
       headline,
       description,
@@ -115,6 +111,23 @@ export async function getImpressionsByMethod(): Promise<
 export async function getProjectsCount(): Promise<number> {
   const query = `count(*[_type == "project"])`;
   return fetchSanity<number>(query);
+}
+
+export async function getProjectBySlug(slug: string): Promise<CaseStudyHeaderData | null> {
+  const query = `*[_type == "project" && slug.current == $slug][0] {
+    projectTitle,
+    projectStatement,
+    projectDescription,
+    attributePills,
+    role,
+    context,
+    timeframe,
+    year,
+    team,
+    outcome
+  }`;
+  const result = await fetchSanity<CaseStudyHeaderData | null>(query, { slug });
+  return result;
 }
 
 export async function getSelectedProjects(): Promise<ProjectCardData[]> {
@@ -333,16 +346,14 @@ export async function getWorkflowAtlasData(): Promise<WorkflowAtlasData> {
         "project": project-> {
           _id,
           _type,
-          title,
+          projectTitle,
           slug,
           year,
           timeframe,
           context,
           role,
           team,
-          outcome,
-          statement,
-          description
+          outcome
         }
       },
       
@@ -398,7 +409,7 @@ export async function getWorkflowAtlasData(): Promise<WorkflowAtlasData> {
   // Debug: Log raw data count (also in production for Vercel debugging)
   const rawCount = data.impressions.length;
   const withMethod = data.impressions.filter(i => i.method && typeof i.method === 'object' && 'name' in i.method).length;
-  const withProject = data.impressions.filter(i => i.project && typeof i.project === 'object' && 'title' in i.project).length;
+  const withProject = data.impressions.filter(i => i.project && typeof i.project === 'object' && 'projectTitle' in i.project).length;
   const withPhase = data.impressions.filter(i => {
     const method = i.method as WorkflowAtlasMethod | null;
     return method && method.phase && typeof method.phase === 'object' && 'name' in method.phase;
@@ -415,7 +426,7 @@ export async function getWorkflowAtlasData(): Promise<WorkflowAtlasData> {
   // Filter out any impressions with invalid method or project references (safety check)
   data.impressions = data.impressions.filter((impression) => {
     const hasMethod = impression.method && typeof impression.method === 'object' && 'name' in impression.method;
-    const hasProject = impression.project && typeof impression.project === 'object' && 'title' in impression.project;
+    const hasProject = impression.project && typeof impression.project === 'object' && 'projectTitle' in impression.project;
     const method = impression.method as WorkflowAtlasMethod | null;
     const hasPhase = method && method.phase && typeof method.phase === 'object' && 'name' in method.phase;
     return hasMethod && hasProject && hasPhase;

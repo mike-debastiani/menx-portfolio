@@ -214,7 +214,7 @@ export default async function SanityDebugPage() {
                   <p><strong>Headline:</strong> {impression.headline || 'N/A'}</p>
                   <p><strong>Method:</strong> {method?.name || 'MISSING'}</p>
                   <p><strong>Phase:</strong> {method?.phase?.name || 'MISSING'}</p>
-                  <p><strong>Project:</strong> {project?.title || 'MISSING'}</p>
+                  <p><strong>Project:</strong> {project?.projectTitle || 'MISSING'}</p>
                   <p><strong>Order:</strong> {impression.order ?? 'N/A'}</p>
                 </div>
               );

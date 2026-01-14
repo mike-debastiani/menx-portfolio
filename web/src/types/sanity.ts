@@ -48,7 +48,7 @@ export interface Method extends SanityDocument {
 
 export interface Project extends SanityDocument {
   _type: 'project';
-  title: string;
+  projectTitle?: string;
   slug: SanitySlug;
   year?: number;
   timeframe?: string;
@@ -56,8 +56,6 @@ export interface Project extends SanityDocument {
   role?: string;
   team?: string;
   outcome?: string;
-  statement?: string;
-  description?: string;
 }
 
 export interface Impression extends SanityDocument {

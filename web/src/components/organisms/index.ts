@@ -9,4 +9,5 @@ export { default as ImpressionGallery, type ImpressionGalleryProps, type Impress
 export { default as WorkflowAtlasTimeline, type WorkflowAtlasTimelineProps, type WorkflowSegment, type WorkflowPhaseKey } from './WorkflowAtlasTimeline';
 export { default as WorkflowAtlasSection, type WorkflowAtlasSectionProps } from './WorkflowAtlasSection';
 export { default as FooterSection, type FooterSectionProps } from './FooterSection';
+export { default as CaseStudyHeader, type CaseStudyHeaderProps, type CaseStudyHeaderData } from './CaseStudyHeader';
 

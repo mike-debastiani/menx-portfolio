@@ -33,7 +33,7 @@ export default function WorkflowAtlasSection({ data, className = '' }: WorkflowA
     const validImpressions = data.impressions.filter(
       (impression) => {
         const hasMethod = impression.method && typeof impression.method === 'object' && 'name' in impression.method;
-        const hasProject = impression.project && typeof impression.project === 'object' && 'title' in impression.project;
+        const hasProject = impression.project && typeof impression.project === 'object' && 'projectTitle' in impression.project;
         const hasPhase = hasMethod && (impression.method as WorkflowAtlasMethod).phase;
         return hasMethod && hasProject && hasPhase;
       }
@@ -70,7 +70,7 @@ export default function WorkflowAtlasSection({ data, className = '' }: WorkflowA
           methodColorVariant,
         },
         detail: {
-          projectLabel: impression.project.title,
+          projectLabel: impression.project.projectTitle || '',
           title: impression.headline,
           description: impression.description || '',
           buttonLabel: 'VIEW PROJECT',

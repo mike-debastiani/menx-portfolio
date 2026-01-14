@@ -5,18 +5,20 @@ export default defineType({
   title: 'Project',
   type: 'document',
   fields: [
+    // Case Study Header Fields
     defineField({
-      name: 'title',
-      title: 'Title',
+      name: 'projectTitle',
+      title: 'Project Title',
       type: 'string',
-      validation: (Rule) => Rule.required(),
+      description: 'Titel des Projektes für den Case Study Header (z.B. "Adjusto")',
+      validation: (Rule) => Rule.max(50).warning('Der Titel sollte maximal 50 Zeichen lang sein'),
     }),
     defineField({
       name: 'slug',
       title: 'Slug',
       type: 'slug',
       options: {
-        source: 'title',
+        source: 'projectTitle',
       },
       validation: (Rule) => Rule.required(),
     }),
@@ -51,26 +53,6 @@ export default defineType({
       name: 'outcome',
       title: 'Outcome',
       type: 'string',
-    }),
-    defineField({
-      name: 'statement',
-      title: 'Statement',
-      type: 'text',
-      description: 'One-sentence challenge',
-    }),
-    defineField({
-      name: 'description',
-      title: 'Description',
-      type: 'text',
-      description: 'Short header description',
-    }),
-    // Case Study Header Fields
-    defineField({
-      name: 'projectTitle',
-      title: 'Project Title',
-      type: 'string',
-      description: 'Titel des Projektes für den Case Study Header (z.B. "Adjusto")',
-      validation: (Rule) => Rule.max(50).warning('Der Titel sollte maximal 50 Zeichen lang sein'),
     }),
     defineField({
       name: 'projectStatement',

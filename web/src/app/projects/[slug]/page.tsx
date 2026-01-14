@@ -1,8 +1,21 @@
-export default function CaseStudy({ params }: { params: { slug: string } }) {
+import { getProjectBySlug } from '@/lib/sanity.queries';
+import { CaseStudyHeader } from '@/components/organisms';
+import { notFound } from 'next/navigation';
+
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
+export default async function CaseStudy({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const projectData = await getProjectBySlug(slug);
+
+  if (!projectData) {
+    notFound();
+  }
+
   return (
     <main>
-      <h1>Case Study</h1>
-      <p>This is the case study page placeholder for {params.slug}.</p>
+      <CaseStudyHeader data={projectData} />
     </main>
   );
 }

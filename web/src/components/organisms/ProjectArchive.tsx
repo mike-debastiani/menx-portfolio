@@ -34,8 +34,8 @@ export default function ProjectArchive({ projects, className = '', maxColumns = 
           gap: 'var(--layout-gutter)',
         }}
       >
-        {projects.map((project) => (
-          <ProjectCard key={project.slug} project={project} className="w-full h-full" />
+        {projects.map((project, index) => (
+          <ProjectCard key={`${project.slug}-${index}`} project={project} className="w-full h-full" />
         ))}
       </div>
     </div>
