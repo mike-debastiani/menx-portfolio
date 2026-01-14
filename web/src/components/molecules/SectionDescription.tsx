@@ -1,3 +1,4 @@
+import { type ReactNode } from 'react';
 import { Button } from '@/components/atoms';
 
 export interface SectionDescriptionCTA {
@@ -7,7 +8,7 @@ export interface SectionDescriptionCTA {
 }
 
 export interface SectionDescriptionProps {
-  title: string;
+  title: string | ReactNode;
   description?: string;
   cta?: SectionDescriptionCTA;
   className?: string;

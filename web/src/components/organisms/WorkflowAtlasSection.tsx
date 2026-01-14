@@ -237,50 +237,55 @@ export default function WorkflowAtlasSection({ data, className = '' }: WorkflowA
   return (
     <section className={`py-24 overflow-visible ${className}`}>
       <Container>
-        <div className="flex flex-col gap-16 overflow-visible">
-          {/* Section Header */}
-          <div className="flex flex-col gap-4">
-            <h2 className="font-sans font-medium text-4xl leading-[1.25] text-primary-950">
-              Workflow Atlas
-            </h2>
-            <p className="font-sans font-normal text-lg leading-[1.5] text-primary-950 max-w-3xl">
-              A visual archive of my practical experience. This interactive timeline maps out the specific methodologies and artifacts I have applied across real projects. It offers a transparent look into my daily toolkit from initial discovery to final delivery.
-            </p>
+        <div className="flex flex-col overflow-visible">
+          {/* Section Header, Stats Group, and Impression Gallery with gap-20 (80px) */}
+          <div className="flex flex-col gap-20 overflow-visible">
+            {/* Section Header */}
+            <div className="flex flex-col gap-4">
+              <h2 className="font-sans font-medium text-4xl leading-[1.25] text-primary-950">
+                Workflow Atlas
+              </h2>
+              <p className="font-sans font-normal text-lg leading-[1.5] text-primary-300 max-w-3xl">
+                A visual archive of my practical experience. This interactive timeline maps out the specific methodologies and artifacts I have applied across real projects. It offers a transparent look into my daily toolkit from initial discovery to final delivery.
+              </p>
+            </div>
+
+            {/* Stats Group */}
+            <StatsGroup items={statsItems} />
+
+            {/* Impression Gallery - Break out of container padding to reach viewport edges */}
+            <div 
+              className="overflow-visible" 
+              style={{ 
+                overflow: 'visible',
+                contain: 'none',
+                // Ensure no height constraints
+                height: 'auto',
+                minHeight: 'fit-content',
+                // Break out of container padding to reach viewport edges
+                marginLeft: 'calc(-1 * var(--layout-margin))',
+                marginRight: 'calc(-1 * var(--layout-margin))',
+                width: 'calc(100% + 2 * var(--layout-margin))',
+              }}
+            >
+              <ImpressionGallery
+                ref={galleryRef}
+                items={galleryItems}
+                expandedImpressionId={expandedImpressionId}
+                onExpandedChange={setExpandedImpressionId}
+                onFocusChange={handleGalleryFocusChange}
+              />
+            </div>
           </div>
 
-          {/* Stats Group */}
-          <StatsGroup items={statsItems} />
-
-          {/* Impression Gallery - Break out of container padding to reach viewport edges */}
-          <div 
-            className="overflow-visible" 
-            style={{ 
-              overflow: 'visible',
-              contain: 'none',
-              // Ensure no height constraints
-              height: 'auto',
-              minHeight: 'fit-content',
-              // Break out of container padding to reach viewport edges
-              marginLeft: 'calc(-1 * var(--layout-margin))',
-              marginRight: 'calc(-1 * var(--layout-margin))',
-              width: 'calc(100% + 2 * var(--layout-margin))',
-            }}
-          >
-            <ImpressionGallery
-              ref={galleryRef}
-              items={galleryItems}
-              expandedImpressionId={expandedImpressionId}
-              onExpandedChange={setExpandedImpressionId}
-              onFocusChange={handleGalleryFocusChange}
+          {/* Timeline with gap-12 (48px) from Impression Gallery */}
+          <div className="mt-12">
+            <WorkflowAtlasTimeline
+              segments={timelineSegments}
+              activeId={activeMethodId || undefined}
+              onSegmentSelect={handleTimelineSegmentSelect}
             />
           </div>
-
-          {/* Timeline */}
-          <WorkflowAtlasTimeline
-            segments={timelineSegments}
-            activeId={activeMethodId || undefined}
-            onSegmentSelect={handleTimelineSegmentSelect}
-          />
         </div>
       </Container>
     </section>
