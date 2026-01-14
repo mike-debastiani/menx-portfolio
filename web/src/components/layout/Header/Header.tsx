@@ -8,8 +8,8 @@ import { Container } from '@/components/layout';
 import HamburgerIcon from './HamburgerIcon';
 
 const navItems = [
-  { label: 'Work', href: '/' },
-  { label: 'Lab', href: '/lab' },
+  { label: 'Work', href: '/relevant-work' },
+  { label: 'Lab', href: '/lab-projects' },
   { label: 'Workflow', href: '/workflow' },
   { label: 'About', href: '/about' },
 ];

@@ -1,8 +1,9 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Pill } from '@/components/atoms';
+import { Pill, type PillSize } from '@/components/atoms';
 import Button from '@/components/atoms/Button';
 
 export interface ProjectCardData {
@@ -22,6 +23,23 @@ export interface ProjectCardProps {
 }
 
 export default function ProjectCard({ project, className = '' }: ProjectCardProps) {
+  const [pillSize, setPillSize] = useState<PillSize>('sm');
+
+  useEffect(() => {
+    const updatePillSize = () => {
+      if (window.innerWidth >= 1536) {
+        // 2xl breakpoint
+        setPillSize('xs');
+      } else {
+        setPillSize('sm');
+      }
+    };
+
+    updatePillSize();
+    window.addEventListener('resize', updatePillSize);
+    return () => window.removeEventListener('resize', updatePillSize);
+  }, []);
+
   return (
     <Link
       href={`/projects/${project.slug}`}
@@ -59,12 +77,12 @@ export default function ProjectCard({ project, className = '' }: ProjectCardProp
       </div>
 
       {/* Project Info Container */}
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-4 2xl:gap-3">
         {/* Pills Row */}
         {project.tags && project.tags.length > 0 && (
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap gap-2 2xl:gap-1.5">
             {project.tags.map((tag, index) => (
-              <Pill key={index} variant="default" size="sm">
+              <Pill key={index} variant="default" size={pillSize}>
                 {tag}
               </Pill>
             ))}
@@ -72,9 +90,9 @@ export default function ProjectCard({ project, className = '' }: ProjectCardProp
         )}
 
         {/* Text Container */}
-        <div className="flex flex-col gap-3 px-2">
-          <h3 className="text-2xl font-medium text-primary-950 leading-[1.2]">{project.title}</h3>
-          <p className="text-base font-normal text-primary-950 leading-[1.5]">{project.excerpt}</p>
+        <div className="flex flex-col gap-3 2xl:gap-2 px-2">
+          <h3 className="text-2xl 2xl:text-xl font-medium text-primary-950 leading-[1.2]">{project.title}</h3>
+          <p className="text-base 2xl:text-sm font-normal text-primary-950 leading-[1.5]">{project.excerpt}</p>
         </div>
       </div>
     </Link>

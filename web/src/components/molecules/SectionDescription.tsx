@@ -12,6 +12,7 @@ export interface SectionDescriptionProps {
   description?: string;
   cta?: SectionDescriptionCTA;
   className?: string;
+  titleAs?: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
 }
 
 export default function SectionDescription({
@@ -19,12 +20,15 @@ export default function SectionDescription({
   description,
   cta,
   className = '',
+  titleAs = 'h2',
 }: SectionDescriptionProps) {
+  const TitleTag = titleAs;
+  
   return (
     <div className={`flex flex-col gap-4 items-start ${className}`}>
-      <h2 className="font-sans font-medium text-3xl leading-[1.2] text-primary-950">
+      <TitleTag className="font-sans font-medium text-3xl leading-[1.2] text-primary-950">
         {title}
-      </h2>
+      </TitleTag>
 
       {description && (
         <p className="font-sans font-normal text-base leading-[1.5] text-primary-500">

@@ -164,6 +164,100 @@ export async function getImpressionsCount(): Promise<number> {
   return fetchSanity<number>(query);
 }
 
+/**
+ * Fetches all Relevant Work projects (category === 'relevant-work')
+ * Sorted by relevantWorkOrder (ascending), then by _createdAt (descending)
+ * Projects without relevantWorkOrder are sorted to the end
+ */
+export async function getRelevantWorkProjects(): Promise<ProjectCardData[]> {
+  const query = `
+    *[_type == "project" && category == "relevant-work"] | order(coalesce(relevantWorkOrder, 9999) asc, _createdAt desc) {
+      _id,
+      slug,
+      cardTitle,
+      cardDescription,
+      cardImage,
+      attributePills
+    }
+  `;
+  const projects = await fetchSanity<any[]>(query);
+  
+  // Convert to ProjectCardData format
+  return projects.map((project) => {
+    // Parse attributePills (comma-separated string) to tags array
+    const tags = project.attributePills
+      ? project.attributePills.split(',').map((tag: string) => tag.trim()).filter((tag: string) => tag.length > 0)
+      : undefined;
+    
+    // Convert cardImage to image URL with high quality for Retina displays
+    const imageUrl = project.cardImage
+      ? urlForImage(project.cardImage, { 
+          width: 1640, // 2x for Retina displays
+          height: 1040, // 2x for Retina displays
+          fit: 'crop',
+          quality: 90, // High quality
+          dpr: 2, // Device Pixel Ratio for Retina
+          auto: 'format' // Auto-optimize format (WebP, AVIF, etc.)
+        })
+      : null;
+    
+    return {
+      slug: project.slug.current,
+      title: project.cardTitle || project.slug.current,
+      excerpt: project.cardDescription || '',
+      tags,
+      image: imageUrl ? { src: imageUrl, alt: project.cardTitle || '' } : null,
+    };
+  });
+}
+
+/**
+ * Fetches all Lab Projects (category === 'lab')
+ * Sorted by labOrder (ascending), then by _createdAt (descending)
+ * Projects without labOrder are sorted to the end
+ */
+export async function getLabProjects(): Promise<ProjectCardData[]> {
+  const query = `
+    *[_type == "project" && category == "lab"] | order(coalesce(labOrder, 9999) asc, _createdAt desc) {
+      _id,
+      slug,
+      cardTitle,
+      cardDescription,
+      cardImage,
+      attributePills
+    }
+  `;
+  const projects = await fetchSanity<any[]>(query);
+  
+  // Convert to ProjectCardData format
+  return projects.map((project) => {
+    // Parse attributePills (comma-separated string) to tags array
+    const tags = project.attributePills
+      ? project.attributePills.split(',').map((tag: string) => tag.trim()).filter((tag: string) => tag.length > 0)
+      : undefined;
+    
+    // Convert cardImage to image URL with high quality for Retina displays
+    const imageUrl = project.cardImage
+      ? urlForImage(project.cardImage, { 
+          width: 1640, // 2x for Retina displays
+          height: 1040, // 2x for Retina displays
+          fit: 'crop',
+          quality: 90, // High quality
+          dpr: 2, // Device Pixel Ratio for Retina
+          auto: 'format' // Auto-optimize format (WebP, AVIF, etc.)
+        })
+      : null;
+    
+    return {
+      slug: project.slug.current,
+      title: project.cardTitle || project.slug.current,
+      excerpt: project.cardDescription || '',
+      tags,
+      image: imageUrl ? { src: imageUrl, alt: project.cardTitle || '' } : null,
+    };
+  });
+}
+
 // WorkflowAtlas data types
 export interface WorkflowAtlasImpression extends Impression {
   method: Method & {

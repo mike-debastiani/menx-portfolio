@@ -15,4 +15,5 @@ export {
   IMPRESSION_CARD_OVERLAP_MARGIN,
 } from './ImpressionCard';
 export { default as ImpressionDetailCard, type ImpressionDetailCardProps } from './ImpressionDetailCard';
+export { default as ProjectArchiveHeader, type ProjectArchiveHeaderProps } from './ProjectArchiveHeader';
 

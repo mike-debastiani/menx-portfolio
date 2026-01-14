@@ -46,7 +46,7 @@ export default function FooterSection({ className = '' }: FooterSectionProps) {
 
   return (
     <section className={cn('pt-20 flex', className)}>
-      <Container className="flex flex-col gap-32">
+      <Container className="flex flex-col gap-30">
         {/* SectionDescription and InfoRows wrapper */}
         <Grid>
           {/* SectionDescription - 6 columns on desktop, full width on mobile */}
@@ -72,11 +72,11 @@ export default function FooterSection({ className = '' }: FooterSectionProps) {
               {footerRows.map((row, rowIndex) => (
                 <div
                   key={rowIndex}
-                  className="border-t border-primary-200 pt-4 flex flex-col gap-4 xl:grid xl:grid-cols-6 xl:gap-6"
+                  className="border-t border-primary-200 pt-3 flex flex-col gap-4 xl:grid xl:grid-cols-6 xl:gap-6"
                   style={{ borderTopWidth: '0.5px' }}
                 >
                   {/* Label - at left edge (takes 3 cols to align items to column 10) */}
-                  <div className="xl:col-span-3 font-mono font-normal text-lg leading-[1.5] text-primary-300">
+                  <div className="xl:col-span-3 font-mono font-normal text-base leading-[1.5] text-primary-300">
                     {row.label}
                   </div>
 
@@ -84,7 +84,7 @@ export default function FooterSection({ className = '' }: FooterSectionProps) {
                   <div className="xl:col-span-3 flex flex-col">
                     {row.items.map((item, itemIndex) => {
                       const isLast = itemIndex === row.items.length - 1;
-                      const itemClasses = `block font-sans font-medium text-lg leading-[1.5] text-primary-950 ${
+                      const itemClasses = `block font-sans font-medium text-base leading-[1.5] text-primary-950 ${
                         isLast ? '' : 'mb-[9px]'
                       }`;
 

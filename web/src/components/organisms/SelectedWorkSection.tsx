@@ -28,13 +28,13 @@ export default function SelectedWorkSection({ projects, className = '' }: Select
             <h2 className="font-sans font-medium text-3xl sm:text-4xl leading-[1.25] text-primary-950 flex-1">
               Selected Work
             </h2>
-            <Button variant="secondary" size="sm" href="/archive" className="shrink-0">
-              VIEW ALL PROJECTS
+            <Button variant="secondary" size="sm" href="/relevant-work" className="shrink-0">
+              VIEW ALL CASE STUDIES
             </Button>
           </div>
 
           {/* Project Archive */}
-          <ProjectArchive projects={projects} />
+          <ProjectArchive projects={projects} maxColumns={2} />
         </div>
       </Container>
     </section>

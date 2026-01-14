@@ -34,7 +34,7 @@ export default function HomeHeroSection({
 
   // Default SubInfoGroup items
   const defaultSubInfoItems: SubInfoGroupItem[] = [
-    { label: 'Location:', value: 'Canton of Aargau' },
+    { label: 'Location:', value: 'Canton of Aargau, Switzerland' },
     { label: 'Status:', value: 'Available for Work', showDot: true },
   ];
 
