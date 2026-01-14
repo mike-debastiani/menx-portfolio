@@ -49,7 +49,7 @@ const defaultContent: Record<RoleId, RoleHeroContent> = {
   },
   recruiters: {
     type: 'headline',
-    text: "I'm a Digital Product Designer currently finishing my BSc at HSLU. I combine strong UX research skills with a technical background to build scalable digital products.",
+    text: "I'm a Digital Product Designer currently finishing my Bachelor of Arts in Digital Ideation at HSLU. I combine strong UX research skills with a technical background to build scalable digital products.",
   },
   'hiring-managers': {
     type: 'headline',

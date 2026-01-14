@@ -39,8 +39,8 @@ export default function SubInfo({
       <p className={styles.label}>{label}</p>
       {dot && (
         <span className="relative flex size-[9px] shrink-0 -mr-2">
-          <span className="absolute inline-flex h-full w-full animate-ping-slow rounded-full bg-accent-green opacity-75"></span>
-          <span className="relative inline-flex size-[9px] rounded-full bg-accent-green"></span>
+          <span className="absolute inline-flex h-full w-full animate-ping-slow rounded-full bg-[#14cd90] opacity-75"></span>
+          <span className="relative inline-flex size-[9px] rounded-full bg-[#14cd90]"></span>
         </span>
       )}
       <p className={styles.value}>{value}</p>
