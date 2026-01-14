@@ -54,8 +54,8 @@ const variantStyles: Record<
     textDisabled: 'text-primary-500',
   },
   secondary: {
-    base: 'bg-white text-primary-950 border-[1.5px] border-primary-200 box-border',
-    hover: 'hover:border-primary-950',
+    base: 'bg-white text-primary-950 border-[1px] border-primary-200 box-border',
+    hover: 'hover:bg-primary-50',
     active: 'active:border-primary-950',
     disabled: 'bg-white border-[1.5px] border-primary-200 text-primary-300 cursor-not-allowed box-border',
     text: 'text-primary-950',
@@ -67,15 +67,15 @@ const sizeStyles: Record<ButtonSize, { text: string; px: string; py: string; pyS
   base: {
     text: 'text-base',
     px: 'px-6',
-    py: 'py-3',
-    pySecondary: 'py-[10.5px]', // py-3 (12px) - 1.5px border = 10.5px
+    py: 'py-2.5',
+    pySecondary: 'py-[10px]', // py-3 (12px) - 1.5px border = 10.5px
     iconGap: 'gap-2',
   },
   sm: {
     text: 'text-sm',
     px: 'px-4',
-    py: 'py-3',
-    pySecondary: 'py-[10.5px]', // py-3 (12px) - 1.5px border = 10.5px
+    py: 'py-2.5',
+    pySecondary: 'py-[10px]', // py-3 (12px) - 1.5px border = 10.5px
     iconGap: 'gap-1.5',
   },
 };

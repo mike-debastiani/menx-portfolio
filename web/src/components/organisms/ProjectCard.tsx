@@ -28,7 +28,7 @@ export default function ProjectCard({ project, className = '' }: ProjectCardProp
       className={`group flex flex-col gap-2 pb-8 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-950 focus-visible:ring-offset-2 rounded-xl ${className}`}
     >
       {/* Image Container */}
-      <div className="relative w-full aspect-[820/520] border border-primary-100 rounded-xl overflow-hidden">
+      <div className="relative w-full aspect-[820/520] rounded-xl overflow-hidden">
         {project.image ? (
           <Image
             src={project.image.src}

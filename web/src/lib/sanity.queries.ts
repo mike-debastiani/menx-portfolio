@@ -1,6 +1,7 @@
-import { sanityClient } from './sanity.client';
+import { sanityClient, urlForImage } from './sanity.client';
 import { fetchSanity } from './sanity.fetch';
 import type { Phase, Method, Project, Impression } from '@/types/sanity';
+import type { ProjectCardData } from '@/components/organisms/ProjectCard';
 
 export async function testSanityConnection() {
   const result = await sanityClient.fetch<unknown | null>(
@@ -114,6 +115,48 @@ export async function getImpressionsByMethod(): Promise<
 export async function getProjectsCount(): Promise<number> {
   const query = `count(*[_type == "project"])`;
   return fetchSanity<number>(query);
+}
+
+export async function getSelectedProjects(): Promise<ProjectCardData[]> {
+  const query = `
+    *[_type == "project" && showOnHomepage == true] | order(selectedWorkOrder asc, _createdAt desc) {
+      _id,
+      slug,
+      cardTitle,
+      cardDescription,
+      cardImage,
+      attributePills
+    }
+  `;
+  const projects = await fetchSanity<any[]>(query);
+  
+  // Convert to ProjectCardData format
+  return projects.map((project) => {
+    // Parse attributePills (comma-separated string) to tags array
+    const tags = project.attributePills
+      ? project.attributePills.split(',').map((tag: string) => tag.trim()).filter((tag: string) => tag.length > 0)
+      : undefined;
+    
+    // Convert cardImage to image URL with high quality for Retina displays
+    const imageUrl = project.cardImage
+      ? urlForImage(project.cardImage, { 
+          width: 1640, // 2x for Retina displays
+          height: 1040, // 2x for Retina displays
+          fit: 'crop',
+          quality: 90, // High quality
+          dpr: 2, // Device Pixel Ratio for Retina
+          auto: 'format' // Auto-optimize format (WebP, AVIF, etc.)
+        })
+      : null;
+    
+    return {
+      slug: project.slug.current,
+      title: project.cardTitle || project.slug.current,
+      excerpt: project.cardDescription || '',
+      tags,
+      image: imageUrl ? { src: imageUrl, alt: project.cardTitle || '' } : null,
+    };
+  });
 }
 
 export async function getImpressionsCount(): Promise<number> {

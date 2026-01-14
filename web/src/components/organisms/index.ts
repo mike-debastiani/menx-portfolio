@@ -2,6 +2,8 @@ export { default as RoleBasedHero, type RoleBasedHeroProps, type RoleId, type Ro
 export { default as StatsGroup, type StatsGroupProps, type StatsGroupItem } from './StatsGroup';
 export { default as AccordionGroup, type AccordionGroupProps, type AccordionGroupItem } from './AccordionGroup';
 export { default as ProjectCard, type ProjectCardProps, type ProjectCardData } from './ProjectCard';
+export { default as ProjectArchive, type ProjectArchiveProps } from './ProjectArchive';
+export { default as SelectedWorkSection, type SelectedWorkSectionProps } from './SelectedWorkSection';
 export { default as ImpressionItem, type ImpressionItemProps } from './ImpressionItem';
 export { default as ImpressionGallery, type ImpressionGalleryProps, type ImpressionGalleryItem, type ImpressionGalleryRef } from './ImpressionGallery';
 export { default as WorkflowAtlasTimeline, type WorkflowAtlasTimelineProps, type WorkflowSegment, type WorkflowPhaseKey } from './WorkflowAtlasTimeline';

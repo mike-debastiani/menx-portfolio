@@ -24,7 +24,7 @@
   :root {
     --layout-columns: 12;
     --layout-margin: 24px;
-    --layout-gutter: 16px;
+    --layout-gutter: 24px;
   }
 }
 
@@ -71,9 +71,13 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: #ffffff;
+    --foreground: #171717;
   }
+}
+
+html {
+  background: var(--background);
 }
 
 body {

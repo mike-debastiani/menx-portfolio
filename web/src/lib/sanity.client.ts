@@ -26,7 +26,7 @@ export const sanityClient = createClient({
  * Builds a Sanity image URL from an image reference.
  * Falls back to a simple CDN URL if imageUrlBuilder is not available.
  */
-export function urlForImage(source: any, options?: { width?: number; height?: number; fit?: string }): string | null {
+export function urlForImage(source: any, options?: { width?: number; height?: number; fit?: string; quality?: number; dpr?: number; auto?: string }): string | null {
   if (!source?.asset?._ref) {
     return null;
   }
@@ -41,6 +41,9 @@ export function urlForImage(source: any, options?: { width?: number; height?: nu
     if (options?.width) urlBuilder = urlBuilder.width(options.width);
     if (options?.height) urlBuilder = urlBuilder.height(options.height);
     if (options?.fit) urlBuilder = urlBuilder.fit(options.fit);
+    if (options?.quality) urlBuilder = urlBuilder.quality(options.quality);
+    if (options?.dpr) urlBuilder = urlBuilder.dpr(options.dpr);
+    if (options?.auto) urlBuilder = urlBuilder.auto(options.auto);
     
     return urlBuilder.url();
   } catch {
@@ -58,6 +61,9 @@ export function urlForImage(source: any, options?: { width?: number; height?: nu
     if (options?.width) params.set('w', String(options.width));
     if (options?.height) params.set('h', String(options.height));
     if (options?.fit) params.set('fit', options.fit);
+    if (options?.quality) params.set('q', String(options.quality));
+    if (options?.dpr) params.set('dpr', String(options.dpr));
+    if (options?.auto) params.set('auto', options.auto);
     
     const query = params.toString();
     return `https://cdn.sanity.io/images/${projectId}/${dataset}/${id}-${dimensions}.${format}${query ? `?${query}` : ''}`;
