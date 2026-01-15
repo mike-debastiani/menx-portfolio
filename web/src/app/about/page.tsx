@@ -1,5 +1,6 @@
 import AboutHeroSection from '@/components/organisms/AboutHeroSection';
 import SkillsSection from '@/components/organisms/SkillsSection';
+import FooterSection from '@/components/organisms/FooterSection';
 import { getAboutData } from '@/lib/sanity.queries';
 
 // Disable caching to ensure draft documents are always fetched
@@ -40,6 +41,13 @@ export default async function AboutPage() {
           columns={aboutData.skillsSection.columns}
         />
       )}
+      <FooterSection
+        customCtaTitle={aboutData.footerCtaTitle}
+        primaryButtonText={aboutData.footerPrimaryButtonText}
+        primaryButtonFileUrl={aboutData.footerPrimaryButtonFileUrl}
+        secondaryButtonText={aboutData.footerSecondaryButtonText}
+        secondaryButtonLink={aboutData.footerSecondaryButtonLink}
+      />
     </main>
   );
 }

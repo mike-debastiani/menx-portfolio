@@ -68,6 +68,24 @@ export interface Impression extends SanityDocument {
   order?: number;
 }
 
+export interface SanityFileAsset {
+  _id: string;
+  _type: string;
+  url?: string;
+  path?: string;
+  originalFilename?: string;
+}
+
+export interface SanityFile {
+  _type: 'file';
+  asset: SanityFileAsset | {
+    _ref: string;
+    _type: 'reference';
+  };
+  filename?: string;
+  url?: string;
+}
+
 export interface About extends SanityDocument {
   _type: 'about';
   greeting?: string;
@@ -83,4 +101,9 @@ export interface About extends SanityDocument {
   skillsColumn1Content?: string[];
   skillsColumn2Title?: string;
   skillsColumn2Content?: string[];
+  footerCtaTitle?: string;
+  footerPrimaryButtonText?: string;
+  footerPrimaryButtonFile?: SanityFile;
+  footerSecondaryButtonText?: string;
+  footerSecondaryButtonLink?: string;
 }

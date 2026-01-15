@@ -1,4 +1,7 @@
 import { sanityClient, urlForImage } from './sanity.client';
+
+const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID;
+const dataset = process.env.NEXT_PUBLIC_SANITY_DATASET;
 import { fetchSanity } from './sanity.fetch';
 import type { Phase, Method, Project, Impression, About } from '@/types/sanity';
 import type { ProjectCardData } from '@/components/organisms/ProjectCard';
@@ -575,6 +578,11 @@ export interface AboutData {
     alt: string;
   };
   skillsSection?: SkillsSectionData;
+  footerCtaTitle?: string;
+  footerPrimaryButtonText?: string;
+  footerPrimaryButtonFileUrl?: string;
+  footerSecondaryButtonText?: string;
+  footerSecondaryButtonLink?: string;
 }
 
 export async function getAboutData(): Promise<AboutData | null> {
@@ -592,7 +600,23 @@ export async function getAboutData(): Promise<AboutData | null> {
       skillsColumn1Title,
       skillsColumn1Content,
       skillsColumn2Title,
-      skillsColumn2Content
+      skillsColumn2Content,
+      footerCtaTitle,
+      footerPrimaryButtonText,
+      "footerPrimaryButtonFile": footerPrimaryButtonFile {
+        asset-> {
+          _id,
+          _type,
+          url,
+          originalFilename,
+          path,
+          size,
+          mimeType
+        },
+        filename
+      },
+      footerSecondaryButtonText,
+      footerSecondaryButtonLink
     }
   `;
   const about = await fetchSanity<About | null>(query);
@@ -653,6 +677,60 @@ export async function getAboutData(): Promise<AboutData | null> {
         }
       : undefined;
   
+  // Get file URL for primary button
+  // Sanity provides the URL directly from the asset
+  let primaryButtonFileUrl: string | undefined;
+  
+  if (about.footerPrimaryButtonFile?.asset) {
+    const asset = about.footerPrimaryButtonFile.asset as any;
+    
+    // First try: Use URL directly from asset if available
+    if (asset.url) {
+      primaryButtonFileUrl = asset.url;
+    } 
+    // Second try: Use path from asset if available
+    else if (asset.path && projectId && dataset) {
+      primaryButtonFileUrl = `https://cdn.sanity.io/files/${projectId}/${dataset}/${asset.path}`;
+    }
+    // Fallback: Construct URL from asset ID
+    else if (asset._id && projectId && dataset) {
+      // Asset ID format: file-{id}-{width}x{height}-{extension}
+      // For files, it's usually: file-{id}-{extension}
+      const assetId = asset._id;
+      
+      // Try to extract ID and extension from asset ID
+      // Format can be: file-{id}-{extension} or file-{id}
+      if (assetId.startsWith('file-')) {
+        const withoutPrefix = assetId.replace(/^file-/, '');
+        const parts = withoutPrefix.split('-');
+        
+        // Get extension from mimeType, filename, or asset ID
+        let extension = 'pdf'; // default
+        if (asset.mimeType) {
+          // Extract extension from mimeType (e.g., "application/pdf" -> "pdf")
+          const mimeParts = asset.mimeType.split('/');
+          if (mimeParts.length > 1) {
+            extension = mimeParts[1];
+            // Handle special cases
+            if (extension === 'vnd.openxmlformats-officedocument.wordprocessingml.document') extension = 'docx';
+            if (extension === 'msword') extension = 'doc';
+          }
+        } else if (about.footerPrimaryButtonFile.filename) {
+          extension = about.footerPrimaryButtonFile.filename.split('.').pop() || 'pdf';
+        } else if (asset.originalFilename) {
+          extension = asset.originalFilename.split('.').pop() || 'pdf';
+        } else if (parts.length > 1) {
+          // Last part might be extension
+          extension = parts[parts.length - 1];
+        }
+        
+        // The ID is usually the first part
+        const id = parts[0];
+        primaryButtonFileUrl = `https://cdn.sanity.io/files/${projectId}/${dataset}/${id}.${extension}`;
+      }
+    }
+  }
+
   return {
     greeting: about.greeting,
     heading: about.bigStatement || '',
@@ -665,5 +743,10 @@ export async function getAboutData(): Promise<AboutData | null> {
         }
       : undefined,
     skillsSection,
+    footerCtaTitle: about.footerCtaTitle,
+    footerPrimaryButtonText: about.footerPrimaryButtonText,
+    footerPrimaryButtonFileUrl: primaryButtonFileUrl,
+    footerSecondaryButtonText: about.footerSecondaryButtonText,
+    footerSecondaryButtonLink: about.footerSecondaryButtonLink,
   };
 }

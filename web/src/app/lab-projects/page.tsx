@@ -1,6 +1,7 @@
 import { Container, Grid } from '@/components/layout';
 import ProjectArchiveHeader from '@/components/molecules/ProjectArchiveHeader';
 import ProjectArchive from '@/components/organisms/ProjectArchive';
+import FooterSection from '@/components/organisms/FooterSection';
 import { getLabProjects } from '@/lib/sanity.queries';
 
 // Disable caching to ensure draft documents are always fetched
@@ -26,6 +27,7 @@ export default async function LabProjectsPage() {
           <ProjectArchive projects={projects} />
         </div>
       </Container>
+      <FooterSection />
     </main>
   );
 }

@@ -3,11 +3,19 @@
 import { Container, Grid } from '@/components/layout';
 import SectionDescription from '@/components/molecules/SectionDescription';
 import Footer from '@/components/layout/Footer';
+import { Button } from '@/components/atoms';
 import { cn } from '@/lib';
 import Link from 'next/link';
+import { type ReactNode } from 'react';
 
 export interface FooterSectionProps {
   className?: string;
+  // Optional props for About page custom footer
+  customCtaTitle?: string | ReactNode;
+  primaryButtonText?: string;
+  primaryButtonFileUrl?: string;
+  secondaryButtonText?: string;
+  secondaryButtonLink?: string;
 }
 
 interface FooterRow {
@@ -15,7 +23,14 @@ interface FooterRow {
   items: Array<{ label: string; href?: string }>;
 }
 
-export default function FooterSection({ className = '' }: FooterSectionProps) {
+export default function FooterSection({ 
+  className = '',
+  customCtaTitle,
+  primaryButtonText,
+  primaryButtonFileUrl,
+  secondaryButtonText,
+  secondaryButtonLink,
+}: FooterSectionProps) {
   // Footer data
   const footerRows: FooterRow[] = [
     {
@@ -30,7 +45,7 @@ export default function FooterSection({ className = '' }: FooterSectionProps) {
       label: 'Write me',
       items: [
         { label: 'hello@mikedebastiani.ch', href: 'mailto:hello@mikedebastiani.ch' },
-        { label: 'Book a Call', href: '#' },
+        { label: 'BOOK A CALL', href: 'https://cal.com/mike-de-bastiani-4xbsfh' },
       ],
     },
   ];
@@ -44,6 +59,22 @@ export default function FooterSection({ className = '' }: FooterSectionProps) {
     }
   }
 
+  // Check if this is a custom footer (About page)
+  const isCustomFooter = !!customCtaTitle;
+
+  // Format title with line breaks if it's a string
+  const formatTitle = (title: string | ReactNode): ReactNode => {
+    if (typeof title === 'string') {
+      return title.split('\n').map((line, index, array) => (
+        <span key={index}>
+          {line}
+          {index < array.length - 1 && <br />}
+        </span>
+      ));
+    }
+    return title;
+  };
+
   return (
     <section className={cn('pt-20 flex', className)}>
       <Container className="flex flex-col gap-30">
@@ -51,19 +82,62 @@ export default function FooterSection({ className = '' }: FooterSectionProps) {
         <Grid>
           {/* SectionDescription - 6 columns on desktop, full width on mobile */}
           <div className="footer-col-mobile">
-            <SectionDescription
-              title={
-                <>
-                  Sparked your interest?
-                  <br />
-                  Let's turn that into a conversation.
-                </>
-              }
-              cta={{
-                label: 'CONTACT ME',
-                href: '#',
-              }}
-            />
+            {isCustomFooter ? (
+              <div className="flex flex-col gap-4 items-start">
+                <h2 className="font-sans font-medium text-3xl leading-[1.2] text-primary-950">
+                  {formatTitle(customCtaTitle)}
+                </h2>
+                {(primaryButtonText || secondaryButtonText) && (
+                  <div className="flex flex-col sm:flex-row gap-3">
+                    {primaryButtonText && (
+                      primaryButtonFileUrl ? (
+                        <a
+                          href={primaryButtonFileUrl}
+                          download
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="group inline-flex items-center justify-center rounded-full font-mono font-medium uppercase tracking-normal text-sm px-4 py-2.5 bg-primary-950 text-white hover:bg-primary-900 active:bg-primary-800 transition-all duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-950 focus-visible:ring-offset-2"
+                        >
+                          {primaryButtonText}
+                        </a>
+                      ) : (
+                        <Button
+                          variant="primary"
+                          size="sm"
+                          icon="none"
+                        >
+                          {primaryButtonText}
+                        </Button>
+                      )
+                    )}
+                    {secondaryButtonText && secondaryButtonLink && (
+                      <a
+                        href={secondaryButtonLink}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="group inline-flex items-center justify-center rounded-full font-mono font-medium uppercase tracking-normal text-sm px-4 py-[10px] bg-white text-primary-950 border-[1px] border-primary-200 box-border hover:bg-primary-50 active:border-primary-950 transition-all duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-950 focus-visible:ring-offset-2"
+                      >
+                        {secondaryButtonText}
+                      </a>
+                    )}
+                  </div>
+                )}
+              </div>
+            ) : (
+              <SectionDescription
+                title={
+                  <>
+                    Sparked your interest?
+                    <br />
+                    Let's turn that into a conversation.
+                  </>
+                }
+                cta={{
+                  label: 'BOOK A CALL',
+                  href: 'https://cal.com/mike-de-bastiani-4xbsfh',
+                }}
+              />
+            )}
           </div>
 
           {/* InfoRows - 6 columns on desktop, full width on mobile */}

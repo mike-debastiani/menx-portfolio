@@ -99,6 +99,47 @@ export default defineType({
         layout: 'tags',
       },
     }),
+    defineField({
+      name: 'footerCtaTitle',
+      title: 'Footer CTA Title',
+      type: 'text',
+      description: 'Footer CTA Titel (z.B. "Ready for the next Step?\nDownload my CV or book a call.") - Unterstützt manuelle Zeilenumbrüche',
+    }),
+    defineField({
+      name: 'footerPrimaryButtonText',
+      title: 'Primary Button Text',
+      type: 'string',
+      description: 'Text für den Primary Button (z.B. "DOWNLOAD CV")',
+    }),
+    defineField({
+      name: 'footerPrimaryButtonFile',
+      title: 'Primary Button File',
+      type: 'file',
+      description: 'Datei für den Primary Button (z.B. CV PDF)',
+      options: {
+        accept: '.pdf,.doc,.docx',
+      },
+    }),
+    defineField({
+      name: 'footerSecondaryButtonText',
+      title: 'Secondary Button Text',
+      type: 'string',
+      description: 'Text für den Secondary Button (z.B. "BOOK A CALL")',
+    }),
+    defineField({
+      name: 'footerSecondaryButtonLink',
+      title: 'Secondary Button Link',
+      type: 'string',
+      description: 'Link für den Secondary Button (z.B. "https://example.com" oder "/contact" für interne Links)',
+      validation: (Rule) => Rule.custom((value) => {
+        if (!value) return true; // Optional field
+        // Allow both absolute URLs and relative paths
+        if (value.startsWith('http://') || value.startsWith('https://') || value.startsWith('/') || value.startsWith('mailto:') || value.startsWith('tel:')) {
+          return true;
+        }
+        return 'Bitte geben Sie eine gültige URL ein (z.B. "https://example.com" oder "/contact")';
+      }),
+    }),
   ],
   preview: {
     select: {

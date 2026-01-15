@@ -1,7 +1,6 @@
 import type { Metadata } from 'next';
 import { Inter, Geist_Mono } from 'next/font/google';
 import { Header } from '@/components/layout/Header';
-import FooterSection from '@/components/organisms/FooterSection';
 import './globals.css';
 
 const inter = Inter({
@@ -31,7 +30,6 @@ export default function RootLayout({
       <body className="antialiased">
         <Header />
         {children}
-        <FooterSection />
       </body>
     </html>
   );

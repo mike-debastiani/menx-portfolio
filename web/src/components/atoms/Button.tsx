@@ -121,6 +121,22 @@ export default function Button({
   );
 
   if (href && !disabled) {
+    // Check if it's an external URL
+    const isExternal = href.startsWith('http://') || href.startsWith('https://') || href.startsWith('mailto:') || href.startsWith('tel:');
+    
+    if (isExternal) {
+      return (
+        <a
+          href={href}
+          target="_blank"
+          rel="noopener noreferrer"
+          className={baseClasses}
+        >
+          {content}
+        </a>
+      );
+    }
+    
     return (
       <Link href={href} className={baseClasses}>
         {content}
