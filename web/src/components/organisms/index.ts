@@ -12,4 +12,5 @@ export { default as FooterSection, type FooterSectionProps } from './FooterSecti
 export { default as CaseStudyHeader, type CaseStudyHeaderProps, type CaseStudyHeaderData } from './CaseStudyHeader';
 export { default as ContentBlocksRenderer, type ContentBlocksRendererProps, type ContentBlock } from './ContentBlocksRenderer';
 export { default as AboutHeroSection, type AboutHeroSectionProps } from './AboutHeroSection';
+export { default as SkillsSection, type SkillsSectionProps } from './SkillsSection';
 

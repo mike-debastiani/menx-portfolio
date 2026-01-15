@@ -19,8 +19,8 @@
   }
 }
 
-/* Layout Tokens - Desktop (xl: 1280px) */
-@media (min-width: 1280px) {
+/* Layout Tokens - Desktop (lg: 1200px) */
+@media (min-width: 1200px) {
   :root {
     --layout-columns: 12;
     --layout-margin: 24px;
@@ -33,6 +33,9 @@
   --color-foreground: var(--foreground);
   --font-family-sans: var(--font-sans);
   --font-family-mono: var(--font-mono);
+  
+  /* Custom breakpoint at 1200px */
+  --breakpoint-lg: 1200px;
   
   /* Primary Colors */
   --color-primary-50: #f6f6f6;
@@ -121,6 +124,123 @@ body {
     }
   }
 
+  /* InfoColumns mobile positioning (base) */
+  .info-col-description {
+    grid-column: span 4 / span 4;
+  }
+  
+  /* InfoColumns description spacing - Mobile/Tablet (unter SectionDescription) */
+  .info-col-description-spacing {
+    margin-top: 1.5rem; /* mt-6 */
+    margin-bottom: 4rem; /* mb-16 */
+  }
+  
+  .info-col-first,
+  .info-col-second,
+  .info-col-three,
+  .info-col-four,
+  .info-col-single {
+    grid-column: span 4 / span 4;
+  }
+  
+  /* Größerer Abstand zwischen Spalte 1 und Spalte 2, wenn sie untereinander sind (Mobile) */
+  .info-col-second {
+    margin-top: 3rem; /* mt-12 - größerer Abstand zur ersten Spalte */
+  }
+  
+  @media (min-width: 768px) {
+    .info-col-description {
+      grid-column: span 6 / span 6;
+    }
+    
+    .info-col-first {
+      grid-column: span 3 / span 3;
+      grid-column-start: 1;
+    }
+    
+    .info-col-second {
+      grid-column: span 3 / span 3;
+      grid-column-start: 4;
+      margin-top: 0; /* Reset margin-top bei Tablet, da Spalten nebeneinander sind */
+    }
+    
+    .info-col-three {
+      grid-column: span 2 / span 2;
+    }
+    
+    .info-col-four {
+      grid-column: span 1 / span 1;
+    }
+    
+    .info-col-single {
+      grid-column: span 6 / span 6;
+    }
+    
+    /* SectionDescription: Volle Breite bei Tablet (768px - 1199px) */
+    .skills-col-lg {
+      grid-column: span 6 / span 6;
+    }
+  }
+
+  @media (min-width: 1200px) {
+    .footer-col-mobile {
+      grid-column: span 6 / span 6;
+    }
+    
+    /* SectionDescription: Column 1-5 (1 Column Abstand zu InfoColumns) */
+    .skills-col-lg {
+      grid-column: span 5 / span 5;
+    }
+    
+    .skills-col-lg-start-7 {
+      grid-column-start: 7;
+      grid-column: span 6 / span 6;
+    }
+    
+    .skills-mt-0 {
+      margin-top: 0;
+    }
+    
+    /* InfoColumns layout grid positioning - Desktop */
+    /* Description: Column 7-12 (über den Spalten) */
+    .info-col-description {
+      grid-column: span 6 / span 6 !important;
+      grid-column-start: 7 !important;
+    }
+    
+    /* InfoColumns description spacing - Desktop (neben SectionDescription) */
+    .info-col-description-spacing {
+      margin-top: 0 !important;
+      margin-bottom: 5rem !important; /* mb-20 */
+    }
+    
+    /* Spalte 1: Column 7-9 */
+    .info-col-first {
+      grid-column: span 3 / span 3 !important;
+      grid-column-start: 7 !important;
+    }
+    
+    /* Spalte 2: Column 10-12 */
+    .info-col-second {
+      grid-column: span 3 / span 3 !important;
+      grid-column-start: 10 !important;
+      margin-top: 0 !important; /* Reset margin-top bei Desktop, da Spalten nebeneinander sind */
+    }
+    
+    .info-col-three {
+      grid-column: span 2 / span 2;
+    }
+    
+    .info-col-four {
+      grid-column: span 1 / span 1;
+    }
+    
+    .info-col-single {
+      grid-column: span 6 / span 6 !important;
+      grid-column-start: 7 !important;
+    }
+  }
+  
   @media (min-width: 1280px) {
     .footer-col-mobile {
       grid-column: span 6 / span 6;

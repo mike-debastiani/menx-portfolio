@@ -77,4 +77,10 @@ export interface About extends SanityDocument {
   location?: string;
   status?: string;
   showStatusDot?: boolean;
+  skillsSectionTitle?: string;
+  skillsParagraphText?: string;
+  skillsColumn1Title?: string;
+  skillsColumn1Content?: string[];
+  skillsColumn2Title?: string;
+  skillsColumn2Content?: string[];
 }

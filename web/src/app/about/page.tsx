@@ -1,4 +1,5 @@
 import AboutHeroSection from '@/components/organisms/AboutHeroSection';
+import SkillsSection from '@/components/organisms/SkillsSection';
 import { getAboutData } from '@/lib/sanity.queries';
 
 // Disable caching to ensure draft documents are always fetched
@@ -32,6 +33,13 @@ export default async function AboutPage() {
           subInfoItems: aboutData.subInfoItems,
         }}
       />
+      {aboutData.skillsSection && (
+        <SkillsSection
+          sectionTitle={aboutData.skillsSection.sectionTitle}
+          description={aboutData.skillsSection.description}
+          columns={aboutData.skillsSection.columns}
+        />
+      )}
     </main>
   );
 }

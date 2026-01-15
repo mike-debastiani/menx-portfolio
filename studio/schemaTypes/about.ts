@@ -55,6 +55,50 @@ export default defineType({
       description: 'Aktiviere diese Option, um einen farbigen Punkt vor dem Status anzuzeigen',
       initialValue: false,
     }),
+    defineField({
+      name: 'skillsSectionTitle',
+      title: 'Skills Section Title',
+      type: 'string',
+      description: 'Titel für die Skills Section',
+    }),
+    defineField({
+      name: 'skillsParagraphText',
+      title: 'Skills Paragraph Text',
+      type: 'text',
+      description: 'Beschreibungstext für die Skills Section',
+    }),
+    defineField({
+      name: 'skillsColumn1Title',
+      title: 'Column 1 Title',
+      type: 'string',
+      description: 'Titel für die erste Spalte (z.B. "Skills")',
+    }),
+    defineField({
+      name: 'skillsColumn1Content',
+      title: 'Column 1 Content',
+      type: 'array',
+      description: 'Inhalt für die erste Spalte (Liste von Skills)',
+      of: [{ type: 'string' }],
+      options: {
+        layout: 'tags',
+      },
+    }),
+    defineField({
+      name: 'skillsColumn2Title',
+      title: 'Column 2 Title',
+      type: 'string',
+      description: 'Titel für die zweite Spalte (z.B. "Tools & Technologies")',
+    }),
+    defineField({
+      name: 'skillsColumn2Content',
+      title: 'Column 2 Content',
+      type: 'array',
+      description: 'Inhalt für die zweite Spalte (Liste von Tools & Technologies)',
+      of: [{ type: 'string' }],
+      options: {
+        layout: 'tags',
+      },
+    }),
   ],
   preview: {
     select: {

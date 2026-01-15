@@ -556,6 +556,27 @@ export interface AboutData {
  * Fetches the About page data from Sanity.
  * Returns the first (and should be only) about document.
  */
+export interface SkillsSectionData {
+  sectionTitle?: string;
+  description?: string;
+  columns: Array<{
+    title: string;
+    items: string[];
+  }>;
+}
+
+export interface AboutData {
+  greeting?: string;
+  heading: string;
+  description: string;
+  subInfoItems?: SubInfoGroupItem[];
+  image?: {
+    src: string;
+    alt: string;
+  };
+  skillsSection?: SkillsSectionData;
+}
+
 export async function getAboutData(): Promise<AboutData | null> {
   const query = `
     *[_type == "about"][0] {
@@ -565,7 +586,13 @@ export async function getAboutData(): Promise<AboutData | null> {
       portraitImage,
       location,
       status,
-      showStatusDot
+      showStatusDot,
+      skillsSectionTitle,
+      skillsParagraphText,
+      skillsColumn1Title,
+      skillsColumn1Content,
+      skillsColumn2Title,
+      skillsColumn2Content
     }
   `;
   const about = await fetchSanity<About | null>(query);
@@ -599,6 +626,33 @@ export async function getAboutData(): Promise<AboutData | null> {
       })
     : undefined;
   
+  // Build skills section data
+  const skillsSection: SkillsSectionData | undefined = 
+    (about.skillsSectionTitle || about.skillsColumn1Title || about.skillsColumn2Title)
+      ? {
+          sectionTitle: about.skillsSectionTitle,
+          description: about.skillsParagraphText,
+          columns: [
+            ...(about.skillsColumn1Title
+              ? [
+                  {
+                    title: about.skillsColumn1Title,
+                    items: about.skillsColumn1Content || [],
+                  },
+                ]
+              : []),
+            ...(about.skillsColumn2Title
+              ? [
+                  {
+                    title: about.skillsColumn2Title,
+                    items: about.skillsColumn2Content || [],
+                  },
+                ]
+              : []),
+          ],
+        }
+      : undefined;
+  
   return {
     greeting: about.greeting,
     heading: about.bigStatement || '',
@@ -610,5 +664,6 @@ export async function getAboutData(): Promise<AboutData | null> {
           alt: 'Mike De Bastiani - Digital Product Designer',
         }
       : undefined,
+    skillsSection,
   };
 }
