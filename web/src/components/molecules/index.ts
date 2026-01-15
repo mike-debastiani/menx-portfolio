@@ -6,6 +6,7 @@ export { default as InfoColumns, type InfoColumnsProps, type InfoColumn, type In
 export { default as SubInfoGroup, type SubInfoGroupProps, type SubInfoGroupItem, type SubInfoGroupVariant } from './SubInfoGroup';
 export { default as CaseStudyDescription, type CaseStudyDescriptionProps } from './CaseStudyDescription';
 export { default as CaseStudyMeta, type CaseStudyMetaProps } from './CaseStudyMeta';
+export { default as AboutDescription, type AboutDescriptionProps } from './AboutDescription';
 export { 
   default as ImpressionCard, 
   type ImpressionCardProps, 

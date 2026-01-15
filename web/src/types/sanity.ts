@@ -67,3 +67,14 @@ export interface Impression extends SanityDocument {
   description?: string;
   order?: number;
 }
+
+export interface About extends SanityDocument {
+  _type: 'about';
+  greeting?: string;
+  bigStatement?: string;
+  supportingParagraph?: string;
+  portraitImage: SanityImage;
+  location?: string;
+  status?: string;
+  showStatusDot?: boolean;
+}

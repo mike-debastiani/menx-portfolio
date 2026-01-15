@@ -23,7 +23,7 @@ export default function SubInfoGroup({
 }: SubInfoGroupProps) {
   if (variant === 'row') {
     return (
-      <div className={`flex gap-8 items-center flex-wrap ${className}`}>
+      <div className={`flex gap-x-8 gap-y-2 items-center flex-wrap ${className}`}>
         {items.map((item, index) => (
           <SubInfo
             key={index}

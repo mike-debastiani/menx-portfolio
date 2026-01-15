@@ -1,8 +1,9 @@
 import { sanityClient, urlForImage } from './sanity.client';
 import { fetchSanity } from './sanity.fetch';
-import type { Phase, Method, Project, Impression } from '@/types/sanity';
+import type { Phase, Method, Project, Impression, About } from '@/types/sanity';
 import type { ProjectCardData } from '@/components/organisms/ProjectCard';
 import type { CaseStudyHeaderData } from '@/components/organisms/CaseStudyHeader';
+import type { SubInfoGroupItem } from '@/components/molecules/SubInfoGroup';
 
 export async function testSanityConnection() {
   const result = await sanityClient.fetch<unknown | null>(
@@ -538,4 +539,76 @@ export async function getWorkflowAtlasData(): Promise<WorkflowAtlasData> {
   });
   
   return data;
+}
+
+export interface AboutData {
+  greeting?: string;
+  heading: string;
+  description: string;
+  subInfoItems?: SubInfoGroupItem[];
+  image?: {
+    src: string;
+    alt: string;
+  };
+}
+
+/**
+ * Fetches the About page data from Sanity.
+ * Returns the first (and should be only) about document.
+ */
+export async function getAboutData(): Promise<AboutData | null> {
+  const query = `
+    *[_type == "about"][0] {
+      greeting,
+      bigStatement,
+      supportingParagraph,
+      portraitImage,
+      location,
+      status,
+      showStatusDot
+    }
+  `;
+  const about = await fetchSanity<About | null>(query);
+  
+  if (!about) {
+    return null;
+  }
+  
+  // Build SubInfoGroup items
+  const subInfoItems: SubInfoGroupItem[] = [];
+  if (about.location) {
+    subInfoItems.push({ label: 'Location:', value: about.location });
+  }
+  if (about.status) {
+    subInfoItems.push({ 
+      label: 'Status:', 
+      value: about.status, 
+      showDot: about.showStatusDot || false 
+    });
+  }
+  
+  // Convert portraitImage to URL
+  const imageUrl = about.portraitImage
+    ? urlForImage(about.portraitImage, {
+        width: 1200,
+        height: 1200,
+        fit: 'crop',
+        quality: 90,
+        dpr: 2,
+        auto: 'format',
+      })
+    : undefined;
+  
+  return {
+    greeting: about.greeting,
+    heading: about.bigStatement || '',
+    description: about.supportingParagraph || '',
+    subInfoItems: subInfoItems.length > 0 ? subInfoItems : undefined,
+    image: imageUrl
+      ? {
+          src: imageUrl,
+          alt: 'Mike De Bastiani - Digital Product Designer',
+        }
+      : undefined,
+  };
 }
