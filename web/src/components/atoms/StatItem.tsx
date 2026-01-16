@@ -13,8 +13,8 @@ export interface StatItemProps {
 
 const sectionStyles = {
   container: 'flex flex-col items-start gap-2',
-  value: 'font-sans font-normal text-5xl leading-none text-primary-950',
-  label: 'font-mono font-normal text-base leading-[1.5] text-primary-300',
+  value: 'font-sans font-normal text-4xl md:text-5xl leading-none text-primary-950',
+  label: 'font-mono font-normal text-base leading-[1.25] text-primary-300',
 };
 
 const metaStyles: Record<
@@ -49,7 +49,7 @@ export default function StatItem({
   if (variant === 'section') {
     return (
       <div className={`${sectionStyles.container} ${className}`}>
-        <div className="h-12">
+        <div className="h-9 md:h-12">
           <p className={sectionStyles.value}>{value}</p>
         </div>
         <div className="h-6">

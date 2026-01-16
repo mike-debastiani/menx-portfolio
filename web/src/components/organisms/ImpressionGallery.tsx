@@ -335,13 +335,15 @@ const ImpressionGallery = forwardRef<ImpressionGalleryRef, ImpressionGalleryProp
       lastScrollPositionRef.current = container.scrollLeft;
     }
 
-    // Update focus (debounced)
+    // Update focus immediately using requestAnimationFrame for smooth, responsive updates
+    // Cancel any pending timeout to avoid duplicate calls
     if (focusCheckTimeoutRef.current) {
       clearTimeout(focusCheckTimeoutRef.current);
     }
-    focusCheckTimeoutRef.current = setTimeout(() => {
+    // Use requestAnimationFrame for immediate, smooth updates during scroll
+    requestAnimationFrame(() => {
       updateFocus();
-    }, 50);
+    });
   }, [activeId, scrollThreshold, updateFocus, maxScrollLeft]);
 
   // Calculate start padding width (matches container padding/Timeline margin)

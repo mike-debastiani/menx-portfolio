@@ -26,9 +26,9 @@ export default function StatsGroup({ items, className = '' }: StatsGroupProps) {
 
   return (
     <div className={`w-full ${className}`}>
-      <div className="grid grid-cols-12 gap-6 w-full">
+      <div className="grid grid-cols-2 min-[660px]:grid-cols-12 gap-12 min-[660px]:gap-6 w-full">
         {items.map((item, index) => (
-          <div key={index} className="col-span-3">
+          <div key={index} className="col-span-1 min-[660px]:col-span-3">
             <StatItem
               variant="section"
               value={item.value}

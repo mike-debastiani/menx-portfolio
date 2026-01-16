@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef, useCallback, useMemo, useEffect } from 'react';
+import { useState, useRef, useCallback, useMemo, useEffect, useLayoutEffect } from 'react';
 import { Container } from '@/components/layout';
 import StatsGroup from './StatsGroup';
 import ImpressionGallery, { type ImpressionGalleryRef, type ImpressionGalleryItem } from './ImpressionGallery';
@@ -158,11 +158,18 @@ export default function WorkflowAtlasSection({ data, className = '' }: WorkflowA
     return map;
   }, [data.impressions]);
 
+  // Ref to track expanded impression ID to avoid stale closure issues
+  const expandedImpressionIdRef = useRef<string | null>(null);
+  expandedImpressionIdRef.current = expandedImpressionId;
+
   // Handle gallery focus change -> update timeline active method
+  // Only updates if no item is currently expanded (to respect forced state)
   const handleGalleryFocusChange = useCallback((impressionId: string | null) => {
     setFocusedImpressionId(impressionId);
     
-    if (impressionId) {
+    // Only update activeMethodId if no item is expanded (using ref to get latest value)
+    // This allows the forced state from expanded items to take precedence
+    if (!expandedImpressionIdRef.current && impressionId) {
       const impression = data.impressions.find((imp) => imp._id === impressionId);
       if (impression) {
         const methodId = (impression.method as WorkflowAtlasMethod)._id;
@@ -189,6 +196,30 @@ export default function WorkflowAtlasSection({ data, className = '' }: WorkflowA
       setActiveMethodId(segment.id);
     }
   }, [methodToFirstImpressionIndex]);
+
+  // When an impression is expanded, force highlight its corresponding segment
+  // Use useLayoutEffect to ensure this runs synchronously before paint
+  // This overrides the normal focus-based highlighting logic
+  useLayoutEffect(() => {
+    if (expandedImpressionId) {
+      const impression = data.impressions.find((imp) => imp._id === expandedImpressionId);
+      if (impression) {
+        const methodId = (impression.method as WorkflowAtlasMethod)._id;
+        setActiveMethodId(methodId);
+      }
+    }
+  }, [expandedImpressionId, data.impressions]);
+
+  // When expanded item is closed, return to focus-based highlighting
+  useEffect(() => {
+    if (!expandedImpressionId && focusedImpressionId) {
+      const impression = data.impressions.find((imp) => imp._id === focusedImpressionId);
+      if (impression) {
+        const methodId = (impression.method as WorkflowAtlasMethod)._id;
+        setActiveMethodId(methodId);
+      }
+    }
+  }, [expandedImpressionId, focusedImpressionId, data.impressions]);
 
   // Initialize: scroll to first item and highlight first segment
   useEffect(() => {
@@ -239,7 +270,7 @@ export default function WorkflowAtlasSection({ data, className = '' }: WorkflowA
       <Container>
         <div className="flex flex-col overflow-visible">
           {/* Section Header, Stats Group, and Impression Gallery with gap-20 (80px) */}
-          <div className="flex flex-col gap-20 overflow-visible">
+          <div className="flex flex-col gap-12 md:gap-20 overflow-visible">
             {/* Section Header */}
             <div className="flex flex-col gap-4">
               <h2 className="font-sans font-medium text-3xl min-[450px]:text-3xl leading-[1.2] text-primary-950">
