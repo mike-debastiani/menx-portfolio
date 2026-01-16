@@ -35,7 +35,7 @@ export default function ProjectArchive({ projects, className = '', maxColumns = 
         }}
       >
         {projects.map((project, index) => (
-          <ProjectCard key={`${project.slug}-${index}`} project={project} className="w-full h-full" />
+          <ProjectCard key={`${project.slug}-${index}`} project={project} className="w-full h-full" maxColumns={maxColumns} />
         ))}
       </div>
     </div>

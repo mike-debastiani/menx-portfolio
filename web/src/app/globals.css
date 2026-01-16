@@ -14,7 +14,7 @@
 @media (min-width: 768px) {
   :root {
     --layout-columns: 6;
-    --layout-margin: 32px;
+    --layout-margin: 16px;
     --layout-gutter: 16px;
   }
 }

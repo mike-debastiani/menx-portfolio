@@ -23,15 +23,18 @@ export default function SectionDescription({
   titleAs = 'h2',
 }: SectionDescriptionProps) {
   const TitleTag = titleAs;
+  const titleClassName = titleAs === 'h1' 
+    ? "font-sans font-medium text-3xl leading-[1.2] text-primary-950"
+    : "font-sans font-medium text-2xl min-[450px]:text-3xl leading-[1.2] text-primary-950";
   
   return (
     <div className={`flex flex-col gap-4 items-start ${className}`}>
-      <TitleTag className="font-sans font-medium text-3xl leading-[1.2] text-primary-950">
+      <TitleTag className={titleClassName}>
         {title}
       </TitleTag>
 
       {description && (
-        <p className="font-sans font-normal text-base leading-[1.5] text-primary-500">
+        <p className="font-sans font-normal text-sm min-[450px]:text-base leading-[1.5] text-primary-300">
           {description}
         </p>
       )}

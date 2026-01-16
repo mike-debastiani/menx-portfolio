@@ -20,25 +20,32 @@ export interface ProjectCardData {
 export interface ProjectCardProps {
   project: ProjectCardData;
   className?: string;
+  maxColumns?: 2 | 3;
 }
 
-export default function ProjectCard({ project, className = '' }: ProjectCardProps) {
-  const [pillSize, setPillSize] = useState<PillSize>('sm');
+export default function ProjectCard({ project, className = '', maxColumns = 2 }: ProjectCardProps) {
+  const [pillSize, setPillSize] = useState<PillSize>('xs');
 
   useEffect(() => {
     const updatePillSize = () => {
-      if (window.innerWidth >= 1536) {
-        // 2xl breakpoint
+      const width = window.innerWidth;
+      
+      // If maxColumns === 3 and we're in 3-column layout (2xl: 1536px+), use xs
+      if (maxColumns === 3 && width >= 1536) {
         setPillSize('xs');
-      } else {
+      } else if (width > 1300) {
+        // Desktop with 2 columns: > 1300px
         setPillSize('sm');
+      } else {
+        // Tablet & Mobile: <= 1300px
+        setPillSize('xs');
       }
     };
 
     updatePillSize();
     window.addEventListener('resize', updatePillSize);
     return () => window.removeEventListener('resize', updatePillSize);
-  }, []);
+  }, [maxColumns]);
 
   return (
     <Link
@@ -91,8 +98,8 @@ export default function ProjectCard({ project, className = '' }: ProjectCardProp
 
         {/* Text Container */}
         <div className="flex flex-col gap-3 2xl:gap-2 px-2">
-          <h3 className="text-2xl 2xl:text-xl font-medium text-primary-950 leading-[1.2]">{project.title}</h3>
-          <p className="text-base 2xl:text-sm font-normal text-primary-950 leading-[1.5]">{project.excerpt}</p>
+          <h3 className="text-lg min-[1301px]:text-2xl font-medium text-primary-950 leading-[1.2]">{project.title}</h3>
+          <p className="text-sm min-[1301px]:text-base font-normal text-primary-950 leading-[1.5]">{project.excerpt}</p>
         </div>
       </div>
     </Link>
