@@ -3,7 +3,7 @@ import { sanityClient, urlForImage } from './sanity.client';
 const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID;
 const dataset = process.env.NEXT_PUBLIC_SANITY_DATASET;
 import { fetchSanity } from './sanity.fetch';
-import type { Phase, Method, Project, Impression, About } from '@/types/sanity';
+import type { Phase, Method, Project, Impression, About, Home } from '@/types/sanity';
 import type { ProjectCardData } from '@/components/organisms/ProjectCard';
 import type { CaseStudyHeaderData } from '@/components/organisms/CaseStudyHeader';
 import type { SubInfoGroupItem } from '@/components/molecules/SubInfoGroup';
@@ -748,5 +748,54 @@ export async function getAboutData(): Promise<AboutData | null> {
     footerPrimaryButtonFileUrl: primaryButtonFileUrl,
     footerSecondaryButtonText: about.footerSecondaryButtonText,
     footerSecondaryButtonLink: about.footerSecondaryButtonLink,
+  };
+}
+
+export interface HomeData {
+  roles?: Array<{
+    id: string;
+    label: string;
+    contentType: 'headline' | 'code';
+    headlineText?: string;
+    codeLines?: Array<{
+      lineNumber: number;
+      segments: Array<{
+        text: string;
+        tone: 'default' | 'purple' | 'green' | 'orange' | 'gray' | 'muted' | 'red';
+      }>;
+    }>;
+  }>;
+}
+
+/**
+ * Fetches the Home page data from Sanity.
+ * Returns the first (and should be only) home document.
+ */
+export async function getHomeData(): Promise<HomeData | null> {
+  const query = `
+    *[_type == "home"][0] {
+      roles[] {
+        id,
+        label,
+        contentType,
+        headlineText,
+        codeLines[] {
+          lineNumber,
+          segments[] {
+            text,
+            tone
+          }
+        }
+      }
+    }
+  `;
+  const home = await fetchSanity<Home | null>(query);
+  
+  if (!home) {
+    return null;
+  }
+  
+  return {
+    roles: home.roles || [],
   };
 }

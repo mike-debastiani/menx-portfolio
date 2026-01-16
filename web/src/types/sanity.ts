@@ -107,3 +107,26 @@ export interface About extends SanityDocument {
   footerSecondaryButtonText?: string;
   footerSecondaryButtonLink?: string;
 }
+
+export interface HomeRoleCodeSegment {
+  text: string;
+  tone: 'default' | 'purple' | 'green' | 'orange' | 'gray' | 'muted' | 'red';
+}
+
+export interface HomeRoleCodeLine {
+  lineNumber: number;
+  segments: HomeRoleCodeSegment[];
+}
+
+export interface HomeRole {
+  id: string;
+  label: string;
+  contentType: 'headline' | 'code';
+  headlineText?: string;
+  codeLines?: HomeRoleCodeLine[];
+}
+
+export interface Home extends SanityDocument {
+  _type: 'home';
+  roles?: HomeRole[];
+}

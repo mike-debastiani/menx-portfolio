@@ -167,10 +167,16 @@ function AutoScaleCode({
         const containerWidth = containerRef.current.offsetWidth;
         const contentWidth = contentRef.current.scrollWidth;
         
-        if (contentWidth > containerWidth && containerWidth > 0) {
-          const newScale = containerWidth / contentWidth;
-          setScale(Math.min(newScale, 1)); // Never scale up, only down
+        // Only use transform scale on screens >= 1010px
+        if (window.innerWidth >= 1010) {
+          if (contentWidth > containerWidth && containerWidth > 0) {
+            const newScale = containerWidth / contentWidth;
+            setScale(Math.min(newScale, 1)); // Never scale up, only down
+          } else {
+            setScale(1);
+          }
         } else {
+          // On smaller screens, don't use transform scale (we use vw units instead)
           setScale(1);
         }
       }
@@ -192,14 +198,15 @@ function AutoScaleCode({
   }, [lines]);
 
   return (
-    <div ref={containerRef} className={`flex items-start relative shrink-0 flex-1 min-w-0 overflow-hidden ${className}`}>
+    <div ref={containerRef} className={`flex items-start relative shrink-0 flex-1 min-w-0 overflow-hidden max-w-full ${className}`}>
       <div 
         ref={contentRef}
-        className="font-mono font-medium leading-[2] text-[20px] text-primary-950"
+        className="font-mono font-medium leading-[2] text-[20px] max-[1010px]:text-[2.2vw] text-primary-950"
         style={{
           transform: `scale(${scale})`,
           transformOrigin: 'left top',
           width: 'fit-content',
+          maxWidth: '100%',
         }}
       >
         {lines.map((line, idx) => (
@@ -266,18 +273,25 @@ export default function RoleBasedHero({
     return (
       <div className={className}>
         {content.type === 'headline' ? (
-          <div className="flex items-center pl-[21px] pr-0 py-0 w-full">
-            <p className="flex-1 font-sans font-medium leading-[1.25] text-4xl text-primary-950 whitespace-pre-wrap">
+          <div className="flex items-center pl-0 md:pl-[21px] pr-0 py-0 w-full min-[1200px]:w-[1000px]">
+            <p className="flex-1 font-sans font-medium leading-[1.25] text-2xl min-[375px]:text-3xl md:text-4xl text-primary-950 whitespace-pre-wrap">
               {content.text}
             </p>
           </div>
         ) : content.type === 'code' ? (
-          <div className="flex gap-[10px] h-full items-start overflow-clip pl-[23px] pr-0 py-0 w-full">
+          <div className="flex gap-[10px] h-full items-start overflow-hidden pl-0 md:pl-[23px] pr-0 py-0 w-full max-w-full min-w-0">
             {/* Line Numbers */}
-            <div className="flex flex-col h-full items-end overflow-clip shrink-0">
-              <div className="font-mono font-medium leading-[2] text-[20px] text-primary-950 whitespace-nowrap pr-4">
+            <div className="flex flex-col h-full items-end overflow-hidden shrink-0">
+              <div className="font-mono font-medium leading-[2] text-[20px] max-[1010px]:text-[2.2vw] text-primary-950 whitespace-nowrap pr-4 max-[1010px]:pr-1">
                 {content.lines.map((line, idx) => (
-                  <p key={line.lineNumber} className={idx < content.lines.length - 1 ? 'mb-0' : ''}>
+                  <p 
+                    key={line.lineNumber} 
+                    className="block"
+                    style={{ 
+                      margin: 0, 
+                      fontFamily: 'inherit',
+                    }}
+                  >
                     {line.lineNumber}
                   </p>
                 ))}
@@ -285,7 +299,7 @@ export default function RoleBasedHero({
             </div>
 
             {/* Code */}
-            <AutoScaleCode lines={content.lines} />
+            <AutoScaleCode lines={content.lines} className="min-w-0" />
           </div>
         ) : null}
       </div>
@@ -305,18 +319,25 @@ export default function RoleBasedHero({
 
       {/* Content */}
       {content.type === 'headline' ? (
-        <div className="flex items-center pl-[21px] pr-0 py-0 w-full">
-          <p className="flex-1 font-sans font-medium leading-[1.25] text-4xl text-primary-950 whitespace-pre-wrap">
+        <div className="flex items-center pl-0 md:pl-[21px] pr-0 py-0 w-full min-[1200px]:w-[1000px]">
+          <p className="flex-1 font-sans font-medium leading-[1.25] text-2xl min-[375px]:text-3xl md:text-4xl text-primary-950 whitespace-pre-wrap">
             {content.text}
           </p>
         </div>
       ) : content.type === 'code' ? (
-        <div className="flex gap-[10px] h-full items-start overflow-clip pl-[23px] pr-0 py-0 w-full">
+        <div className="flex gap-[10px] h-full items-start overflow-hidden pl-0 md:pl-[23px] pr-0 py-0 w-full max-w-full min-w-0">
           {/* Line Numbers */}
-          <div className="flex flex-col h-full items-end overflow-clip shrink-0">
-            <div className="font-mono font-medium leading-[2] text-[20px] text-primary-950 whitespace-nowrap pr-4">
+          <div className="flex flex-col h-full items-end overflow-hidden shrink-0">
+            <div className="font-mono font-medium leading-[2] text-[20px] max-[1010px]:text-[2.2vw] text-primary-950 whitespace-nowrap pr-4 max-[1010px]:pr-1">
               {content.lines.map((line, idx) => (
-                <p key={line.lineNumber} className={idx < content.lines.length - 1 ? 'mb-0' : ''}>
+                <p 
+                  key={line.lineNumber} 
+                  className="block"
+                  style={{ 
+                    margin: 0, 
+                    fontFamily: 'inherit',
+                  }}
+                >
                   {line.lineNumber}
                 </p>
               ))}
@@ -324,7 +345,7 @@ export default function RoleBasedHero({
           </div>
 
           {/* Code */}
-          <AutoScaleCode lines={content.lines} />
+          <AutoScaleCode lines={content.lines} className="min-w-0" />
         </div>
       ) : null}
     </div>

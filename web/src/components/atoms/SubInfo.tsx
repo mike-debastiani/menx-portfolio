@@ -1,4 +1,4 @@
-export type SubInfoSize = 'lg' | 'base';
+export type SubInfoSize = 'lg' | 'base' | 'sm';
 
 export interface SubInfoProps {
   label: string;
@@ -23,6 +23,10 @@ const sizeStyles: Record<
     label: 'font-mono font-medium text-base leading-[1.5] text-primary-300',
     value: 'font-sans font-normal text-base leading-[1.5] text-primary-950',
   },
+  sm: {
+    label: 'font-mono font-medium text-sm leading-[1.5] text-primary-300',
+    value: 'font-sans font-normal text-sm leading-[1.5] text-primary-950',
+  },
 };
 
 export default function SubInfo({
@@ -35,15 +39,15 @@ export default function SubInfo({
   const styles = sizeStyles[size];
 
   return (
-    <div className={`flex gap-4 items-center ${className}`}>
+    <div className={`flex gap-4 max-[400px]:gap-2 items-center ${className}`}>
       <p className={styles.label}>{label}</p>
       {dot && (
-        <span className="relative flex size-[9px] shrink-0 -mr-2">
+        <span className="relative flex size-[9px] shrink-0 -mr-2 max-[400px]:mr-2">
           <span className="absolute inline-flex h-full w-full animate-ping-slow rounded-full bg-[#14cd90] opacity-75"></span>
           <span className="relative inline-flex size-[9px] rounded-full bg-[#14cd90]"></span>
         </span>
       )}
-      <p className={styles.value}>{value}</p>
+      <p className={`${styles.value} ${dot ? 'max-[400px]:-ml-2' : ''}`}>{value}</p>
     </div>
   );
 }

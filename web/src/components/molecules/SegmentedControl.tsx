@@ -25,12 +25,12 @@ const sizeStyles: Record<
   }
 > = {
   base: {
-    container: 'flex gap-2 items-center',
-    segment: 'font-mono font-normal text-base leading-[1.5] px-6 py-3 rounded-full',
+    container: 'flex gap-2 max-[860px]:gap-1 max-[475px]:gap-2 items-center',
+    segment: 'font-mono font-normal text-base leading-[1.5] px-6 py-3 max-[860px]:text-sm max-[860px]:px-3 rounded-full',
   },
   sm: {
-    container: 'flex gap-2 items-center',
-    segment: 'font-mono font-normal text-sm leading-[1.5] px-5 py-2 rounded-full',
+    container: 'flex gap-2 max-[860px]:gap-1 max-[475px]:gap-2 items-center',
+    segment: 'font-mono font-normal text-sm leading-[1.5] px-5 py-2 max-[860px]:px-3 rounded-full',
   },
 };
 
