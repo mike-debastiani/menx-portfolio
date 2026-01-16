@@ -10,7 +10,7 @@ import HamburgerIcon from './HamburgerIcon';
 const navItems = [
   { label: 'Work', href: '/relevant-work' },
   { label: 'Lab', href: '/lab-projects' },
-  { label: 'Workflow', href: '/workflow' },
+  { label: 'Workflow', href: '/#workflow' },
   { label: 'About', href: '/about' },
 ];
 

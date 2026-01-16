@@ -36,16 +36,16 @@ export default function FooterSection({
     {
       label: 'Connect',
       items: [
-        { label: 'Behance', href: 'https://www.behance.net' },
-        { label: 'LinkedIn', href: 'https://www.linkedin.com' },
-        { label: 'Dribbble', href: 'https://dribbble.com' },
+        { label: 'Behance', href: 'https://www.behance.net/mikedebastiani1' },
+        { label: 'LinkedIn', href: 'https://www.linkedin.com/in/mike-de-bastiani-aab161290' },
+        { label: 'GitHub', href: 'https://github.com/mike-debastiani' },
       ],
     },
     {
       label: 'Write me',
       items: [
         { label: 'hello@mikedebastiani.ch', href: 'mailto:hello@mikedebastiani.ch' },
-        { label: 'BOOK A CALL', href: 'https://cal.com/mike-de-bastiani-4xbsfh' },
+        { label: 'Book a call', href: 'https://cal.com/mike-de-bastiani-4xbsfh' },
       ],
     },
   ];
