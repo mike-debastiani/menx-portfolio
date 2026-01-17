@@ -272,5 +272,25 @@ main {
       grid-column: span 6 / span 6;
     }
   }
+
+  /* InfoRows responsive text size - smaller font below 450px */
+  @media (max-width: 449px) {
+    .info-rows-label {
+      font-size: 0.875rem; /* text-sm */
+      line-height: 1.25rem; /* leading-5 */
+    }
+    
+    .info-rows-item {
+      font-size: 0.875rem; /* text-sm */
+      line-height: 1.25rem; /* leading-5 */
+    }
+  }
+
+  /* InfoRows responsive gap - smaller gap below 400px */
+  @media (max-width: 399px) {
+    .info-rows-row {
+      gap: 0rem !important; /* gap-1 */
+    }
+  }
 }
 

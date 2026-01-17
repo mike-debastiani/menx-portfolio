@@ -88,7 +88,7 @@ export default function FooterSection({
                   {formatTitle(customCtaTitle)}
                 </h2>
                 {(primaryButtonText || secondaryButtonText) && (
-                  <div className="flex flex-col sm:flex-row gap-3">
+                  <div className="flex flex-row gap-3">
                     {primaryButtonText && (
                       primaryButtonFileUrl ? (
                         <a
@@ -146,19 +146,19 @@ export default function FooterSection({
               {footerRows.map((row, rowIndex) => (
                 <div
                   key={rowIndex}
-                  className="border-t border-primary-200 pt-3 flex flex-col gap-4 xl:grid xl:grid-cols-6 xl:gap-6"
+                  className="info-rows-row border-t border-primary-200 pt-3 grid grid-cols-2 gap-3 md:gap-6"
                   style={{ borderTopWidth: '0.5px' }}
                 >
-                  {/* Label - at left edge (takes 3 cols to align items to column 10) */}
-                  <div className="xl:col-span-3 font-mono font-normal text-base leading-[1.4] text-primary-300">
+                  {/* Label - always takes 50% of width */}
+                  <div className="info-rows-label font-mono font-normal text-base leading-[1.4] text-primary-300">
                     {row.label}
                   </div>
 
-                  {/* Items - aligned to column 10 (takes remaining 3 cols) */}
-                  <div className="xl:col-span-3 flex flex-col">
+                  {/* Items - always takes 50% of width */}
+                  <div className="flex flex-col">
                     {row.items.map((item, itemIndex) => {
                       const isLast = itemIndex === row.items.length - 1;
-                      const itemClasses = `block font-sans font-medium text-base leading-[1.4] text-primary-950 ${
+                      const itemClasses = `info-rows-item block font-sans font-medium text-base leading-[1.4] text-primary-950 ${
                         isLast ? '' : 'mb-[9px]'
                       }`;
 
