@@ -324,8 +324,9 @@ export default function WorkflowAtlasSection({ data, className = '' }: WorkflowA
             </div>
           </div>
 
-          {/* Timeline with gap-12 (48px) from Impression Gallery */}
-          <div className="mt-12">
+          {/* Timeline with responsive gap from Impression Gallery */}
+          {/* Smaller gap on mobile (< 600px), full gap on larger screens */}
+          <div className="mt-8 min-[600px]:mt-12">
             <WorkflowAtlasTimeline
               segments={timelineSegments}
               activeId={activeMethodId || undefined}
