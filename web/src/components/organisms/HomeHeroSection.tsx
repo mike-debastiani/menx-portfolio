@@ -51,7 +51,6 @@ export default function HomeHeroSection({
   className = '',
 }: HomeHeroSectionProps) {
   const screenWidth = useScreenSize();
-  const isSmallScreen = screenWidth > 0 && screenWidth < 630;
   const isVerySmallScreen = screenWidth > 0 && screenWidth < 475;
   const isExtraSmallScreen = screenWidth > 0 && screenWidth <= 375;
 
@@ -63,30 +62,18 @@ export default function HomeHeroSection({
   }>(() => {
     if (!homeData?.roles || homeData.roles.length === 0) {
       // Fallback to heroProps or defaults
-      let fallbackTabs = heroProps?.tabs;
-      
-      // Filter out "Hiring Managers" on small screens
-      if (isSmallScreen && fallbackTabs) {
-        fallbackTabs = fallbackTabs.filter((tab) => tab.id !== 'hiring-managers');
-      }
-      
       return {
-        tabs: fallbackTabs,
+        tabs: heroProps?.tabs,
         contentByRole: heroProps?.contentByRole,
         defaultRoleId: heroProps?.defaultRoleId ?? 'for-anyone',
       };
     }
 
     // Convert roles to tabs
-    let tabs: RoleTab[] = homeData.roles.map((role) => ({
+    const tabs: RoleTab[] = homeData.roles.map((role) => ({
       id: role.id as RoleId,
       label: role.label,
     }));
-
-    // Filter out "Hiring Managers" on small screens
-    if (isSmallScreen) {
-      tabs = tabs.filter((tab) => tab.id !== 'hiring-managers');
-    }
 
     // Convert roles to contentByRole
     const contentByRole: Record<RoleId, RoleHeroContent> = {} as Record<RoleId, RoleHeroContent>;
@@ -110,40 +97,16 @@ export default function HomeHeroSection({
       }
     });
 
-    // Ensure defaultRoleId is not "hiring-managers" if filtered out
-    let selectedDefaultRoleId = (homeData.roles[0]?.id as RoleId) ?? 'for-anyone';
-    if (isSmallScreen && selectedDefaultRoleId === 'hiring-managers') {
-      // Find first available role that's not "hiring-managers"
-      selectedDefaultRoleId = (tabs.find((tab) => tab.id !== 'hiring-managers')?.id as RoleId) ?? 'for-anyone';
-    }
+    const selectedDefaultRoleId = (homeData.roles[0]?.id as RoleId) ?? 'for-anyone';
 
     return {
       tabs,
       contentByRole: Object.keys(contentByRole).length > 0 ? contentByRole : undefined,
       defaultRoleId: selectedDefaultRoleId,
     };
-  }, [homeData, heroProps, isSmallScreen]);
+  }, [homeData, heroProps]);
 
   const [activeRoleId, setActiveRoleId] = useState<RoleId>(defaultRoleId);
-
-  // Update activeRoleId if it's "hiring-managers" and we're on a small screen
-  useEffect(() => {
-    if (isSmallScreen && activeRoleId === 'hiring-managers') {
-      // Switch to first available tab
-      const availableTabs = tabs ?? heroProps?.tabs ?? [];
-      const firstAvailableTab = availableTabs.find((tab) => tab.id !== 'hiring-managers');
-      if (firstAvailableTab) {
-        setActiveRoleId(firstAvailableTab.id as RoleId);
-      }
-    }
-  }, [isSmallScreen, activeRoleId, tabs, heroProps?.tabs]);
-
-  // Force "for-anyone" on very small screens
-  useEffect(() => {
-    if (isVerySmallScreen) {
-      setActiveRoleId('for-anyone');
-    }
-  }, [isVerySmallScreen]);
 
   // Default SubInfoGroup items
   const defaultSubInfoItems: SubInfoGroupItem[] = [

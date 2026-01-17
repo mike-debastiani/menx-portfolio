@@ -245,40 +245,7 @@ export default function RoleBasedHero({
   activeRoleId: externalActiveRoleId,
 }: RoleBasedHeroProps) {
   const [internalActiveRoleId, setInternalActiveRoleId] = useState<RoleId>(defaultRoleId);
-  const [isSmallScreen, setIsSmallScreen] = useState(false);
   const activeRoleId = externalActiveRoleId ?? internalActiveRoleId;
-
-  // Monitor screen size for responsive tabs
-  useEffect(() => {
-    const checkScreenSize = () => {
-      setIsSmallScreen(window.innerWidth < 485);
-    };
-
-    checkScreenSize();
-    window.addEventListener('resize', checkScreenSize);
-    return () => window.removeEventListener('resize', checkScreenSize);
-  }, []);
-
-  // Filter tabs based on screen size
-  const visibleTabs = isSmallScreen
-    ? tabs.filter((tab) => ['for-anyone', 'recruiters', 'designers'].includes(tab.id))
-    : tabs;
-
-  // Ensure active tab is available, fallback to first visible tab if not
-  const effectiveActiveRoleId = visibleTabs.some((tab) => tab.id === activeRoleId)
-    ? activeRoleId
-    : visibleTabs[0]?.id || activeRoleId;
-
-  // Auto-switch to visible tab if current active tab becomes hidden (only for internal state)
-  useEffect(() => {
-    if (!externalActiveRoleId && !visibleTabs.some((tab) => tab.id === activeRoleId)) {
-      const firstVisibleTab = visibleTabs[0];
-      if (firstVisibleTab) {
-        setInternalActiveRoleId(firstVisibleTab.id as RoleId);
-        onRoleChange?.(firstVisibleTab.id as RoleId);
-      }
-    }
-  }, [isSmallScreen, visibleTabs, activeRoleId, externalActiveRoleId, onRoleChange]);
 
   const handleRoleChange = (id: string) => {
     const newRoleId = id as RoleId;
@@ -291,8 +258,8 @@ export default function RoleBasedHero({
     return (
       <div className={className}>
         <SegmentedControl
-          items={visibleTabs}
-          value={effectiveActiveRoleId}
+          items={tabs}
+          value={activeRoleId}
           onChange={handleRoleChange}
           size="base"
         />
@@ -302,7 +269,7 @@ export default function RoleBasedHero({
 
   // Render only content
   if (showContentOnly) {
-    const contentToShow = contentByRole[effectiveActiveRoleId];
+    const contentToShow = contentByRole[activeRoleId];
     return (
       <div className={className}>
         {contentToShow.type === 'headline' ? (
@@ -340,13 +307,13 @@ export default function RoleBasedHero({
   }
 
   // Render both (default behavior)
-  const contentToShow = contentByRole[effectiveActiveRoleId];
+  const contentToShow = contentByRole[activeRoleId];
   return (
     <div className={`flex flex-col gap-8 items-start ${className}`}>
       {/* SegmentedControl */}
       <SegmentedControl
-        items={visibleTabs}
-        value={effectiveActiveRoleId}
+        items={tabs}
+        value={activeRoleId}
         onChange={handleRoleChange}
         size="base"
       />
