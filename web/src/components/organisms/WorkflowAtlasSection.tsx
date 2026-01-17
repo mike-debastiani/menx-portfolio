@@ -265,6 +265,21 @@ export default function WorkflowAtlasSection({ data, className = '' }: WorkflowA
     },
   ], [data.stats]);
 
+  // Extract phase labels from Sanity CMS data
+  const phaseLabels = useMemo(() => {
+    const labels: Partial<Record<WorkflowPhaseKey, string>> = {};
+    
+    // Map each phase from Sanity to its WorkflowPhaseKey and store its name
+    data.phases.forEach((phase) => {
+      const phaseKey = phaseToWorkflowPhaseKey(phase);
+      if (phase.name) {
+        labels[phaseKey] = phase.name;
+      }
+    });
+    
+    return labels;
+  }, [data.phases]);
+
   return (
     <section id="workflow" className={`py-24 overflow-visible ${className}`}>
       <Container>
@@ -315,6 +330,7 @@ export default function WorkflowAtlasSection({ data, className = '' }: WorkflowA
               segments={timelineSegments}
               activeId={activeMethodId || undefined}
               onSegmentSelect={handleTimelineSegmentSelect}
+              phaseLabels={phaseLabels}
             />
           </div>
         </div>

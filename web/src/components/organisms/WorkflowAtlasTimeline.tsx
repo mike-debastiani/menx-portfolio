@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 
 export type WorkflowPhaseKey =
   | 'research'
@@ -42,6 +42,19 @@ const getPhaseColorClass = (phase: WorkflowPhaseKey): string => {
     design: 'bg-accent-orange',
     testing: 'bg-accent-green',
     development: 'bg-accent-darkgrey',
+  };
+  return phaseColorMap[phase];
+};
+
+// Phase to text color mapping (using CSS variables)
+const getPhaseTextColor = (phase: WorkflowPhaseKey): string => {
+  const phaseColorMap: Record<WorkflowPhaseKey, string> = {
+    research: 'var(--color-accent-blue)',
+    analysis: 'var(--color-accent-purple)',
+    ideation: 'var(--color-accent-magenta)',
+    design: 'var(--color-accent-orange)',
+    testing: 'var(--color-accent-green)',
+    development: 'var(--color-accent-darkgrey)',
   };
   return phaseColorMap[phase];
 };
@@ -174,14 +187,31 @@ export default function WorkflowAtlasTimeline({
   const [internalActiveId, setInternalActiveId] = useState<string | undefined>(defaultActiveId);
   const [segmentWidths, setSegmentWidths] = useState<number[]>([]);
   const [isMounted, setIsMounted] = useState(false);
+  const [viewportWidth, setViewportWidth] = useState<number>(() => {
+    if (typeof window !== 'undefined') {
+      return window.innerWidth;
+    }
+    return 1200; // Default to desktop width for SSR
+  });
   const containerRef = useRef<HTMLDivElement>(null);
 
   // Determine active ID (controlled vs uncontrolled)
   const activeId = controlledActiveId !== undefined ? controlledActiveId : internalActiveId;
 
-  // Set mounted flag after hydration
+  // Set mounted flag after hydration and track viewport width
   useEffect(() => {
     setIsMounted(true);
+    
+    const updateViewportWidth = () => {
+      setViewportWidth(window.innerWidth);
+    };
+    
+    updateViewportWidth();
+    window.addEventListener('resize', updateViewportWidth);
+    
+    return () => {
+      window.removeEventListener('resize', updateViewportWidth);
+    };
   }, []);
 
   // Calculate segment widths when container size or segments change
@@ -248,79 +278,180 @@ export default function WorkflowAtlasTimeline({
     return phaseLabels[phase] ?? DEFAULT_PHASE_LABELS[phase];
   };
 
-  // Get all unique phases for legend
-  const uniquePhases: WorkflowPhaseKey[] = [
-    'research',
-    'analysis',
-    'ideation',
-    'design',
-    'testing',
-    'development',
-  ];
+  // Calculate phase label positions
+  // Groups segments by phase and calculates center positions for labels
+  const phaseLabelPositions = useMemo(() => {
+    if (!containerRef.current || segmentWidths.length === 0 || !isMounted) {
+      return [];
+    }
+
+    const viewportWidth = typeof window !== 'undefined' ? window.innerWidth : undefined;
+    const segmentGap = getSegmentGap(viewportWidth);
+    
+    // Group segments by phase and track their positions
+    const phaseGroups = new Map<WorkflowPhaseKey, { startIndex: number; endIndex: number; startPosition: number; endPosition: number }>();
+    
+    let currentPosition = 0;
+    
+    segments.forEach((segment, index) => {
+      const width = segmentWidths[index] || MIN_SEGMENT_WIDTH_DESKTOP;
+      const segmentCenter = currentPosition + width / 2;
+      
+      if (!phaseGroups.has(segment.phase)) {
+        // First segment of this phase
+        phaseGroups.set(segment.phase, {
+          startIndex: index,
+          endIndex: index,
+          startPosition: currentPosition,
+          endPosition: currentPosition + width,
+        });
+      } else {
+        // Extend the phase group
+        const group = phaseGroups.get(segment.phase)!;
+        group.endIndex = index;
+        group.endPosition = currentPosition + width;
+      }
+      
+      // Move to next segment position
+      currentPosition += width + segmentGap;
+    });
+    
+    // Calculate center positions for each phase
+    return Array.from(phaseGroups.entries()).map(([phase, group]) => {
+      const centerPosition = group.startPosition + (group.endPosition - group.startPosition) / 2;
+      return {
+        phase,
+        centerPosition,
+        startPosition: group.startPosition,
+        endPosition: group.endPosition,
+      };
+    });
+  }, [segments, segmentWidths, isMounted]);
 
   return (
-    <div className={`flex flex-col gap-6 items-start w-full ${className}`}>
-      {/* Timeline */}
-      <div
-        ref={containerRef}
-        className="flex gap-0.5 min-[600px]:gap-1 items-center relative w-full"
-        style={{ height: `${ACTIVE_HEIGHT}px` }}
-      >
-        {segments.map((segment, index) => {
-          const isActive = activeId === segment.id;
-          // Use desktop default during SSR to avoid hydration mismatch
-          const fallbackWidth = isMounted ? MIN_SEGMENT_WIDTH_MOBILE : MIN_SEGMENT_WIDTH_DESKTOP;
-          const width = segmentWidths[index] || fallbackWidth;
-          const height = isActive ? ACTIVE_HEIGHT : BASE_HEIGHT;
-          // Use desktop default during SSR
-          const minWidth = isMounted 
-            ? getMinSegmentWidth(window.innerWidth)
-            : MIN_SEGMENT_WIDTH_DESKTOP;
+    <div className={`flex flex-col items-start w-full ${className}`}>
+      {/* Timeline with labels */}
+      <div className="relative w-full">
+        {/* Timeline */}
+        <div
+          ref={containerRef}
+          className="flex gap-0.5 min-[600px]:gap-1 items-center relative w-full"
+          style={{ height: `${ACTIVE_HEIGHT}px` }}
+        >
+          {segments.map((segment, index) => {
+            const isActive = activeId === segment.id;
+            // Use desktop default during SSR to avoid hydration mismatch
+            const fallbackWidth = isMounted ? MIN_SEGMENT_WIDTH_MOBILE : MIN_SEGMENT_WIDTH_DESKTOP;
+            const width = segmentWidths[index] || fallbackWidth;
+            const height = isActive ? ACTIVE_HEIGHT : BASE_HEIGHT;
+            // Use desktop default during SSR
+            const minWidth = isMounted 
+              ? getMinSegmentWidth(window.innerWidth)
+              : MIN_SEGMENT_WIDTH_DESKTOP;
 
-          return (
-            <button
-              key={segment.id}
-              type="button"
-              onClick={() => handleSegmentClick(segment)}
-              onKeyDown={(e) => handleKeyDown(e, segment)}
-              aria-pressed={isActive}
-              title={`${segment.methodName} — ${segment.count} examples`}
-              className={`
-                ${getPhaseColorClass(segment.phase)}
-                rounded-full
-                transition-all duration-200 ease-out
-                focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-950 focus-visible:ring-offset-2
-                ${isActive ? 'opacity-100' : 'opacity-60 hover:opacity-80 hover:scale-y-[1.3]'}
-              `}
-              style={{
-                width: `${width}px`,
-                height: `${height}px`,
-                minWidth: `${minWidth}px`,
-                flexShrink: 0,
-              }}
-              aria-label={`${segment.methodName} method, ${segment.count} examples`}
-            />
-          );
-        })}
-      </div>
+            return (
+              <button
+                key={segment.id}
+                type="button"
+                onClick={() => handleSegmentClick(segment)}
+                onKeyDown={(e) => handleKeyDown(e, segment)}
+                aria-pressed={isActive}
+                title={`${segment.methodName} — ${segment.count} examples`}
+                className={`
+                  ${getPhaseColorClass(segment.phase)}
+                  rounded-full
+                  transition-all duration-200 ease-out
+                  focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-950 focus-visible:ring-offset-2
+                  ${isActive ? 'opacity-100' : 'opacity-60 hover:opacity-80 hover:scale-y-[1.3]'}
+                `}
+                style={{
+                  width: `${width}px`,
+                  height: `${height}px`,
+                  minWidth: `${minWidth}px`,
+                  flexShrink: 0,
+                }}
+                aria-label={`${segment.methodName} method, ${segment.count} examples`}
+              />
+            );
+          })}
+        </div>
 
-      {/* Legend - responsive layout */}
-      <div className="flex flex-wrap gap-3 min-[500px]:gap-4 md:gap-5 lg:gap-6 items-center justify-start px-1 w-full">
-        {uniquePhases.map((phase) => (
-          <div key={phase} className="flex gap-1.5 min-[500px]:gap-2 items-center shrink-0">
-            <div
-              className={`${getPhaseColorClass(phase)} rounded-full shrink-0`}
-              style={{
-                width: `${LEGEND_DOT_SIZE}px`,
-                height: `${LEGEND_DOT_SIZE}px`,
-              }}
-              aria-hidden="true"
-            />
-            <p className="font-mono font-normal leading-[1.25] text-xs min-[500px]:text-[13px] lg:text-sm text-primary-950 whitespace-nowrap">
-              {getPhaseLabel(phase)}
-            </p>
+        {/* Phase Labels - positioned below their segments */}
+        {isMounted && phaseLabelPositions.length > 0 && (
+          <div 
+            className="relative w-full overflow-visible" 
+            style={{ 
+              marginTop: viewportWidth < 600 ? '12px' : '8px', 
+              minHeight: '20px',
+            }}
+          >
+            {phaseLabelPositions.map(({ phase, centerPosition }) => {
+              const isSmallScreen = viewportWidth < 600;
+              
+              if (isSmallScreen) {
+                // For rotated labels: wrapper handles centering, inner element rotates from center top
+                // This ensures all labels align at the top AND are horizontally centered
+                // Labels are positioned above segments with a 12px gap
+                // Since labels are 100px wide and rotate from center top, half (50px) extends down from rotation point
+                // Timeline segments have height ACTIVE_HEIGHT (22px)
+                // Label container has marginTop: 12px, so segment top is at -34px relative to label container
+                // We want label bottom to be 12px above segment top: -34px - 12px = -46px
+                // Label rotation point is 50px above bottom, so: top = -46px - 50px = -96px
+                const LABEL_WIDTH = 100;
+                const GAP_TO_SEGMENTS = 12;
+                const SEGMENT_HEIGHT = ACTIVE_HEIGHT; // 22px
+                const LABEL_CONTAINER_MARGIN = 12; // marginTop of label container
+                // Segment top relative to label container: -(SEGMENT_HEIGHT + LABEL_CONTAINER_MARGIN) = -34px
+                // Label bottom should be: -34px - 12px gap = -46px
+                // Label rotation point (center top) is 50px above bottom, so: top = -46px - 50px = -96px
+                const labelTop = '46';
+                
+                return (
+                  <div
+                    key={phase}
+                    className="absolute"
+                    style={{
+                      left: `${centerPosition}px`,
+                      top: `${labelTop}px`,
+                      transform: 'translateX(-50%)',
+                      display: 'inline-flex',
+                      alignItems: 'flex-start',
+                      justifyContent: 'center',
+                    }}
+                  >
+                    <div
+                      className="font-mono font-normal leading-[0] text-sm whitespace-nowrap"
+                      style={{
+                        transform: 'rotate(90deg)',
+                        transformOrigin: 'center top',
+                        color: getPhaseTextColor(phase),
+                        width: '100px',
+                      }}
+                    >
+                      {getPhaseLabel(phase)}
+                    </div>
+                  </div>
+                );
+              }
+              
+              // For non-rotated labels: normal alignment
+              return (
+                <div
+                  key={phase}
+                  className="absolute font-mono font-normal leading-[1.25] text-xs md:text-sm lg:text-base whitespace-nowrap"
+                  style={{
+                    left: `${centerPosition}px`,
+                    top: '0',
+                    transform: 'translateX(-50%)',
+                    color: getPhaseTextColor(phase),
+                  }}
+                >
+                  {getPhaseLabel(phase)}
+                </div>
+              );
+            })}
           </div>
-        ))}
+        )}
       </div>
     </div>
   );
