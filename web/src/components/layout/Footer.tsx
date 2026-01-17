@@ -9,7 +9,7 @@ export default function Footer({ className = '' }: FooterProps) {
         <p className="font-mono font-normal text-sm leading-[1.4] text-primary-300">
           © 2026 Mike De Bastiani. All rights reserved.
         </p>
-        <p className="font-mono font-normal text-sm leading-[1.4] text-primary-300">
+        <p className="hidden min-[800px]:block font-mono font-normal text-sm leading-[1.4] text-primary-300">
           Canton of Aargau, Switzerland
         </p>
       </div>
