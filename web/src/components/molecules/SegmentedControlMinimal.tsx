@@ -9,7 +9,7 @@ export interface SegmentedControlItem {
   label: string;
 }
 
-export interface SegmentedControlProps {
+export interface SegmentedControlMinimalProps {
   items: SegmentedControlItem[];
   value: string;
   onChange: (id: string) => void;
@@ -25,33 +25,33 @@ const sizeStyles: Record<
   }
 > = {
   base: {
-    container: 'flex gap-2 max-[860px]:gap-1 max-[475px]:gap-2 items-center overflow-x-auto',
-    segment: 'font-mono font-normal text-base leading-[1.4] px-6 py-3 max-[860px]:text-sm max-[860px]:px-3 rounded-full whitespace-nowrap flex-shrink-0',
+    container: 'flex gap-10 max-[860px]:gap-8 max-[475px]:gap-8 items-center overflow-x-auto',
+    segment: 'font-mono text-base leading-[1.4] max-[800px]:text-sm whitespace-nowrap flex-shrink-0',
   },
   sm: {
-    container: 'flex gap-2 max-[860px]:gap-1 max-[475px]:gap-2 items-center overflow-x-auto',
-    segment: 'font-mono font-normal text-sm leading-[1.4] px-5 py-2 max-[860px]:px-3 rounded-full whitespace-nowrap flex-shrink-0',
+    container: 'flex gap-10 max-[860px]:gap-8 max-[475px]:gap-8 items-center overflow-x-auto',
+    segment: 'font-mono text-sm leading-[1.4] whitespace-nowrap flex-shrink-0',
   },
 };
 
 const stateStyles = {
   active: {
-    base: 'bg-primary-100 text-primary-950',
-    hover: 'hover:bg-primary-200 hover:text-primary-950',
+    base: 'text-primary-950 font-normal',
+    hover: 'hover:text-primary-950',
   },
   inactive: {
-    base: 'bg-transparent text-primary-300',
-    hover: 'hover:bg-primary-50 hover:text-primary-700',
+    base: 'text-primary-300 font-normal',
+    hover: 'hover:text-primary-950',
   },
 };
 
-export default function SegmentedControl({
+export default function SegmentedControlMinimal({
   items,
   value,
   onChange,
   size = 'base',
   className = '',
-}: SegmentedControlProps) {
+}: SegmentedControlMinimalProps) {
   const [focusedIndex, setFocusedIndex] = useState<number>(
     items.findIndex((item) => item.id === value) || 0
   );
@@ -221,4 +221,3 @@ export default function SegmentedControl({
     </div>
   );
 }
-

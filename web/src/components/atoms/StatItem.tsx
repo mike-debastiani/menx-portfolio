@@ -27,13 +27,13 @@ const metaStyles: Record<
 > = {
   lg: {
     container: 'flex flex-col items-start gap-1',
-    metaLabel: 'font-mono font-normal text-lg leading-[1.5] text-primary-300',
-    metaValue: 'font-sans font-medium text-lg leading-[1.5] text-primary-950',
+    metaLabel: 'font-mono font-normal text-lg leading-[1.4] text-primary-300',
+    metaValue: 'font-sans font-medium text-lg leading-[1.4] text-primary-950',
   },
   base: {
     container: 'flex flex-col items-start gap-1',
-    metaLabel: 'font-mono font-normal text-base leading-[1.5] text-primary-300',
-    metaValue: 'font-sans font-medium text-base leading-[1.5] text-primary-950',
+    metaLabel: 'font-mono font-normal text-base leading-[1.4] text-primary-300',
+    metaValue: 'font-sans font-medium text-base leading-[1.4] text-primary-950',
   },
 };
 

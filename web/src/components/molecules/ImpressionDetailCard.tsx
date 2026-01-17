@@ -44,7 +44,7 @@ export default function ImpressionDetailCard({
         </div>
 
         {/* Description - hidden only below 500px */}
-        <p className="hidden max-[500px]:hidden min-[500px]:block font-normal text-[15px] lg:text-base leading-[1.5] text-primary-500 w-full whitespace-pre-wrap">
+        <p className="hidden max-[500px]:hidden min-[500px]:block font-normal text-[15px] lg:text-base leading-[1.4] text-primary-500 w-full whitespace-pre-wrap">
           {description}
         </p>
       </div>

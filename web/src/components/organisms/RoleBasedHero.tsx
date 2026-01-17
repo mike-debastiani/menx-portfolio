@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import SegmentedControl from '@/components/molecules/SegmentedControl';
+import SegmentedControlMinimal from '@/components/molecules/SegmentedControlMinimal';
 
 export type RoleId = 'for-anyone' | 'recruiters' | 'hiring-managers' | 'designers' | 'engineers';
 
@@ -257,7 +257,7 @@ export default function RoleBasedHero({
   if (showControlsOnly) {
     return (
       <div className={className}>
-        <SegmentedControl
+        <SegmentedControlMinimal
           items={tabs}
           value={activeRoleId}
           onChange={handleRoleChange}
@@ -273,7 +273,7 @@ export default function RoleBasedHero({
     return (
       <div className={className}>
         {contentToShow.type === 'headline' ? (
-          <div className="flex items-center pl-0 md:pl-[21px] pr-0 py-0 w-full min-[1200px]:w-[1000px]">
+          <div className="flex items-center pl-0 md:pl-[0px] pr-0 py-0 w-full min-[1200px]:w-[1000px]">
             <p className="flex-1 font-sans font-medium leading-[1.25] text-2xl min-[375px]:text-3xl md:text-4xl text-primary-950 whitespace-pre-wrap">
               {contentToShow.text}
             </p>
@@ -311,7 +311,7 @@ export default function RoleBasedHero({
   return (
     <div className={`flex flex-col gap-8 items-start ${className}`}>
       {/* SegmentedControl */}
-      <SegmentedControl
+      <SegmentedControlMinimal
         items={tabs}
         value={activeRoleId}
         onChange={handleRoleChange}

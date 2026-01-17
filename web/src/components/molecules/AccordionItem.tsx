@@ -88,7 +88,7 @@ export default function AccordionItem({
         aria-controls={contentId}
         className="flex items-center justify-between w-full text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2"
       >
-        <div className="font-sans font-medium text-lg leading-[1.5] text-primary-950">
+        <div className="font-sans font-medium text-lg leading-[1.4] text-primary-950">
           {title}
         </div>
         <div
@@ -121,7 +121,7 @@ export default function AccordionItem({
           maxHeight: contentHeight,
         }}
       >
-        <div ref={contentRef} className="font-sans font-normal text-base leading-[1.5] text-primary-500">
+        <div ref={contentRef} className="font-sans font-normal text-base leading-[1.4] text-primary-500">
           {children}
         </div>
       </div>
