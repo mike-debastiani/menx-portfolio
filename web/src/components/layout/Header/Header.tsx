@@ -3,9 +3,9 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
+import Image from 'next/image';
 import Button from '@/components/atoms/Button';
 import { Container } from '@/components/layout';
-import HamburgerIcon from './HamburgerIcon';
 
 const navItems = [
   { label: 'Work', href: '/relevant-work' },
@@ -13,6 +13,34 @@ const navItems = [
   { label: 'Workflow', href: '/#workflow' },
   { label: 'About', href: '/about' },
 ];
+
+// Footer data for mobile menu (same as FooterSection)
+const footerRows = [
+  {
+    label: 'Connect',
+    items: [
+      { label: 'Behance', href: 'https://www.behance.net/mikedebastiani1' },
+      { label: 'LinkedIn', href: 'https://www.linkedin.com/in/mike-de-bastiani-aab161290' },
+      { label: 'GitHub', href: 'https://github.com/mike-debastiani' },
+    ],
+  },
+  {
+    label: 'Write me',
+    items: [
+      { label: 'hello@mikedebastiani.ch', href: 'mailto:hello@mikedebastiani.ch' },
+      { label: 'Book a call', href: 'https://cal.com/mike-de-bastiani-4xbsfh' },
+    ],
+  },
+];
+
+function isExternalUrl(url: string): boolean {
+  try {
+    const parsed = new URL(url);
+    return parsed.protocol === 'http:' || parsed.protocol === 'https:';
+  } catch {
+    return false;
+  }
+}
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -133,120 +161,214 @@ export default function Header() {
   };
 
   return (
-    <header className="sticky top-0 z-50 w-full bg-white border-b border-primary-100">
-      <Container as="nav" aria-label="Main navigation">
-        <div className="flex h-16 items-center justify-between">
-          {/* Wordmark */}
-          <Link
-            href="/"
-            className="font-mono text-base font-medium text-primary-950 hover:text-primary-700 transition-colors"
-          >
-            &lt;mike de bastiani/&gt;
-          </Link>
+    <>
+      <header className="sticky top-0 z-50 w-full bg-white md:border-b border-primary-100">
+        <Container as="nav" aria-label="Main navigation">
+          <div className="flex h-16 items-center justify-between">
+            {/* Wordmark */}
+            <Link
+              href="/"
+              className="font-mono text-base font-medium text-primary-950 hover:text-primary-700 transition-colors"
+            >
+              &lt;mike de bastiani/&gt;
+            </Link>
 
-          {/* Desktop Navigation */}
-          <div className="hidden lg:flex lg:items-center lg:gap-8">
-            {navItems.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={`font-mono text-base font-medium transition-colors ${
-                  isActive(item.href)
-                    ? 'text-primary-950'
-                    : 'text-primary-700 hover:text-primary-950'
-                }`}
-              >
-                {item.label}
-              </Link>
-            ))}
-            <Button variant="primary" size="sm" icon="right" href="/contact">
-              CONTACT
-            </Button>
+            {/* Desktop Navigation */}
+            <div className="hidden md:flex md:items-center md:gap-8">
+              {navItems.map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={`font-mono text-base font-medium transition-colors ${
+                    isActive(item.href)
+                      ? 'text-primary-950'
+                      : 'text-primary-700 hover:text-primary-950'
+                  }`}
+                >
+                  {item.label}
+                </Link>
+              ))}
+              <Button variant="primary" size="sm" icon="right" href="/contact">
+                CONTACT
+              </Button>
+            </div>
+
+            {/* Mobile/Tablet Hamburger Button with MENU text */}
+            <button
+              ref={hamburgerButtonRef}
+              type="button"
+              onClick={toggleMenu}
+              aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
+              aria-expanded={isMenuOpen}
+              className="md:hidden flex items-center gap-2 text-primary-950 hover:text-primary-700 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-950 focus-visible:ring-offset-2 rounded"
+            >
+              <Image
+                src="/icons/hamburger-icon-primary400.svg"
+                alt=""
+                width={15}
+                height={10}
+                className="shrink-0"
+                aria-hidden="true"
+              />
+              <span className="font-mono font-normal text-base uppercase tracking-normal">
+                MENU
+              </span>
+            </button>
+          </div>
+        </Container>
+      </header>
+
+      {/* Fullscreen Mobile Menu Overlay */}
+      <div
+        ref={menuRef}
+        className={`fixed inset-0 z-50 bg-white transition-transform duration-300 ease-out md:hidden ${
+          isMenuOpen ? 'translate-x-0' : 'translate-x-full'
+        }`}
+        role="dialog"
+        aria-modal="true"
+        aria-label="Mobile menu"
+        aria-hidden={!isMenuOpen}
+      >
+        <div className="flex flex-col h-full">
+          {/* Header Section with Logo and Close Button */}
+          <div className="flex items-center justify-between px-4 pt-4 pb-6">
+            {/* Logo */}
+            <Link
+              href="/"
+              onClick={closeMenu}
+              className="font-mono text-base font-medium text-primary-950 hover:text-primary-700 transition-colors"
+            >
+              &lt;mdb/&gt;
+            </Link>
+
+            {/* Close Button */}
+            <button
+              type="button"
+              onClick={closeMenu}
+              aria-label="Close menu"
+              className="flex items-center gap-2 text-primary-300 hover:text-primary-950 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-950 focus-visible:ring-offset-2 rounded"
+            >
+              <Image
+                src="/icons/close-icon-primary400.svg"
+                alt=""
+                width={11}
+                height={11}
+                className="shrink-0"
+                aria-hidden="true"
+              />
+              <span className="font-mono font-normal text-base uppercase tracking-normal">
+                CLOSE
+              </span>
+            </button>
           </div>
 
-          {/* Mobile Hamburger Button */}
-          <button
-            ref={hamburgerButtonRef}
-            type="button"
-            onClick={toggleMenu}
-            aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
-            aria-expanded={isMenuOpen}
-            className="lg:hidden p-2 text-primary-950 hover:text-primary-700 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-950 focus-visible:ring-offset-2 rounded"
-          >
-            <HamburgerIcon isOpen={isMenuOpen} />
-          </button>
-        </div>
-      </Container>
+          {/* Main Content Area */}
+          <div className="flex-1 flex flex-col justify-between min-h-0">
+            {/* Navigation Links */}
+            <nav className="px-4 pt-4 overflow-y-auto" aria-label="Mobile navigation">
+              <ul className="flex flex-col">
+                {navItems.map((item, index) => (
+                  <li key={item.href}>
+                    {index > 0 && (
+                      <div className="border-t border-primary-200 my-4" style={{ borderTopWidth: '0.5px' }} />
+                    )}
+                    <Link
+                      href={item.href}
+                      onClick={closeMenu}
+                      className={`block font-mono font-medium text-3xl leading-[1.4] transition-colors ${
+                        isActive(item.href)
+                          ? 'text-primary-950'
+                          : 'text-primary-300 hover:text-primary-950'
+                      }`}
+                    >
+                      {item.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </nav>
 
-      {/* Mobile Menu Overlay */}
-      {isMenuOpen && (
-        <>
-          {/* Backdrop */}
-          <div
-            className="fixed inset-0 z-40 bg-primary-950/20 backdrop-blur-sm transition-opacity duration-300 lg:hidden"
-            aria-hidden="true"
-            onClick={closeMenu}
-          />
+            {/* Bottom Section: InfoRows + Button */}
+            <div className="flex-shrink-0 mt-auto">
+              {/* InfoRows Section - using same code as FooterSection */}
+              <div className="px-4 pt-12">
+                <div className="flex flex-col gap-12">
+                  {footerRows.map((row, rowIndex) => (
+                    <div
+                      key={rowIndex}
+                      className="info-rows-row border-t border-primary-200 pt-3 grid grid-cols-2 gap-3 md:gap-6"
+                      style={{ borderTopWidth: '0.5px' }}
+                    >
+                      {/* Label - always takes 50% of width */}
+                      <div className="info-rows-label font-mono font-normal text-base leading-[1.4] text-primary-300">
+                        {row.label}
+                      </div>
 
-          {/* Menu Panel */}
-          <div
-            ref={menuRef}
-            className="fixed top-16 right-0 bottom-0 z-50 w-full max-w-sm bg-white border-l border-primary-100 shadow-xl transition-transform duration-300 ease-out lg:hidden"
-            role="dialog"
-            aria-modal="true"
-            aria-label="Mobile menu"
-          >
-            <div className="flex flex-col h-full">
-              {/* Close Button */}
-              <div className="flex justify-end p-4 border-b border-primary-100">
-                <button
-                  type="button"
-                  onClick={closeMenu}
-                  aria-label="Close menu"
-                  className="p-2 text-primary-950 hover:text-primary-700 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-950 focus-visible:ring-offset-2 rounded"
-                >
-                  <HamburgerIcon isOpen={true} />
-                </button>
+                      {/* Items - always takes 50% of width */}
+                      <div className="flex flex-col">
+                        {row.items.map((item, itemIndex) => {
+                          const isLast = itemIndex === row.items.length - 1;
+                          const itemClasses = `info-rows-item block font-sans font-medium text-base leading-[1.4] text-primary-950 ${
+                            isLast ? '' : 'mb-[9px]'
+                          }`;
+
+                          if (item.href) {
+                            const isExternal = isExternalUrl(item.href);
+
+                            if (isExternal || item.href.startsWith('mailto:')) {
+                              return (
+                                <a
+                                  key={itemIndex}
+                                  href={item.href}
+                                  target={item.href.startsWith('mailto:') ? undefined : '_blank'}
+                                  rel={item.href.startsWith('mailto:') ? undefined : 'noreferrer'}
+                                  className={`${itemClasses} hover:underline`}
+                                >
+                                  {item.label}
+                                </a>
+                              );
+                            }
+
+                            return (
+                              <Link
+                                key={itemIndex}
+                                href={item.href}
+                                className={`${itemClasses} hover:underline`}
+                              >
+                                {item.label}
+                              </Link>
+                            );
+                          }
+
+                          return (
+                            <span key={itemIndex} className={itemClasses}>
+                              {item.label}
+                            </span>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
 
-              {/* Navigation Links */}
-              <nav className="flex-1 px-6 py-8" aria-label="Mobile navigation">
-                <ul className="flex flex-col gap-6">
-                  {navItems.map((item) => (
-                    <li key={item.href}>
-                      <Link
-                        href={item.href}
-                        onClick={closeMenu}
-                        className={`block font-mono text-lg font-medium transition-colors ${
-                          isActive(item.href)
-                            ? 'text-primary-950'
-                            : 'text-primary-700 hover:text-primary-950'
-                        }`}
-                      >
-                        {item.label}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              </nav>
-
-              {/* CTA Button */}
-              <div className="px-6 pb-8 pt-4 border-t border-primary-100">
+              {/* Bottom CTA Button */}
+              <div className="px-4 pb-4 pt-8">
                 <Button
                   variant="primary"
                   size="base"
                   icon="right"
-                  href="/contact"
+                  href="https://cal.com/mike-de-bastiani-4xbsfh"
                   onClick={closeMenu}
                   className="w-full justify-center"
                 >
-                  CONTACT
+                  BOOK A CALL
                 </Button>
               </div>
             </div>
           </div>
-        </>
-      )}
-    </header>
+        </div>
+      </div>
+    </>
   );
 }
