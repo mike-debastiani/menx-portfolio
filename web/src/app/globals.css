@@ -8,6 +8,11 @@
   --layout-columns: 4;
   --layout-margin: 16px;
   --layout-gutter: 16px;
+  
+  /* ImpressionCard Dimensions - Mobile */
+  --impression-card-width: 280;
+  --impression-card-height: 310;
+  --impression-card-overlap-margin: 16;
 }
 
 /* Layout Tokens - Tablet (md: 768px) */
@@ -16,6 +21,11 @@
     --layout-columns: 6;
     --layout-margin: 16px;
     --layout-gutter: 16px;
+    
+    /* ImpressionCard Dimensions - Tablet */
+    --impression-card-width: 340;
+    --impression-card-height: 380;
+    --impression-card-overlap-margin: 20;
   }
 }
 
@@ -25,6 +35,11 @@
     --layout-columns: 12;
     --layout-margin: 24px;
     --layout-gutter: 24px;
+    
+    /* ImpressionCard Dimensions - Desktop */
+    --impression-card-width: 398;
+    --impression-card-height: 436;
+    --impression-card-overlap-margin: 24;
   }
 }
 

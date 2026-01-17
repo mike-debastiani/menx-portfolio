@@ -57,16 +57,39 @@ const DEFAULT_PHASE_LABELS: Record<WorkflowPhaseKey, string> = {
 };
 
 // Constants from Figma design
-const SEGMENT_GAP = 4; // gap-[4px] between segments
+const SEGMENT_GAP_MOBILE = 2; // gap between segments on mobile
+const SEGMENT_GAP_DESKTOP = 4; // gap between segments on desktop
 const BASE_HEIGHT = 16; // h-[16px] for normal segments
 const ACTIVE_HEIGHT = 22; // h-[22px] for active segment (6px taller)
-const MIN_SEGMENT_WIDTH = 10; // minimum width to keep segments visible
-const LEGEND_GAP = 24; // gap-[24px] between legend items
+const MIN_SEGMENT_WIDTH_MOBILE = 2; // minimum width on mobile to keep segments visible but allow small sizes
+const MIN_SEGMENT_WIDTH_DESKTOP = 10; // minimum width on desktop
+const LEGEND_GAP_MOBILE = 12; // gap between legend items on mobile
+const LEGEND_GAP_DESKTOP = 24; // gap between legend items on desktop
 const LEGEND_DOT_TEXT_GAP = 8; // gap-[8px] between dot and text
 const LEGEND_DOT_SIZE = 12; // size-[12px] for legend dots
 const CONTAINER_GAP = 24; // gap-[24px] between timeline and legend
 
+// Get minimum segment width based on viewport width
+// Uses desktop default for SSR to avoid hydration mismatch
+const getMinSegmentWidth = (viewportWidth?: number): number => {
+  if (typeof viewportWidth === 'undefined' || typeof window === 'undefined') {
+    return MIN_SEGMENT_WIDTH_DESKTOP; // Default for SSR
+  }
+  return viewportWidth < 600 ? MIN_SEGMENT_WIDTH_MOBILE : MIN_SEGMENT_WIDTH_DESKTOP;
+};
+
+// Get segment gap based on viewport width
+// Uses desktop default for SSR to avoid hydration mismatch
+const getSegmentGap = (viewportWidth?: number): number => {
+  if (typeof viewportWidth === 'undefined' || typeof window === 'undefined') {
+    return SEGMENT_GAP_DESKTOP; // Default for SSR
+  }
+  return viewportWidth < 600 ? SEGMENT_GAP_MOBILE : SEGMENT_GAP_DESKTOP;
+};
+
 // Calculate proportional widths for segments
+// Always maintains exact ratio between segments based on count
+// Timeline always uses 100% of container width (minus gaps)
 const calculateSegmentWidths = (
   segments: WorkflowSegment[],
   containerWidth: number
@@ -74,43 +97,69 @@ const calculateSegmentWidths = (
   const N = segments.length;
   if (N === 0) return [];
 
-  const totalGapWidth = (N - 1) * SEGMENT_GAP;
+  // For SSR, use undefined to get desktop defaults
+  const viewportWidth = typeof window !== 'undefined' ? window.innerWidth : undefined;
+  const minWidth = getMinSegmentWidth(viewportWidth);
+  const segmentGap = getSegmentGap(viewportWidth);
+  const totalGapWidth = (N - 1) * segmentGap;
   const availableWidth = containerWidth - totalGapWidth;
 
   if (availableWidth <= 0) {
-    // Fallback: equal widths if container is too small
-    return new Array(N).fill(Math.max(MIN_SEGMENT_WIDTH, availableWidth / N));
+    // Fallback: proportional widths even if container is very small
+    const weights = segments.map((seg) => Math.max(seg.count, 1));
+    const totalWeight = weights.reduce((sum, w) => sum + w, 0);
+    return weights.map((weight) => (weight / totalWeight) * Math.max(availableWidth, N * minWidth));
   }
 
-  // Calculate weights (use max(count, 1) to ensure minimum weight)
+  // Calculate weights based on count (always proportional)
   const weights = segments.map((seg) => Math.max(seg.count, 1));
   const totalWeight = weights.reduce((sum, w) => sum + w, 0);
 
-  // Calculate preliminary widths proportional to weights
+  // Calculate widths strictly proportional to weights
   let widths = weights.map((weight) => {
-    const proportionalWidth = (weight / totalWeight) * availableWidth;
-    return Math.max(proportionalWidth, MIN_SEGMENT_WIDTH);
+    return (weight / totalWeight) * availableWidth;
   });
 
-  // Check if enforcing min width causes overflow
-  const totalWidth = widths.reduce((sum, w) => sum + w, 0);
-  if (totalWidth > availableWidth) {
-    // Scale down proportionally while maintaining minimum
-    const scale = (availableWidth - N * MIN_SEGMENT_WIDTH) / (totalWidth - N * MIN_SEGMENT_WIDTH);
-    widths = widths.map((w) => MIN_SEGMENT_WIDTH + (w - MIN_SEGMENT_WIDTH) * scale);
+  // Check if any segment is below minimum width
+  const needsAdjustment = widths.some((w) => w < minWidth);
+  
+  if (needsAdjustment) {
+    // Find segments that need minimum width
+    const segmentsNeedingMin = widths.map((w, i) => w < minWidth).reduce((count, needs) => count + (needs ? 1 : 0), 0);
+    const minWidthTotal = segmentsNeedingMin * minWidth;
+    const remainingWidth = availableWidth - minWidthTotal;
+    
+    if (remainingWidth < 0) {
+      // Container is too small - use absolute minimums
+      return new Array(N).fill(minWidth);
+    }
+    
+    // Recalculate: segments at minimum get minWidth, others get proportional share of remaining
+    widths = widths.map((w, i) => {
+      if (w < minWidth) {
+        return minWidth;
+      }
+      // Recalculate weights for segments above minimum
+      const aboveMinWeights = weights.filter((weight, idx) => widths[idx] >= minWidth);
+      const aboveMinTotal = aboveMinWeights.reduce((sum, w) => sum + w, 0);
+      return (weights[i] / aboveMinTotal) * remainingWidth;
+    });
   }
 
-  // Distribute rounding errors
+  // Ensure exact total width - distribute rounding errors proportionally
   const currentTotal = widths.reduce((sum, w) => sum + w, 0);
   const difference = availableWidth - currentTotal;
-  if (Math.abs(difference) > 0.01) {
-    // Distribute leftover pixels
-    const adjustmentPerSegment = difference / N;
-    widths = widths.map((w) => w + adjustmentPerSegment);
+  
+  if (Math.abs(difference) > 0.001) {
+    // Distribute difference proportionally to maintain ratio
+    widths = widths.map((w) => {
+      const proportion = w / currentTotal;
+      return w + difference * proportion;
+    });
   }
 
-  // Ensure final widths are at least MIN_SEGMENT_WIDTH
-  return widths.map((w) => Math.max(w, MIN_SEGMENT_WIDTH));
+  // Final safety check: ensure no segment is below absolute minimum
+  return widths.map((w) => Math.max(w, minWidth));
 };
 
 export default function WorkflowAtlasTimeline({
@@ -124,10 +173,16 @@ export default function WorkflowAtlasTimeline({
 }: WorkflowAtlasTimelineProps) {
   const [internalActiveId, setInternalActiveId] = useState<string | undefined>(defaultActiveId);
   const [segmentWidths, setSegmentWidths] = useState<number[]>([]);
+  const [isMounted, setIsMounted] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
   // Determine active ID (controlled vs uncontrolled)
   const activeId = controlledActiveId !== undefined ? controlledActiveId : internalActiveId;
+
+  // Set mounted flag after hydration
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   // Calculate segment widths when container size or segments change
   useEffect(() => {
@@ -139,22 +194,29 @@ export default function WorkflowAtlasTimeline({
       setSegmentWidths(widths);
     };
 
-    updateWidths();
+    // Only update widths after mount to avoid hydration mismatch
+    if (isMounted) {
+      updateWidths();
+    }
 
     // Use ResizeObserver to handle container size changes
     const resizeObserver = new ResizeObserver(updateWidths);
-    if (containerRef.current) {
+    if (containerRef.current && isMounted) {
       resizeObserver.observe(containerRef.current);
     }
 
     // Also listen to window resize as fallback
-    window.addEventListener('resize', updateWidths);
+    if (isMounted) {
+      window.addEventListener('resize', updateWidths);
+    }
 
     return () => {
       resizeObserver.disconnect();
-      window.removeEventListener('resize', updateWidths);
+      if (isMounted) {
+        window.removeEventListener('resize', updateWidths);
+      }
     };
-  }, [segments]);
+  }, [segments, isMounted]);
 
   const handleSegmentClick = useCallback(
     (segment: WorkflowSegment) => {
@@ -201,13 +263,19 @@ export default function WorkflowAtlasTimeline({
       {/* Timeline */}
       <div
         ref={containerRef}
-        className="flex gap-1 items-center relative w-full"
+        className="flex gap-0.5 min-[600px]:gap-1 items-center relative w-full"
         style={{ height: `${ACTIVE_HEIGHT}px` }}
       >
         {segments.map((segment, index) => {
           const isActive = activeId === segment.id;
-          const width = segmentWidths[index] || MIN_SEGMENT_WIDTH;
+          // Use desktop default during SSR to avoid hydration mismatch
+          const fallbackWidth = isMounted ? MIN_SEGMENT_WIDTH_MOBILE : MIN_SEGMENT_WIDTH_DESKTOP;
+          const width = segmentWidths[index] || fallbackWidth;
           const height = isActive ? ACTIVE_HEIGHT : BASE_HEIGHT;
+          // Use desktop default during SSR
+          const minWidth = isMounted 
+            ? getMinSegmentWidth(window.innerWidth)
+            : MIN_SEGMENT_WIDTH_DESKTOP;
 
           return (
             <button
@@ -227,7 +295,8 @@ export default function WorkflowAtlasTimeline({
               style={{
                 width: `${width}px`,
                 height: `${height}px`,
-                minWidth: `${MIN_SEGMENT_WIDTH}px`,
+                minWidth: `${minWidth}px`,
+                flexShrink: 0,
               }}
               aria-label={`${segment.methodName} method, ${segment.count} examples`}
             />
@@ -235,10 +304,10 @@ export default function WorkflowAtlasTimeline({
         })}
       </div>
 
-      {/* Legend */}
-      <div className="flex flex-wrap gap-6 items-center justify-between px-1 w-full">
+      {/* Legend - responsive layout */}
+      <div className="flex flex-wrap gap-3 min-[500px]:gap-4 md:gap-5 lg:gap-6 items-center justify-start px-1 w-full">
         {uniquePhases.map((phase) => (
-          <div key={phase} className="flex gap-2 items-center">
+          <div key={phase} className="flex gap-1.5 min-[500px]:gap-2 items-center shrink-0">
             <div
               className={`${getPhaseColorClass(phase)} rounded-full shrink-0`}
               style={{
@@ -247,7 +316,7 @@ export default function WorkflowAtlasTimeline({
               }}
               aria-hidden="true"
             />
-            <p className="font-mono font-normal leading-[1.25] text-sm text-primary-950">
+            <p className="font-mono font-normal leading-[1.25] text-xs min-[500px]:text-[13px] lg:text-sm text-primary-950 whitespace-nowrap">
               {getPhaseLabel(phase)}
             </p>
           </div>

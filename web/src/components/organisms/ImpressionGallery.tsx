@@ -44,6 +44,7 @@ const ImpressionGallery = forwardRef<ImpressionGalleryRef, ImpressionGalleryProp
     const [endPaddingWidth, setEndPaddingWidth] = useState<number>(0);
     const [maxScrollLeft, setMaxScrollLeft] = useState<number>(Infinity);
     const [startPaddingWidth, setStartPaddingWidth] = useState<number>(0);
+    const [gapSize, setGapSize] = useState<string>('var(--layout-gutter)');
     const containerRef = useRef<HTMLDivElement>(null);
     const programmaticScrollRef = useRef(false);
     const scrollSettleTimeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -185,8 +186,36 @@ const ImpressionGallery = forwardRef<ImpressionGalleryRef, ImpressionGalleryProp
     } else {
       // Center alignment
       // Calculate expanded width: card width + detail card width
-      const cardWidth = IMPRESSION_CARD_WIDTH * imageScale;
-      const detailCardWidth = cardWidth + IMPRESSION_CARD_OVERLAP_MARGIN;
+      // On mobile, calculate dimensions dynamically; on tablet/desktop use CSS variables
+      const root = document.documentElement;
+      const viewportWidth = window.innerWidth;
+      const isMobile = viewportWidth < 768;
+      
+      let baseWidth: number;
+      let overlapMargin: number;
+      
+      if (isMobile) {
+        // On mobile: calculate width so expanded item fills screen minus padding
+        const layoutMargin = parseFloat(
+          getComputedStyle(root).getPropertyValue('--layout-margin').trim()
+        ) || 16;
+        
+        // Expanded width = 2 * cardWidth
+        // We want: 2 * cardWidth = viewportWidth - 2 * layoutMargin
+        baseWidth = (viewportWidth - 2 * layoutMargin) / 2;
+        overlapMargin = Math.round(baseWidth * (IMPRESSION_CARD_OVERLAP_MARGIN / IMPRESSION_CARD_WIDTH));
+      } else {
+        // Tablet and Desktop: use CSS variables
+        baseWidth = parseFloat(
+          getComputedStyle(root).getPropertyValue('--impression-card-width').trim()
+        ) || IMPRESSION_CARD_WIDTH;
+        overlapMargin = parseFloat(
+          getComputedStyle(root).getPropertyValue('--impression-card-overlap-margin').trim()
+        ) || IMPRESSION_CARD_OVERLAP_MARGIN;
+      }
+      
+      const cardWidth = baseWidth * imageScale;
+      const detailCardWidth = cardWidth + overlapMargin;
       const expandedWidth = cardWidth + detailCardWidth;
       
       // Calculate the center of the expanded item
@@ -373,6 +402,25 @@ const ImpressionGallery = forwardRef<ImpressionGalleryRef, ImpressionGalleryProp
     };
   }, []);
 
+  // Update gap size based on viewport width
+  useEffect(() => {
+    const updateGapSize = () => {
+      const viewportWidth = window.innerWidth;
+      // Set gap to 12px below 500px, otherwise use layout gutter
+      if (viewportWidth < 500) {
+        setGapSize('12px');
+      } else {
+        const root = document.documentElement;
+        const layoutGutter = getComputedStyle(root).getPropertyValue('--layout-gutter').trim() || '16px';
+        setGapSize(layoutGutter);
+      }
+    };
+
+    updateGapSize();
+    window.addEventListener('resize', updateGapSize);
+    return () => window.removeEventListener('resize', updateGapSize);
+  }, []);
+
   // Initialize last scroll position and track container width
   useEffect(() => {
     const container = containerRef.current;
@@ -495,8 +543,9 @@ const ImpressionGallery = forwardRef<ImpressionGalleryRef, ImpressionGalleryProp
       <div
         ref={containerRef}
         onScroll={handleScroll}
-        className="flex flex-row items-end gap-6 overflow-x-auto scroll-smooth"
+        className="flex flex-row items-end overflow-x-auto scroll-smooth"
         style={{
+          gap: gapSize,
           scrollbarWidth: 'thin',
           scrollbarColor: 'transparent transparent',
           // Remove any height constraints that might cause clipping

@@ -76,9 +76,9 @@ export default function ProjectCard({ project, className = '', maxColumns = 2 }:
         />
 
         {/* Hover Button Overlay */}
-        <div className="absolute top-6 right-6 opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity duration-150 pointer-events-none z-10">
+        <div className="absolute top-3 right-3 min-[451px]:top-4 min-[451px]:right-4 min-[1301px]:top-6 min-[1301px]:right-6 2xl:top-5 2xl:right-5 opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity duration-150 pointer-events-none z-10">
           <Button variant="secondary" icon="right" size="sm">
-            VIEW PROJECTS
+            VIEW PROJECT
           </Button>
         </div>
       </div>

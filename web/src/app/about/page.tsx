@@ -1,7 +1,13 @@
+import type { Metadata } from 'next';
 import AboutHeroSection from '@/components/organisms/AboutHeroSection';
 import SkillsSection from '@/components/organisms/SkillsSection';
 import FooterSection from '@/components/organisms/FooterSection';
 import { getAboutData } from '@/lib/sanity.queries';
+
+export const metadata: Metadata = {
+  title: 'About - Mike De Bastiani',
+  description: 'Lerne Mike De Bastiani kennen - Student und Digital Product Designer. Erfahre mehr über meine Skills, meinen Hintergrund und meinen Designprozess.',
+};
 
 // Disable caching to ensure draft documents are always fetched
 export const dynamic = 'force-dynamic';

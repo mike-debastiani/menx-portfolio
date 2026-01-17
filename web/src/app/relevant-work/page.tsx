@@ -1,8 +1,14 @@
+import type { Metadata } from 'next';
 import { Container, Grid } from '@/components/layout';
 import ProjectArchiveHeader from '@/components/molecules/ProjectArchiveHeader';
 import ProjectArchive from '@/components/organisms/ProjectArchive';
 import FooterSection from '@/components/organisms/FooterSection';
 import { getRelevantWorkProjects } from '@/lib/sanity.queries';
+
+export const metadata: Metadata = {
+  title: 'User Experience Case Studies - Mike De Bastiani',
+  description: 'User Experience Case Studies von Mike De Bastiani. Entdecke, wie ich User Needs und Business Goals in digitale Erfahrungen transformiere.',
+};
 
 // Disable caching to ensure draft documents are always fetched
 export const dynamic = 'force-dynamic';

@@ -1,4 +1,10 @@
+import type { Metadata } from 'next';
 import FooterSection from '@/components/organisms/FooterSection';
+
+export const metadata: Metadata = {
+  title: 'Archive - Mike De Bastiani',
+  description: 'Projektarchiv von Mike De Bastiani - Übersicht aller Digital Product Design Projekte.',
+};
 
 export default function Archive() {
   return (
