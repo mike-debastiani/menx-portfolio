@@ -177,8 +177,8 @@ export default function HomeHeroSection({
   };
 
   return (
-    <section className={`py-12 md:py-20 max-[480px]:pb-2 ${className}`}>
-      <div className="flex flex-col gap-8 max-[480px]:gap-6">
+    <section className={`py-12 md:py-20 max-[480px]:pb-2 overflow-x-hidden max-w-full ${className}`}>
+      <div className="flex flex-col gap-8 max-[480px]:gap-6 w-full">
         {/* SegmentedControls - full width */}
         <div className="w-full">
           <RoleBasedHero
