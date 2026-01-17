@@ -19,8 +19,8 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   }
 
   return {
-    title: `${caseStudyData.title} - Mike De Bastiani`,
-    description: caseStudyData.excerpt || `Projekt-Detailseite: ${caseStudyData.title}`,
+    title: `${caseStudyData.projectTitle || 'Project'} - Mike De Bastiani`,
+    description: caseStudyData.projectDescription || caseStudyData.projectStatement || `Projekt-Detailseite: ${caseStudyData.projectTitle || 'Project'}`,
   };
 }
 
