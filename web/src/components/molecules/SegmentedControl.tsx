@@ -22,15 +22,21 @@ const sizeStyles: Record<
   {
     container: string;
     segment: string;
+    firstSegment: string;
+    otherSegment: string;
   }
 > = {
   base: {
-    container: 'flex gap-2 max-[860px]:gap-1 max-[475px]:gap-2 items-center',
-    segment: 'font-mono font-normal text-base leading-[1.5] px-6 py-3 max-[860px]:text-sm max-[860px]:px-3 rounded-full',
+    container: 'flex gap-2 max-[860px]:gap-1 max-[475px]:gap-2 items-center max-[480px]:w-full max-[480px]:-mx-2 max-[480px]:gap-1',
+    segment: 'font-mono font-normal text-base leading-[1.5] px-6 py-3 max-[860px]:text-sm max-[860px]:px-3 rounded-full max-[480px]:py-2.5',
+    firstSegment: 'max-[480px]:whitespace-nowrap max-[480px]:flex-shrink-0',
+    otherSegment: 'max-[480px]:flex-1 max-[480px]:min-w-0 max-[480px]:whitespace-nowrap max-[480px]:justify-center max-[480px]:w-0',
   },
   sm: {
-    container: 'flex gap-2 max-[860px]:gap-1 max-[475px]:gap-2 items-center',
-    segment: 'font-mono font-normal text-sm leading-[1.5] px-5 py-2 max-[860px]:px-3 rounded-full',
+    container: 'flex gap-2 max-[860px]:gap-1 max-[475px]:gap-2 items-center max-[480px]:w-full max-[480px]:-mx-2 max-[480px]:gap-1',
+    segment: 'font-mono font-normal text-sm leading-[1.5] px-5 py-2 max-[860px]:px-3 rounded-full max-[480px]:py-2.5',
+    firstSegment: 'max-[480px]:whitespace-nowrap max-[480px]:flex-shrink-0',
+    otherSegment: 'max-[480px]:flex-1 max-[480px]:min-w-0 max-[480px]:whitespace-nowrap max-[480px]:justify-center max-[480px]:w-0',
   },
 };
 
@@ -101,6 +107,12 @@ export default function SegmentedControl({
         const stateStyle = isActive ? stateStyles.active : stateStyles.inactive;
         // Only the active or focused segment should be in tab order
         const tabIndex = isActive || isFocused ? 0 : -1;
+        
+        // First segment (index 0) gets special treatment on small screens
+        const isFirstSegment = index === 0;
+        const responsiveSegmentClass = isFirstSegment 
+          ? styles.firstSegment 
+          : styles.otherSegment;
 
         return (
           <button
@@ -119,6 +131,7 @@ export default function SegmentedControl({
             onFocus={() => setFocusedIndex(index)}
             className={`
               ${styles.segment}
+              ${responsiveSegmentClass}
               ${stateStyle.base}
               ${stateStyle.hover}
               focus-visible:outline-none

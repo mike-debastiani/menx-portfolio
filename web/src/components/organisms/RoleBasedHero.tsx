@@ -245,8 +245,40 @@ export default function RoleBasedHero({
   activeRoleId: externalActiveRoleId,
 }: RoleBasedHeroProps) {
   const [internalActiveRoleId, setInternalActiveRoleId] = useState<RoleId>(defaultRoleId);
+  const [isSmallScreen, setIsSmallScreen] = useState(false);
   const activeRoleId = externalActiveRoleId ?? internalActiveRoleId;
-  const content = contentByRole[activeRoleId];
+
+  // Monitor screen size for responsive tabs
+  useEffect(() => {
+    const checkScreenSize = () => {
+      setIsSmallScreen(window.innerWidth < 485);
+    };
+
+    checkScreenSize();
+    window.addEventListener('resize', checkScreenSize);
+    return () => window.removeEventListener('resize', checkScreenSize);
+  }, []);
+
+  // Filter tabs based on screen size
+  const visibleTabs = isSmallScreen
+    ? tabs.filter((tab) => ['for-anyone', 'recruiters', 'designers'].includes(tab.id))
+    : tabs;
+
+  // Ensure active tab is available, fallback to first visible tab if not
+  const effectiveActiveRoleId = visibleTabs.some((tab) => tab.id === activeRoleId)
+    ? activeRoleId
+    : visibleTabs[0]?.id || activeRoleId;
+
+  // Auto-switch to visible tab if current active tab becomes hidden (only for internal state)
+  useEffect(() => {
+    if (!externalActiveRoleId && !visibleTabs.some((tab) => tab.id === activeRoleId)) {
+      const firstVisibleTab = visibleTabs[0];
+      if (firstVisibleTab) {
+        setInternalActiveRoleId(firstVisibleTab.id as RoleId);
+        onRoleChange?.(firstVisibleTab.id as RoleId);
+      }
+    }
+  }, [isSmallScreen, visibleTabs, activeRoleId, externalActiveRoleId, onRoleChange]);
 
   const handleRoleChange = (id: string) => {
     const newRoleId = id as RoleId;
@@ -259,8 +291,8 @@ export default function RoleBasedHero({
     return (
       <div className={className}>
         <SegmentedControl
-          items={tabs}
-          value={activeRoleId}
+          items={visibleTabs}
+          value={effectiveActiveRoleId}
           onChange={handleRoleChange}
           size="base"
         />
@@ -270,20 +302,21 @@ export default function RoleBasedHero({
 
   // Render only content
   if (showContentOnly) {
+    const contentToShow = contentByRole[effectiveActiveRoleId];
     return (
       <div className={className}>
-        {content.type === 'headline' ? (
+        {contentToShow.type === 'headline' ? (
           <div className="flex items-center pl-0 md:pl-[21px] pr-0 py-0 w-full min-[1200px]:w-[1000px]">
             <p className="flex-1 font-sans font-medium leading-[1.25] text-2xl min-[375px]:text-3xl md:text-4xl text-primary-950 whitespace-pre-wrap">
-              {content.text}
+              {contentToShow.text}
             </p>
           </div>
-        ) : content.type === 'code' ? (
+        ) : contentToShow.type === 'code' ? (
           <div className="flex gap-[10px] h-full items-start overflow-hidden pl-0 md:pl-[23px] pr-0 py-0 w-full max-w-full min-w-0">
             {/* Line Numbers */}
             <div className="flex flex-col h-full items-end overflow-hidden shrink-0">
               <div className="font-mono font-medium leading-[2] text-[20px] max-[1010px]:text-[2.2vw] text-primary-950 whitespace-nowrap pr-4 max-[1010px]:pr-1">
-                {content.lines.map((line, idx) => (
+                {contentToShow.lines.map((line, idx) => (
                   <p 
                     key={line.lineNumber} 
                     className="block"
@@ -299,7 +332,7 @@ export default function RoleBasedHero({
             </div>
 
             {/* Code */}
-            <AutoScaleCode lines={content.lines} className="min-w-0" />
+            <AutoScaleCode lines={contentToShow.lines} className="min-w-0" />
           </div>
         ) : null}
       </div>
@@ -307,29 +340,30 @@ export default function RoleBasedHero({
   }
 
   // Render both (default behavior)
+  const contentToShow = contentByRole[effectiveActiveRoleId];
   return (
     <div className={`flex flex-col gap-8 items-start ${className}`}>
       {/* SegmentedControl */}
       <SegmentedControl
-        items={tabs}
-        value={activeRoleId}
+        items={visibleTabs}
+        value={effectiveActiveRoleId}
         onChange={handleRoleChange}
         size="base"
       />
 
       {/* Content */}
-      {content.type === 'headline' ? (
+      {contentToShow.type === 'headline' ? (
         <div className="flex items-center pl-0 md:pl-[21px] pr-0 py-0 w-full min-[1200px]:w-[1000px]">
           <p className="flex-1 font-sans font-medium leading-[1.25] text-2xl min-[375px]:text-3xl md:text-4xl text-primary-950 whitespace-pre-wrap">
-            {content.text}
+            {contentToShow.text}
           </p>
         </div>
-      ) : content.type === 'code' ? (
+      ) : contentToShow.type === 'code' ? (
         <div className="flex gap-[10px] h-full items-start overflow-hidden pl-0 md:pl-[23px] pr-0 py-0 w-full max-w-full min-w-0">
           {/* Line Numbers */}
           <div className="flex flex-col h-full items-end overflow-hidden shrink-0">
             <div className="font-mono font-medium leading-[2] text-[20px] max-[1010px]:text-[2.2vw] text-primary-950 whitespace-nowrap pr-4 max-[1010px]:pr-1">
-              {content.lines.map((line, idx) => (
+              {contentToShow.lines.map((line, idx) => (
                 <p 
                   key={line.lineNumber} 
                   className="block"
@@ -345,7 +379,7 @@ export default function RoleBasedHero({
           </div>
 
           {/* Code */}
-          <AutoScaleCode lines={content.lines} className="min-w-0" />
+          <AutoScaleCode lines={contentToShow.lines} className="min-w-0" />
         </div>
       ) : null}
     </div>

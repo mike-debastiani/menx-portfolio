@@ -177,19 +177,17 @@ export default function HomeHeroSection({
   };
 
   return (
-    <section className={`py-12 md:py-20 ${className}`}>
-      <div className="flex flex-col gap-8">
-        {/* SegmentedControls - full width, hidden on very small screens */}
-        {!isVerySmallScreen && (
-          <div className="w-full">
-            <RoleBasedHero
-              {...finalHeroProps}
-              showControlsOnly
-              activeRoleId={activeRoleId}
-              onRoleChange={setActiveRoleId}
-            />
-          </div>
-        )}
+    <section className={`py-12 md:py-20 max-[480px]:pb-2 ${className}`}>
+      <div className="flex flex-col gap-8 max-[480px]:gap-6">
+        {/* SegmentedControls - full width */}
+        <div className="w-full">
+          <RoleBasedHero
+            {...finalHeroProps}
+            showControlsOnly
+            activeRoleId={activeRoleId}
+            onRoleChange={setActiveRoleId}
+          />
+        </div>
 
         {/* Content area - limited to 7 columns on desktop */}
         <Grid>
@@ -208,7 +206,7 @@ export default function HomeHeroSection({
 
             {/* SubInfoGroup with 24px gap and 22px left offset for text alignment */}
             {/* Always positioned below RoleBasedHero */}
-            <div className="pl-0 md:pl-[22px] mt-6 max-[475px]:mt-10">
+            <div className="pl-0 md:pl-[22px] mt-6 max-[475px]:mt-10 max-[480px]:mt-8">
               <SubInfoGroup {...finalSubInfoProps} />
             </div>
           </div>
