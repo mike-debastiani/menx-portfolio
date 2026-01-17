@@ -279,7 +279,7 @@ export default function RoleBasedHero({
             </p>
           </div>
         ) : contentToShow.type === 'code' ? (
-          <div className="flex gap-[10px] h-full items-start overflow-hidden pl-0 md:pl-[23px] pr-0 py-0 w-full max-w-full min-w-0">
+          <div className="flex gap-[10px] h-full items-start overflow-hidden pl-0 md:pl-[0px] pr-0 py-0 w-full max-w-full min-w-0">
             {/* Line Numbers */}
             <div className="flex flex-col h-full items-end overflow-hidden shrink-0">
               <div className="font-mono font-medium leading-[2] text-[20px] max-[1010px]:text-[2.2vw] text-primary-950 whitespace-nowrap pr-4 max-[1010px]:pr-1">
@@ -320,13 +320,13 @@ export default function RoleBasedHero({
 
       {/* Content */}
       {contentToShow.type === 'headline' ? (
-        <div className="flex items-center pl-0 md:pl-[21px] pr-0 py-0 w-full min-[1200px]:w-[1000px]">
+        <div className="flex items-center pl-0 md:pl-[0px] pr-0 py-0 w-full min-[1200px]:w-[1000px]">
           <p className="flex-1 font-sans font-medium leading-[1.25] text-2xl min-[375px]:text-3xl md:text-4xl text-primary-950 whitespace-pre-wrap">
             {contentToShow.text}
           </p>
         </div>
       ) : contentToShow.type === 'code' ? (
-        <div className="flex gap-[10px] h-full items-start overflow-hidden pl-0 md:pl-[23px] pr-0 py-0 w-full max-w-full min-w-0">
+        <div className="flex gap-[10px] h-full items-start overflow-hidden pl-0 md:pl-[0px] pr-0 py-0 w-full max-w-full min-w-0">
           {/* Line Numbers */}
           <div className="flex flex-col h-full items-end overflow-hidden shrink-0">
             <div className="font-mono font-medium leading-[2] text-[20px] max-[1010px]:text-[2.2vw] text-primary-950 whitespace-nowrap pr-4 max-[1010px]:pr-1">
