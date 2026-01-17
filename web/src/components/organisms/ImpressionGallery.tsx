@@ -143,11 +143,11 @@ const ImpressionGallery = forwardRef<ImpressionGalleryRef, ImpressionGalleryProp
     const itemElement = container.querySelector(`[data-impression-item-id="${itemId}"]`) as HTMLElement;
     if (!itemElement) return;
 
+    // Use offsetLeft instead of getBoundingClientRect for final positions
+    // offsetLeft gives us the position in the layout tree, not the animated position
+    // This ensures accurate centering even during animations
+    const itemOffsetLeft = itemElement.offsetLeft;
     const containerRect = container.getBoundingClientRect();
-    const itemRect = itemElement.getBoundingClientRect();
-    
-    // Get the item's position relative to the scroll container
-    const itemLeftRelativeToContainer = itemRect.left - containerRect.left + container.scrollLeft;
     
     let targetScrollLeft: number;
     
@@ -167,10 +167,6 @@ const ImpressionGallery = forwardRef<ImpressionGalleryRef, ImpressionGalleryProp
       // Parse the value (e.g., "16px", "24px", or "32px") and convert to number
       const viewportWidth = window.innerWidth;
       const marginValue = parseFloat(layoutMargin) || (viewportWidth >= 1280 ? 24 : viewportWidth >= 768 ? 32 : 16);
-      
-      // Get the item's offsetLeft relative to the scroll container
-      // Note: Since we added padding at the start, the first item is now at offsetLeft = marginValue
-      const itemOffsetLeft = itemElement.offsetLeft;
       
       // Position item so it has the same left offset as the Timeline (container padding)
       // Since we added padding at the start of the container (marginValue), the first item
@@ -218,8 +214,9 @@ const ImpressionGallery = forwardRef<ImpressionGalleryRef, ImpressionGalleryProp
       const detailCardWidth = cardWidth + overlapMargin;
       const expandedWidth = cardWidth + detailCardWidth;
       
-      // Calculate the center of the expanded item
-      const itemExpandedCenter = itemLeftRelativeToContainer + expandedWidth / 2;
+      // Calculate the center of the expanded item using offsetLeft (final position in layout)
+      // offsetLeft is relative to the scroll container, so we can use it directly
+      const itemExpandedCenter = itemOffsetLeft + expandedWidth / 2;
       
       // Target scroll position to center the expanded item in the viewport
       const containerCenter = containerRect.width / 2;
@@ -297,11 +294,6 @@ const ImpressionGallery = forwardRef<ImpressionGalleryRef, ImpressionGalleryProp
   // Handle item click
   const handleItemClick = useCallback(
     (itemId: string, imageScale: number = 1) => {
-      // If another item is active, collapse it immediately
-      if (activeId && activeId !== itemId) {
-        setActiveId(null);
-      }
-
       // If this item is already open, just center it (don't close it)
       if (activeId === itemId) {
         // Set programmatic scroll flag to prevent auto-collapse
@@ -315,6 +307,36 @@ const ImpressionGallery = forwardRef<ImpressionGalleryRef, ImpressionGalleryProp
         return;
       }
 
+      // If another item is active, we need to handle the transition properly
+      if (activeId && activeId !== itemId) {
+        // Set programmatic scroll flag to prevent auto-collapse during transition
+        programmaticScrollRef.current = true;
+        
+        // Check for reduced motion preference
+        const prefersReducedMotion = typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        const animationDuration = prefersReducedMotion ? 200 : 350;
+        
+        // Start both animations in parallel for smoother transition
+        // Setting the new activeId will automatically close the old one
+        // Both animations will run simultaneously
+        setActiveId(itemId);
+        
+        // Single precise centering after both animations fully complete
+        // This avoids bounce effect and ensures perfect centering with final positions
+        // Use requestAnimationFrame to ensure DOM has updated with new state
+        requestAnimationFrame(() => {
+          // Wait for both animations to fully complete
+          // This ensures all position changes are done and we use final stable positions
+          setTimeout(() => {
+            // Single centering with final positions - no bounce effect
+            // Use 'auto' for faster, instant centering
+            scrollToCenter(itemId, imageScale, 'center', 'auto');
+          }, animationDuration + 20); // Wait for full animation + small buffer for DOM updates
+        });
+        return;
+      }
+
+      // No item is currently active, just open and center the new one
       // Set programmatic scroll flag BEFORE opening to prevent auto-collapse
       programmaticScrollRef.current = true;
 

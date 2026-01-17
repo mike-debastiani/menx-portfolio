@@ -168,7 +168,7 @@ export default function ImpressionItem({
       className={`flex items-start justify-start pl-0 py-0 relative ${className}`}
       style={{ 
         width: `${totalWidth}px`,
-        transition: prefersReducedMotion ? 'width 300ms ease-in-out' : 'width 500ms ease-in-out',
+        transition: prefersReducedMotion ? 'width 200ms ease-in-out' : 'width 350ms ease-in-out',
       }}
     >
       {/* ImpressionCard - always visible, shows image + pill */}
