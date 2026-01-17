@@ -83,6 +83,7 @@ export interface ImpressionItemProps {
   onRequestClose?: () => void; // Callback when item requests to close
   className?: string;
   imageScale?: number;
+  calculatedWidth?: number | null; // Calculated width for responsive layout (fixed size for screens > 800px)
 }
 
 export default function ImpressionItem({
@@ -96,6 +97,7 @@ export default function ImpressionItem({
   onRequestClose,
   className = '',
   imageScale = 1,
+  calculatedWidth,
 }: ImpressionItemProps) {
   const [internalIsOpen, setInternalIsOpen] = useState(defaultOpen);
   
@@ -146,13 +148,29 @@ export default function ImpressionItem({
     typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   // Get responsive dimensions from CSS variables
-  const { width: baseWidth, height: baseHeight, overlapMargin } = useResponsiveCardDimensions();
+  const { width: baseWidth, height: baseHeight, overlapMargin: baseOverlapMargin } = useResponsiveCardDimensions();
+
+  // Use calculated width if provided (for screens > 800px), otherwise use base width
+  const effectiveBaseWidth = calculatedWidth !== null && calculatedWidth !== undefined 
+    ? calculatedWidth 
+    : baseWidth;
+  
+  // Calculate height proportionally to maintain aspect ratio
+  const aspectRatio = baseHeight / baseWidth;
+  const effectiveBaseHeight = calculatedWidth !== null && calculatedWidth !== undefined
+    ? calculatedWidth * aspectRatio
+    : baseHeight;
+
+  // Scale overlap margin proportionally if using calculated width
+  const effectiveOverlapMargin = calculatedWidth !== null && calculatedWidth !== undefined
+    ? Math.round(calculatedWidth * (baseOverlapMargin / baseWidth))
+    : baseOverlapMargin;
 
   // Calculate dimensions based on scale and responsive base dimensions
-  const cardHeight = baseHeight * imageScale;
-  const cardWidth = baseWidth * imageScale;
+  const cardHeight = effectiveBaseHeight * imageScale;
+  const cardWidth = effectiveBaseWidth * imageScale;
   const detailCardHeight = cardHeight; // Identical height
-  const detailCardWidth = cardWidth + overlapMargin; // Width + negative margin
+  const detailCardWidth = cardWidth + effectiveOverlapMargin; // Width + negative margin
   
   // Calculate total width for the container:
   // - Collapsed: just card width
@@ -160,7 +178,7 @@ export default function ImpressionItem({
   //   because the card's negative margin already creates the overlap internally
   //   This ensures the container width matches the visual width for correct gap spacing
   const totalWidth = isOpen 
-    ? cardWidth + detailCardWidth - overlapMargin
+    ? cardWidth + detailCardWidth - effectiveOverlapMargin
     : cardWidth;
 
   return (
@@ -174,13 +192,14 @@ export default function ImpressionItem({
       {/* ImpressionCard - always visible, shows image + pill */}
       <div 
         className="flex flex-col gap-3 items-start relative shrink-0 z-[2]"
-        style={{ marginRight: `-${overlapMargin}px` }}
+        style={{ marginRight: `-${effectiveOverlapMargin}px` }}
       >
         <ImpressionCard
           image={card.image}
           methodLabel={card.methodLabel}
           methodColorVariant={card.methodColorVariant}
           imageScale={imageScale}
+          calculatedWidth={calculatedWidth}
         />
       </div>
 

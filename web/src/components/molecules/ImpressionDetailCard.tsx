@@ -23,7 +23,7 @@ export default function ImpressionDetailCard({
 }: ImpressionDetailCardProps) {
   return (
     <div 
-      className={`bg-primary-50 flex flex-col items-end justify-between overflow-hidden pl-6 pr-4 py-4 md:pl-10 md:pr-5 md:py-5 lg:pl-12 lg:pr-6 lg:py-6 rounded-xl shrink-0 ${className}`}
+      className={`bg-primary-50 flex flex-col items-end justify-between overflow-hidden pl-10 pr-4 py-4 md:pr-5 md:py-5 lg:pr-6 lg:py-6 rounded-xl shrink-0 ${className}`}
       style={{
         height: height ? `${height}px` : undefined,
         width: width ? `${width}px` : undefined,

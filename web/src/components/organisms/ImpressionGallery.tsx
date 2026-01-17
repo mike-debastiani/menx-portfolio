@@ -45,6 +45,7 @@ const ImpressionGallery = forwardRef<ImpressionGalleryRef, ImpressionGalleryProp
     const [maxScrollLeft, setMaxScrollLeft] = useState<number>(Infinity);
     const [startPaddingWidth, setStartPaddingWidth] = useState<number>(0);
     const [gapSize, setGapSize] = useState<string>('var(--layout-gutter)');
+    const [calculatedItemWidth, setCalculatedItemWidth] = useState<number | null>(null);
     const containerRef = useRef<HTMLDivElement>(null);
     const programmaticScrollRef = useRef(false);
     const scrollSettleTimeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -443,6 +444,29 @@ const ImpressionGallery = forwardRef<ImpressionGalleryRef, ImpressionGalleryProp
     return () => window.removeEventListener('resize', updateGapSize);
   }, []);
 
+  // Calculate item width for screens > 800px (fixed size based on 1500px = 4 items)
+  useEffect(() => {
+    const calculateItemWidth = () => {
+      const viewportWidth = window.innerWidth;
+      
+      if (viewportWidth > 800) {
+        // Calculate width so that at 1500px, 4 items fit: 1500 = 4 * itemWidth + 3 * gap
+        // itemWidth = (1500 - 3 * gap) / 4
+        // Use the gap value at 1500px (24px for desktop)
+        const gapAt1500px = 24; // Desktop gap size
+        
+        const itemWidth = (1500 - 3 * gapAt1500px) / 4;
+        setCalculatedItemWidth(itemWidth);
+      } else {
+        setCalculatedItemWidth(null);
+      }
+    };
+
+    calculateItemWidth();
+    window.addEventListener('resize', calculateItemWidth);
+    return () => window.removeEventListener('resize', calculateItemWidth);
+  }, []);
+
   // Initialize last scroll position and track container width
   useEffect(() => {
     const container = containerRef.current;
@@ -605,6 +629,7 @@ const ImpressionGallery = forwardRef<ImpressionGalleryRef, ImpressionGalleryProp
               onRequestOpen={() => handleItemClick(item.id, item.imageScale || 1)}
               onRequestClose={() => setActiveId(null)}
               imageScale={item.imageScale}
+              calculatedWidth={calculatedItemWidth}
             />
           </div>
         ))}

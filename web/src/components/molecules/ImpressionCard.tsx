@@ -79,6 +79,7 @@ export interface ImpressionCardProps {
   methodColorVariant?: MethodColorVariant;
   className?: string;
   imageScale?: number;
+  calculatedWidth?: number | null; // Calculated width for responsive layout (overrides hook value)
 }
 
 export default function ImpressionCard({
@@ -87,8 +88,9 @@ export default function ImpressionCard({
   methodColorVariant = 'default',
   className = '',
   imageScale = 1,
+  calculatedWidth,
 }: ImpressionCardProps) {
-  const { width, height } = useResponsiveCardDimensions();
+  const { width: baseWidth, height: baseHeight } = useResponsiveCardDimensions();
   const [pillSize, setPillSize] = useState<PillSize>('sm');
 
   // Update pill size based on viewport width
@@ -102,8 +104,19 @@ export default function ImpressionCard({
     return () => window.removeEventListener('resize', updatePillSize);
   }, []);
 
-  const cardWidth = width * imageScale;
-  const cardHeight = height * imageScale;
+  // Use calculated width if provided, otherwise use base width
+  const effectiveWidth = calculatedWidth !== null && calculatedWidth !== undefined
+    ? calculatedWidth
+    : baseWidth;
+  
+  // Calculate height proportionally to maintain aspect ratio
+  const aspectRatio = baseHeight / baseWidth;
+  const effectiveHeight = calculatedWidth !== null && calculatedWidth !== undefined
+    ? calculatedWidth * aspectRatio
+    : baseHeight;
+
+  const cardWidth = effectiveWidth * imageScale;
+  const cardHeight = effectiveHeight * imageScale;
 
   return (
     <div className={`flex flex-col gap-2 min-[600px]:gap-3 items-start ${className}`}>
