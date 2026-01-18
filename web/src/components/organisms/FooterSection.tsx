@@ -142,7 +142,8 @@ export default function FooterSection({
 
           {/* InfoRows - 6 columns on desktop, full width on mobile */}
           <div className="footer-col-mobile mt-8 md:mt-0">
-            <div className="flex flex-col gap-[88px]">
+            {/* >=450px: regular 50/50 layout */}
+            <div className="flex flex-col gap-[88px] max-[449px]:hidden">
               {footerRows.map((row, rowIndex) => (
                 <div
                   key={rowIndex}
@@ -159,7 +160,7 @@ export default function FooterSection({
                     {row.items.map((item, itemIndex) => {
                       const isLast = itemIndex === row.items.length - 1;
                       const itemClasses = `info-rows-item block font-sans font-medium text-base leading-[1.4] text-primary-950 ${
-                        isLast ? '' : 'mb-[9px]'
+                        isLast ? '' : 'mb-[9px] max-[449px]:mb-[6px]'
                       }`;
 
                       if (item.href) {
@@ -197,6 +198,69 @@ export default function FooterSection({
                       );
                     })}
                   </div>
+                </div>
+              ))}
+            </div>
+
+            {/* <450px: width determined by widest right content */}
+            <div className="hidden max-[449px]:grid grid-cols-[minmax(0,1fr)_max-content] gap-x-3">
+              {footerRows.map((row, rowIndex) => (
+                <div key={rowIndex} className="contents">
+                  <div
+                    className="col-span-2 border-t border-primary-200"
+                    style={{ borderTopWidth: '0.5px' }}
+                  />
+                  {/* Label - always takes 50% of width */}
+                  <div className="info-rows-label min-w-0 pt-3 font-mono font-normal text-base leading-[1.4] text-primary-300">
+                    {row.label}
+                  </div>
+
+                  {/* Items - always takes 50% of width */}
+                  <div className="pt-3 flex flex-col">
+                    {row.items.map((item, itemIndex) => {
+                      const isLast = itemIndex === row.items.length - 1;
+                      const itemClasses = `info-rows-item block font-sans font-medium text-base leading-[1.4] text-primary-950 ${
+                        isLast ? '' : 'mb-[9px] max-[449px]:mb-[6px]'
+                      }`;
+
+                      if (item.href) {
+                        const isExternal = isExternalUrl(item.href);
+
+                        if (isExternal || item.href.startsWith('mailto:')) {
+                          return (
+                            <a
+                              key={itemIndex}
+                              href={item.href}
+                              target={item.href.startsWith('mailto:') ? undefined : '_blank'}
+                              rel={item.href.startsWith('mailto:') ? undefined : 'noreferrer'}
+                              className={`${itemClasses} hover:underline`}
+                            >
+                              {item.label}
+                            </a>
+                          );
+                        }
+
+                        return (
+                          <Link
+                            key={itemIndex}
+                            href={item.href}
+                            className={`${itemClasses} hover:underline`}
+                          >
+                            {item.label}
+                          </Link>
+                        );
+                      }
+
+                      return (
+                        <span key={itemIndex} className={itemClasses}>
+                          {item.label}
+                        </span>
+                      );
+                    })}
+                  </div>
+                  {rowIndex < footerRows.length - 1 && (
+                    <div className="col-span-2 h-[88px]" aria-hidden="true" />
+                  )}
                 </div>
               ))}
             </div>

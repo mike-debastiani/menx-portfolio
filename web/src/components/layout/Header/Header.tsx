@@ -265,12 +265,12 @@ export default function Header() {
           {/* Main Content Area */}
           <div className="flex-1 flex flex-col justify-between min-h-0">
             {/* Navigation Links */}
-            <nav className="px-4 pt-4 overflow-y-auto" aria-label="Mobile navigation">
+            <nav className="flex-1 min-h-0 px-4 pt-2 overflow-y-auto" aria-label="Mobile navigation">
               <ul className="flex flex-col">
                 {navItems.map((item, index) => (
                   <li key={item.href}>
                     {index > 0 && (
-                      <div className="border-t border-primary-200 my-4" style={{ borderTopWidth: '0.5px' }} />
+                      <div className="border-t border-primary-200 my-3" style={{ borderTopWidth: '0.5px' }} />
                     )}
                     <Link
                       href={item.href}
@@ -291,25 +291,24 @@ export default function Header() {
             {/* Bottom Section: InfoRows + Button */}
             <div className="flex-shrink-0 mt-auto">
               {/* InfoRows Section - using same code as FooterSection */}
-              <div className="px-4 pt-12">
-                <div className="flex flex-col gap-12">
+              <div className="px-4 pt-0">
+                {/* >=450px: regular 50/50 layout */}
+                <div className="flex flex-col gap-12 max-[449px]:hidden">
                   {footerRows.map((row, rowIndex) => (
                     <div
                       key={rowIndex}
                       className="info-rows-row border-t border-primary-200 pt-3 grid grid-cols-2 gap-3 md:gap-6"
                       style={{ borderTopWidth: '0.5px' }}
                     >
-                      {/* Label - always takes 50% of width */}
                       <div className="info-rows-label font-mono font-normal text-base leading-[1.4] text-primary-300">
                         {row.label}
                       </div>
 
-                      {/* Items - always takes 50% of width */}
                       <div className="flex flex-col">
                         {row.items.map((item, itemIndex) => {
                           const isLast = itemIndex === row.items.length - 1;
                           const itemClasses = `info-rows-item block font-sans font-medium text-base leading-[1.4] text-primary-950 ${
-                            isLast ? '' : 'mb-[9px]'
+                            isLast ? '' : 'mb-[9px] max-[449px]:mb-[6px]'
                           }`;
 
                           if (item.href) {
@@ -350,13 +349,73 @@ export default function Header() {
                     </div>
                   ))}
                 </div>
+
+                {/* <450px: width determined by widest right content */}
+                <div className="hidden max-[449px]:grid grid-cols-[minmax(0,1fr)_max-content] gap-x-3">
+                  {footerRows.map((row, rowIndex) => (
+                    <div key={rowIndex} className="contents">
+                      <div
+                        className="col-span-2 border-t border-primary-200"
+                        style={{ borderTopWidth: '0.5px' }}
+                      />
+                      <div className="info-rows-label min-w-0 pt-3 font-mono font-normal text-base leading-[1.4] text-primary-300">
+                        {row.label}
+                      </div>
+                      <div className="pt-3 flex flex-col">
+                        {row.items.map((item, itemIndex) => {
+                          const isLast = itemIndex === row.items.length - 1;
+                          const itemClasses = `info-rows-item block font-sans font-medium text-base leading-[1.4] text-primary-950 ${
+                            isLast ? '' : 'mb-[9px] max-[449px]:mb-[6px]'
+                          }`;
+
+                          if (item.href) {
+                            const isExternal = isExternalUrl(item.href);
+
+                            if (isExternal || item.href.startsWith('mailto:')) {
+                              return (
+                                <a
+                                  key={itemIndex}
+                                  href={item.href}
+                                  target={item.href.startsWith('mailto:') ? undefined : '_blank'}
+                                  rel={item.href.startsWith('mailto:') ? undefined : 'noreferrer'}
+                                  className={`${itemClasses} hover:underline`}
+                                >
+                                  {item.label}
+                                </a>
+                              );
+                            }
+
+                            return (
+                              <Link
+                                key={itemIndex}
+                                href={item.href}
+                                className={`${itemClasses} hover:underline`}
+                              >
+                                {item.label}
+                              </Link>
+                            );
+                          }
+
+                          return (
+                            <span key={itemIndex} className={itemClasses}>
+                              {item.label}
+                            </span>
+                          );
+                        })}
+                      </div>
+                      {rowIndex < footerRows.length - 1 && (
+                        <div className="col-span-2 h-12" aria-hidden="true" />
+                      )}
+                    </div>
+                  ))}
+                </div>
               </div>
 
               {/* Bottom CTA Button */}
               <div className="px-4 pb-4 pt-8">
                 <Button
                   variant="primary"
-                  size="base"
+                  size="sm"
                   icon="right"
                   href="https://cal.com/mike-de-bastiani-4xbsfh"
                   onClick={closeMenu}
