@@ -10,6 +10,13 @@ export interface ButtonProps {
   variant?: ButtonVariant;
   size?: ButtonSize;
   icon?: 'none' | 'right';
+  /**
+   * Optional override for the right-side icon (e.g. header "Info" button).
+   * Uses the default variant icon when omitted.
+   */
+  iconSrc?: string;
+  /** Optional icon size override (width & height in px). */
+  iconSize?: number;
   disabled?: boolean;
   href?: string;
   onClick?: () => void;
@@ -18,16 +25,27 @@ export interface ButtonProps {
 }
 
 // Icon component that uses the uploaded SVG files
-const ButtonIcon = ({ variant, size, disabled }: { variant: ButtonVariant; size: ButtonSize; disabled: boolean }) => {
-  const iconSize = size === 'sm' ? 14 : 17;
-  const iconSrc = variant === 'primary' ? '/icons/button-icon-primary.svg' : '/icons/button-icon-secondary.svg';
+const ButtonIcon = ({
+  variant,
+  size,
+  iconSrc,
+  iconSize,
+}: {
+  variant: ButtonVariant;
+  size: ButtonSize;
+  iconSrc?: string;
+  iconSize?: number;
+}) => {
+  const resolvedIconSize = iconSize ?? (size === 'sm' ? 14 : 17);
+  const resolvedIconSrc =
+    iconSrc ?? (variant === 'primary' ? '/icons/button-icon-primary.svg' : '/icons/button-icon-secondary.svg');
   
   return (
     <Image
-      src={iconSrc}
+      src={resolvedIconSrc}
       alt=""
-      width={iconSize}
-      height={iconSize}
+      width={resolvedIconSize}
+      height={resolvedIconSize}
       className="shrink-0"
       aria-hidden="true"
     />
@@ -76,7 +94,7 @@ const sizeStyles: Record<ButtonSize, { text: string; px: string; py: string; pyS
     px: 'px-4',
     py: 'py-2.5',
     pySecondary: 'py-[10px]', // py-3 (12px) - 1.5px border = 10.5px
-    iconGap: 'gap-1.5',
+    iconGap: 'gap-2.5',
   },
 };
 
@@ -85,6 +103,8 @@ export default function Button({
   variant = 'primary',
   size = 'base',
   icon = 'none',
+  iconSrc,
+  iconSize,
   disabled = false,
   href,
   onClick,
@@ -114,7 +134,12 @@ export default function Button({
       <span className={disabled ? variantStyle.textDisabled : variantStyle.text}>{children}</span>
       {icon === 'right' && (
         <span className="inline-flex items-center">
-          <ButtonIcon variant={variant} size={size} disabled={disabled} />
+          <ButtonIcon
+            variant={variant}
+            size={size}
+            iconSrc={iconSrc}
+            iconSize={iconSize}
+          />
         </span>
       )}
     </span>

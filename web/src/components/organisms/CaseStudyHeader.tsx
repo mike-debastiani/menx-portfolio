@@ -36,7 +36,7 @@ export default function CaseStudyHeader({ data, className = '' }: CaseStudyHeade
       <Container>
         <Grid className="py-12 md:py-16 xl:py-20">
           {/* CaseStudyDescription: Mobile full width (span 4), Tablet columns 1-3 (span 3), Desktop columns 1-6 (span 6) */}
-          <div className="col-span-4 md:col-span-3 xl:col-span-6">
+          <div className="col-span-4 md:col-span-6 xl:col-span-6">
             <CaseStudyDescription
               projectTitle={data.projectTitle || ''}
               statement={data.projectStatement || ''}
@@ -46,7 +46,7 @@ export default function CaseStudyHeader({ data, className = '' }: CaseStudyHeade
           </div>
 
           {/* CaseStudyMeta: Mobile full width below description (span 4), Tablet columns 5-6 (col-start-5 span 2), Desktop columns 10-12 (col-start-10 span 3) */}
-          <div className="col-span-4 md:col-start-5 md:col-span-2 xl:col-start-10 xl:col-span-3 mt-8 md:mt-0">
+          <div className="col-span-4 md:col-start-10 md:col-span-3 xl:col-start-10 xl:col-span-3 mt-8 md:mt-0">
             <CaseStudyMeta
               role={data.role || ''}
               context={data.context || ''}

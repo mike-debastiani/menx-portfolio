@@ -150,6 +150,14 @@ main {
     }
   }
 
+  /* AboutHeroSection: 1000px - 1199px (6-col grid) */
+  @media (min-width: 1000px) and (max-width: 1199px) {
+    .about-hero-image {
+      grid-column: span 2 / span 2 !important;
+      grid-column-start: 5 !important;
+    }
+  }
+
   /* InfoColumns mobile positioning (base) */
   .info-col-description {
     grid-column: span 4 / span 4;
@@ -211,6 +219,17 @@ main {
   @media (min-width: 1200px) {
     .footer-col-mobile {
       grid-column: span 6 / span 6;
+    }
+    
+    /* AboutHeroSection: 1200px - 1279px (12-col grid) */
+    .about-hero-description {
+      grid-column: span 6 / span 6 !important;
+      grid-column-start: 1 !important;
+    }
+    
+    .about-hero-image {
+      grid-column: span 4 / span 4 !important;
+      grid-column-start: 9 !important;
     }
     
     /* SectionDescription: Column 1-5 (1 Column Abstand zu InfoColumns) */

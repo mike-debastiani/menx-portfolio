@@ -16,6 +16,11 @@ export interface FooterSectionProps {
   primaryButtonFileUrl?: string;
   secondaryButtonText?: string;
   secondaryButtonLink?: string;
+  /**
+   * Controls rendering of the bottom copyright footer (`<Footer />`).
+   * Useful for full-viewport overlays that must not show the copyright line.
+   */
+  showBottomFooter?: boolean;
 }
 
 interface FooterRow {
@@ -30,6 +35,7 @@ export default function FooterSection({
   primaryButtonFileUrl,
   secondaryButtonText,
   secondaryButtonLink,
+  showBottomFooter = true,
 }: FooterSectionProps) {
   // Footer data
   const footerRows: FooterRow[] = [
@@ -129,7 +135,7 @@ export default function FooterSection({
                   <>
                     Sparked your interest?
                     <br />
-                    Let's turn that into a conversation.
+                    Let&apos;s turn that into a conversation.
                   </>
                 }
                 cta={{
@@ -268,7 +274,7 @@ export default function FooterSection({
         </Grid>
 
         {/* Footer */}
-        <Footer />
+        {showBottomFooter && <Footer />}
       </Container>
     </section>
   );
