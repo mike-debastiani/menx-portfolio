@@ -105,12 +105,43 @@ export default function Header() {
 
   // Lock body scroll when menu is open
   useEffect(() => {
-    if (isMenuOpen) {
-      document.body.style.overflow = 'hidden';
-      return () => {
-        document.body.style.overflow = '';
-      };
+    if (!isMenuOpen) return;
+
+    const body = document.body;
+    const html = document.documentElement;
+
+    const scrollY = window.scrollY;
+
+    const originalBodyOverflow = body.style.overflow;
+    const originalBodyPosition = body.style.position;
+    const originalBodyTop = body.style.top;
+    const originalBodyWidth = body.style.width;
+    const originalBodyPaddingRight = body.style.paddingRight;
+    const originalHtmlOverflow = html.style.overflow;
+
+    // Prevent layout shift when the scrollbar disappears (desktop)
+    const scrollbarWidth = window.innerWidth - html.clientWidth;
+    if (scrollbarWidth > 0) {
+      body.style.paddingRight = `${scrollbarWidth}px`;
     }
+
+    // iOS-safe scroll lock: freeze the body in place
+    html.style.overflow = 'hidden';
+    body.style.position = 'fixed';
+    body.style.top = `-${scrollY}px`;
+    body.style.width = '100%';
+    body.style.overflow = 'hidden';
+
+    return () => {
+      body.style.overflow = originalBodyOverflow;
+      body.style.position = originalBodyPosition;
+      body.style.top = originalBodyTop;
+      body.style.width = originalBodyWidth;
+      body.style.paddingRight = originalBodyPaddingRight;
+      html.style.overflow = originalHtmlOverflow;
+
+      window.scrollTo(0, scrollY);
+    };
   }, [isMenuOpen]);
 
   // Focus trap
