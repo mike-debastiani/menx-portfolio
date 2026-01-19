@@ -82,12 +82,17 @@ export default function HeaderClient({
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isQuickInfoOpen, setIsQuickInfoOpen] = useState(false);
+  const [isHeaderHidden, setIsHeaderHidden] = useState(false);
 
   const menuRef = useRef<HTMLDivElement>(null);
   const hamburgerButtonRef = useRef<HTMLButtonElement>(null);
   const previousFocusRef = useRef<HTMLElement | null>(null);
   const quickInfoRef = useRef<HTMLDivElement>(null);
   const quickInfoButtonRef = useRef<HTMLButtonElement>(null);
+  const lastScrollYRef = useRef(0);
+  const scrollDirRef = useRef<'up' | 'down' | 'none'>('none');
+  const scrollDeltaAccRef = useRef(0);
+  const tickingRef = useRef(false);
 
   const isAnyOverlayOpen = isMenuOpen || isQuickInfoOpen;
 
@@ -133,8 +138,74 @@ export default function HeaderClient({
   useEffect(() => {
     closeMenu();
     closeQuickInfo();
+    setIsHeaderHidden(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname]);
+
+  // Hide header on downscroll, show on upscroll (all breakpoints)
+  useEffect(() => {
+    lastScrollYRef.current = window.scrollY;
+    const topThreshold = 8; // always show near top
+    const hideDeltaThreshold = 8; // a bit more sensitive on downscroll
+    const showDeltaThreshold = 1; // show very quickly on upward scroll
+
+    const onScroll = () => {
+      if (tickingRef.current) return;
+      tickingRef.current = true;
+
+      window.requestAnimationFrame(() => {
+        const currentY = window.scrollY;
+        const lastY = lastScrollYRef.current;
+        const delta = currentY - lastY;
+        const dir: 'up' | 'down' | 'none' = delta > 0 ? 'down' : delta < 0 ? 'up' : 'none';
+
+        // Keep header visible while any overlay is open (menu / quick info)
+        if (isAnyOverlayOpen) {
+          setIsHeaderHidden(false);
+          scrollDirRef.current = 'none';
+          scrollDeltaAccRef.current = 0;
+          lastScrollYRef.current = currentY;
+          tickingRef.current = false;
+          return;
+        }
+
+        if (currentY <= topThreshold) {
+          setIsHeaderHidden(false);
+          scrollDirRef.current = 'none';
+          scrollDeltaAccRef.current = 0;
+        } else if (dir !== 'none') {
+          // Show immediately on any upward scroll (as requested)
+          if (dir === 'up') {
+            setIsHeaderHidden(false);
+            scrollDirRef.current = 'up';
+            scrollDeltaAccRef.current = 0;
+            lastScrollYRef.current = currentY;
+            tickingRef.current = false;
+            return;
+          }
+
+          // Accumulate small deltas so trackpad "slow scroll" still triggers hide/show.
+          if (dir !== scrollDirRef.current) {
+            scrollDirRef.current = dir;
+            scrollDeltaAccRef.current = 0;
+          }
+          scrollDeltaAccRef.current += delta;
+
+          if (scrollDeltaAccRef.current > hideDeltaThreshold) {
+            setIsHeaderHidden(true);
+          } else if (scrollDeltaAccRef.current < -showDeltaThreshold) {
+            setIsHeaderHidden(false);
+          }
+        }
+
+        lastScrollYRef.current = currentY;
+        tickingRef.current = false;
+      });
+    };
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, [isAnyOverlayOpen]);
 
   // Close quick info on small screens (safety)
   useEffect(() => {
@@ -286,7 +357,19 @@ export default function HeaderClient({
 
   return (
     <>
-      <header className="sticky top-0 z-50 w-full bg-white">
+      {/* Header spacer so content can slide up when header hides */}
+      <div
+        aria-hidden="true"
+        className={`overflow-hidden transition-[height] duration-300 ease-out motion-reduce:transition-none ${
+          isHeaderHidden ? 'h-0' : 'h-16'
+        }`}
+      />
+
+      <header
+        className={`fixed top-0 left-0 right-0 z-50 w-full bg-white transition-transform duration-300 ease-out motion-reduce:transition-none will-change-transform ${
+          isHeaderHidden ? '-translate-y-full' : 'translate-y-0'
+        }`}
+      >
         <Container as="nav" aria-label="Main navigation">
           <div className="flex h-16 items-center justify-between">
             <Link
@@ -318,7 +401,7 @@ export default function HeaderClient({
                 iconSize={14}
                 onClick={openQuickInfo}
               >
-                Quick info
+                QuickInfo
               </Button>
             </div>
 
