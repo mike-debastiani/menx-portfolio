@@ -397,7 +397,7 @@ export default function HeaderClient({
                 variant="primary"
                 size="sm"
                 icon="right"
-                iconSrc="/icons/info-icon-white.svg"
+                iconSrc="/icons/button-icon-primary.svg"
                 iconSize={14}
                 onClick={openQuickInfo}
               >
