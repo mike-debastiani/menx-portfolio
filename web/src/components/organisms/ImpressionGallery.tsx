@@ -20,6 +20,9 @@ export interface ImpressionGalleryProps {
   onExpandedChange?: (id: string | null) => void;
   // Focus tracking
   onFocusChange?: (impressionId: string | null) => void;
+  // Mobile-only overlay behavior (<md)
+  isMobileOverlay?: boolean;
+  onMobileOpen?: (impressionId: string) => void;
 }
 
 export interface ImpressionGalleryRef {
@@ -36,6 +39,8 @@ const ImpressionGallery = forwardRef<ImpressionGalleryRef, ImpressionGalleryProp
       expandedImpressionId: controlledExpandedId,
       onExpandedChange,
       onFocusChange,
+      isMobileOverlay = false,
+      onMobileOpen,
     },
     ref
   ) {
@@ -295,6 +300,14 @@ const ImpressionGallery = forwardRef<ImpressionGalleryRef, ImpressionGalleryProp
   // Handle item click
   const handleItemClick = useCallback(
     (itemId: string, imageScale: number = 1) => {
+      // Mobile overlay mode (<md): do NOT run desktop inline expand/centering logic.
+      if (isMobileOverlay) {
+        // Ensure any inline expanded state is cleared (best-effort; parent also clears on mode switch)
+        setActiveId(null);
+        onMobileOpen?.(itemId);
+        return;
+      }
+
       // If this item is already open, just center it (don't close it)
       if (activeId === itemId) {
         // Set programmatic scroll flag to prevent auto-collapse
@@ -353,7 +366,7 @@ const ImpressionGallery = forwardRef<ImpressionGalleryRef, ImpressionGalleryProp
         }, 50);
       });
     },
-    [activeId, scrollToCenter]
+    [activeId, isMobileOverlay, onMobileOpen, scrollToCenter, setActiveId]
   );
 
   // Handle manual scroll (auto-collapse + focus update + scroll limit)

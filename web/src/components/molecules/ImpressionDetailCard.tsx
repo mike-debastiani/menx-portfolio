@@ -23,7 +23,7 @@ export default function ImpressionDetailCard({
 }: ImpressionDetailCardProps) {
   return (
     <div 
-      className={`bg-primary-50 flex flex-col items-end justify-between overflow-hidden pl-10 pr-4 py-4 md:pr-5 md:py-5 lg:pr-6 lg:py-6 rounded-xl shrink-0 ${className}`}
+      className={`bg-primary-50 flex flex-col items-end justify-between overflow-hidden -mt-[40px] px-4 pb-4 pt-12 md:mt-0 md:pl-10 md:pr-5 md:py-5 lg:pr-6 lg:py-6 rounded-xl shrink-0 ${className}`}
       style={{
         height: height ? `${height}px` : undefined,
         width: width ? `${width}px` : undefined,
@@ -43,32 +43,15 @@ export default function ImpressionDetailCard({
           </h3>
         </div>
 
-        {/* Description - hidden only below 500px */}
-        <p className="hidden max-[500px]:hidden min-[500px]:block font-normal text-[15px] lg:text-base leading-[1.4] text-primary-500 w-full whitespace-pre-wrap">
+        {/* Description - always visible (also <500px) */}
+        <p className="block font-normal text-[15px] lg:text-base leading-[1.4] text-primary-500 w-full whitespace-pre-wrap">
           {description}
         </p>
       </div>
 
-      {/* Button - full width without icon below 500px, right-aligned with icon from 500px */}
-      <div className="self-stretch max-[500px]:self-stretch min-[500px]:self-end relative z-20 w-full max-[500px]:w-full min-[500px]:w-auto">
-        {/* Mobile button - no icon, full width, only visible below 500px */}
-        <Button 
-          variant="primary" 
-          icon="none"
-          size="sm" 
-          href={buttonHref}
-          className="w-full max-[500px]:!block min-[500px]:!hidden"
-        >
-          {buttonLabel}
-        </Button>
-        {/* Standard button - with icon, auto width, only visible from 500px */}
-        <Button 
-          variant="primary" 
-          icon="right"
-          size="sm" 
-          href={buttonHref}
-          className="!hidden max-[500px]:!hidden min-[500px]:!block"
-        >
+      {/* Button - always use the “large screen” variant (also <500px) */}
+      <div className="self-end relative z-20 w-auto">
+        <Button variant="primary" icon="right" size="sm" href={buttonHref}>
           {buttonLabel}
         </Button>
       </div>

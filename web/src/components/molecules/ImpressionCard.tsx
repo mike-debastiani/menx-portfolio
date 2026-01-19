@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Pill, { type PillSize } from '@/components/atoms/Pill';
+import { motion } from 'framer-motion';
 
 export type MethodColorVariant = 'default' | 'blue' | 'purple' | 'magenta' | 'orange' | 'green' | 'darkgrey';
 
@@ -80,6 +81,11 @@ export interface ImpressionCardProps {
   className?: string;
   imageScale?: number;
   calculatedWidth?: number | null; // Calculated width for responsive layout (overrides hook value)
+  /**
+   * Optional shared element layout id for Framer Motion transitions.
+   * Must match between the thumbnail and the modal hero image.
+   */
+  sharedImageLayoutId?: string;
 }
 
 export default function ImpressionCard({
@@ -89,6 +95,7 @@ export default function ImpressionCard({
   className = '',
   imageScale = 1,
   calculatedWidth,
+  sharedImageLayoutId,
 }: ImpressionCardProps) {
   const { width: baseWidth, height: baseHeight } = useResponsiveCardDimensions();
   const [pillSize, setPillSize] = useState<PillSize>('sm');
@@ -121,25 +128,48 @@ export default function ImpressionCard({
   return (
     <div className={`flex flex-col gap-2 min-[600px]:gap-3 items-start ${className}`}>
       {/* Image Container - scales down in size, border radius stays at 12px */}
-      <div 
-        className="relative rounded-xl overflow-hidden bg-primary-50 transition-all duration-300 ease-out"
-        style={{
-          height: `${cardHeight}px`,
-          width: `${cardWidth}px`,
-        }}
-      >
-        {image?.src ? (
-          <Image
-            src={image.src}
-            alt={image.alt}
-            fill
-            className="object-cover"
-            sizes={`${cardWidth}px`}
-          />
-        ) : (
-          <div className="w-full h-full bg-primary-100" aria-hidden="true" />
-        )}
-      </div>
+      {sharedImageLayoutId ? (
+        <motion.div
+          layoutId={sharedImageLayoutId}
+          className="relative rounded-xl overflow-hidden bg-primary-50 transition-all duration-300 ease-out"
+          style={{
+            height: `${cardHeight}px`,
+            width: `${cardWidth}px`,
+          }}
+        >
+          {image?.src ? (
+            <Image
+              src={image.src}
+              alt={image.alt}
+              fill
+              className="object-cover"
+              sizes={`${cardWidth}px`}
+            />
+          ) : (
+            <div className="w-full h-full bg-primary-100" aria-hidden="true" />
+          )}
+        </motion.div>
+      ) : (
+        <div
+          className="relative rounded-xl overflow-hidden bg-primary-50 transition-all duration-300 ease-out"
+          style={{
+            height: `${cardHeight}px`,
+            width: `${cardWidth}px`,
+          }}
+        >
+          {image?.src ? (
+            <Image
+              src={image.src}
+              alt={image.alt}
+              fill
+              className="object-cover"
+              sizes={`${cardWidth}px`}
+            />
+          ) : (
+            <div className="w-full h-full bg-primary-100" aria-hidden="true" />
+          )}
+        </div>
+      )}
 
       {/* Method Pill - xs size below 600px, sm size from 600px */}
       <Pill variant={methodColorVariant} size={pillSize}>

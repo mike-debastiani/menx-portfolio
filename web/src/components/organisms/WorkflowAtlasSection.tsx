@@ -9,6 +9,9 @@ import { phaseColorToMethodColorVariant, phaseToWorkflowPhaseKey, formatStatValu
 import type { WorkflowAtlasData, WorkflowAtlasImpression, WorkflowAtlasMethod } from '@/lib/sanity.queries';
 import { urlForImage } from '@/lib/sanity.client';
 import type { SanityImage } from '@/types/sanity';
+import { LayoutGroup } from 'framer-motion';
+import { useIsMobileOverlay } from '@/lib/useIsMobileOverlay';
+import ImpressionOverlayModal from '@/components/organisms/ImpressionOverlayModal';
 
 export interface WorkflowAtlasSectionProps {
   data: WorkflowAtlasData;
@@ -21,11 +24,14 @@ export interface WorkflowAtlasSectionProps {
  */
 export default function WorkflowAtlasSection({ data, className = '' }: WorkflowAtlasSectionProps) {
   const galleryRef = useRef<ImpressionGalleryRef>(null);
+  const isMobileOverlay = useIsMobileOverlay();
+  const lastTriggerElementRef = useRef<HTMLElement | null>(null);
   
   // State for bidirectional interaction
   const [activeMethodId, setActiveMethodId] = useState<string | null>(null);
   const [focusedImpressionId, setFocusedImpressionId] = useState<string | null>(null);
   const [expandedImpressionId, setExpandedImpressionId] = useState<string | null>(null);
+  const [overlayImpressionId, setOverlayImpressionId] = useState<string | null>(null);
 
   // Convert impressions to gallery items
   const galleryItems: ImpressionGalleryItem[] = useMemo(() => {
@@ -79,6 +85,11 @@ export default function WorkflowAtlasSection({ data, className = '' }: WorkflowA
       };
     });
   }, [data.impressions]);
+
+  const overlayGalleryItem = useMemo(() => {
+    if (!overlayImpressionId) return null;
+    return galleryItems.find((item) => item.id === overlayImpressionId) ?? null;
+  }, [galleryItems, overlayImpressionId]);
 
   // Convert methods to timeline segments
   const timelineSegments: WorkflowSegment[] = useMemo(() => {
@@ -221,6 +232,48 @@ export default function WorkflowAtlasSection({ data, className = '' }: WorkflowA
     }
   }, [expandedImpressionId, focusedImpressionId, data.impressions]);
 
+  // Mobile overlay mode: ensure desktop inline expansion is cleared
+  useEffect(() => {
+    if (!isMobileOverlay) return;
+    setExpandedImpressionId(null);
+  }, [isMobileOverlay]);
+
+  // If switching to desktop, ensure any mobile overlay is closed
+  useEffect(() => {
+    if (isMobileOverlay) return;
+    setOverlayImpressionId(null);
+  }, [isMobileOverlay]);
+
+  const handleMobileOverlayOpen = useCallback(
+    (impressionId: string) => {
+      // Capture focus for restore (basic focus restore is enough)
+      lastTriggerElementRef.current = (document.activeElement as HTMLElement | null) ?? null;
+
+      // Clear any inline expanded state (desktop behavior)
+      setExpandedImpressionId(null);
+
+      // Keep timeline highlight synced to the clicked impression's method
+      const impression = data.impressions.find((imp) => imp._id === impressionId);
+      if (impression) {
+        const methodId = (impression.method as WorkflowAtlasMethod)._id;
+        setActiveMethodId(methodId);
+      }
+
+      setOverlayImpressionId(impressionId);
+    },
+    [data.impressions]
+  );
+
+  const handleMobileOverlayClose = useCallback(() => {
+    setOverlayImpressionId(null);
+  }, []);
+
+  const handleAfterMobileOverlayClose = useCallback(() => {
+    // Restore focus to the previously focused trigger (best-effort)
+    lastTriggerElementRef.current?.focus?.();
+    lastTriggerElementRef.current = null;
+  }, []);
+
   // Initialize: scroll to first item and highlight first segment
   useEffect(() => {
     if (galleryItems.length > 0 && timelineSegments.length > 0 && galleryRef.current) {
@@ -300,28 +353,43 @@ export default function WorkflowAtlasSection({ data, className = '' }: WorkflowA
             <StatsGroup items={statsItems} />
 
             {/* Impression Gallery - Break out of container padding to reach viewport edges */}
-            <div 
-              className="overflow-visible" 
-              style={{ 
-                overflow: 'visible',
-                contain: 'none',
-                // Ensure no height constraints
-                height: 'auto',
-                minHeight: 'fit-content',
-                // Break out of container padding to reach viewport edges
-                marginLeft: 'calc(-1 * var(--layout-margin))',
-                marginRight: 'calc(-1 * var(--layout-margin))',
-                width: 'calc(100% + 2 * var(--layout-margin))',
-              }}
-            >
-              <ImpressionGallery
-                ref={galleryRef}
-                items={galleryItems}
-                expandedImpressionId={expandedImpressionId}
-                onExpandedChange={setExpandedImpressionId}
-                onFocusChange={handleGalleryFocusChange}
+            <LayoutGroup>
+              <div 
+                className="overflow-visible" 
+                style={{ 
+                  overflow: 'visible',
+                  contain: 'none',
+                  // Ensure no height constraints
+                  height: 'auto',
+                  minHeight: 'fit-content',
+                  // Break out of container padding to reach viewport edges
+                  marginLeft: 'calc(-1 * var(--layout-margin))',
+                  marginRight: 'calc(-1 * var(--layout-margin))',
+                  width: 'calc(100% + 2 * var(--layout-margin))',
+                }}
+              >
+                <ImpressionGallery
+                  ref={galleryRef}
+                  items={galleryItems}
+                  expandedImpressionId={expandedImpressionId}
+                  onExpandedChange={setExpandedImpressionId}
+                  onFocusChange={handleGalleryFocusChange}
+                  isMobileOverlay={isMobileOverlay}
+                  onMobileOpen={handleMobileOverlayOpen}
+                />
+              </div>
+
+              <ImpressionOverlayModal
+                open={isMobileOverlay && overlayImpressionId !== null}
+                impressionId={overlayImpressionId}
+                image={overlayGalleryItem?.card.image}
+                methodLabel={overlayGalleryItem?.card.methodLabel}
+                methodColorVariant={overlayGalleryItem?.card.methodColorVariant}
+                detail={overlayGalleryItem?.detail ?? null}
+                onClose={handleMobileOverlayClose}
+                onAfterClose={handleAfterMobileOverlayClose}
               />
-            </div>
+            </LayoutGroup>
           </div>
 
           {/* Timeline with responsive gap from Impression Gallery */}

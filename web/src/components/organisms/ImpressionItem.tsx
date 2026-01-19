@@ -200,6 +200,7 @@ export default function ImpressionItem({
           methodColorVariant={card.methodColorVariant}
           imageScale={imageScale}
           calculatedWidth={calculatedWidth}
+          sharedImageLayoutId={`impression-image-${id}`}
         />
       </div>
 
