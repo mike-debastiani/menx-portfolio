@@ -83,6 +83,7 @@ export default function HeaderClient({
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isQuickInfoOpen, setIsQuickInfoOpen] = useState(false);
   const [isHeaderHidden, setIsHeaderHidden] = useState(false);
+  const [isNearBottom, setIsNearBottom] = useState(false);
 
   const menuRef = useRef<HTMLDivElement>(null);
   const hamburgerButtonRef = useRef<HTMLButtonElement>(null);
@@ -93,6 +94,7 @@ export default function HeaderClient({
   const scrollDirRef = useRef<'up' | 'down' | 'none'>('none');
   const scrollDeltaAccRef = useRef(0);
   const tickingRef = useRef(false);
+  const isNearBottomRef = useRef(false);
 
   const isAnyOverlayOpen = isMenuOpen || isQuickInfoOpen;
 
@@ -147,7 +149,8 @@ export default function HeaderClient({
     lastScrollYRef.current = window.scrollY;
     const topThreshold = 8; // always show near top
     const hideDeltaThreshold = 8; // a bit more sensitive on downscroll
-    const showDeltaThreshold = 1; // show very quickly on upward scroll
+    const showDeltaThreshold = 4; // small but stable threshold to avoid bottom-edge flicker
+    const bottomLockThreshold = 96; // px from bottom where we avoid collapsing layout
 
     const onScroll = () => {
       if (tickingRef.current) return;
@@ -158,6 +161,13 @@ export default function HeaderClient({
         const lastY = lastScrollYRef.current;
         const delta = currentY - lastY;
         const dir: 'up' | 'down' | 'none' = delta > 0 ? 'down' : delta < 0 ? 'up' : 'none';
+        const doc = document.documentElement;
+        const maxScrollY = Math.max(0, doc.scrollHeight - window.innerHeight);
+        const nearBottomNow = currentY >= maxScrollY - bottomLockThreshold;
+        if (nearBottomNow !== isNearBottomRef.current) {
+          isNearBottomRef.current = nearBottomNow;
+          setIsNearBottom(nearBottomNow);
+        }
 
         // Keep header visible while any overlay is open (menu / quick info)
         if (isAnyOverlayOpen) {
@@ -174,16 +184,6 @@ export default function HeaderClient({
           scrollDirRef.current = 'none';
           scrollDeltaAccRef.current = 0;
         } else if (dir !== 'none') {
-          // Show immediately on any upward scroll (as requested)
-          if (dir === 'up') {
-            setIsHeaderHidden(false);
-            scrollDirRef.current = 'up';
-            scrollDeltaAccRef.current = 0;
-            lastScrollYRef.current = currentY;
-            tickingRef.current = false;
-            return;
-          }
-
           // Accumulate small deltas so trackpad "slow scroll" still triggers hide/show.
           if (dir !== scrollDirRef.current) {
             scrollDirRef.current = dir;
@@ -361,7 +361,7 @@ export default function HeaderClient({
       <div
         aria-hidden="true"
         className={`overflow-hidden transition-[height] duration-300 ease-out motion-reduce:transition-none ${
-          isHeaderHidden ? 'h-0' : 'h-16'
+          isHeaderHidden && !isNearBottom ? 'h-0' : 'h-16'
         }`}
       />
 
