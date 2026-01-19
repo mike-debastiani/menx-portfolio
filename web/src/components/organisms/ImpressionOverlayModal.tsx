@@ -127,13 +127,15 @@ export default function ImpressionOverlayModal({
     <AnimatePresence onExitComplete={onAfterClose}>
       {open && impressionId && detail ? (
         <motion.div
+          key={impressionId}
           className="fixed inset-0 z-[999] flex items-end justify-center"
           role="dialog"
           aria-modal="true"
           aria-label={detail.title ? `Impression: ${detail.title}` : 'Impression details'}
           initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
+          animate={{ opacity: 1, pointerEvents: 'auto' }}
+          // Safety: if exit ever gets interrupted, don't keep blocking the page.
+          exit={{ opacity: 0, pointerEvents: 'none' }}
         >
           {/* Backdrop */}
           <motion.button
@@ -142,8 +144,8 @@ export default function ImpressionOverlayModal({
             className="absolute inset-0 bg-primary-950/40 backdrop-blur-[6px]"
             onClick={onClose}
             initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
+            animate={{ opacity: 1, pointerEvents: 'auto' }}
+            exit={{ opacity: 0, pointerEvents: 'none' }}
             transition={{ duration: shouldReduceMotion ? 0.12 : 0.2 }}
           />
 
@@ -162,6 +164,7 @@ export default function ImpressionOverlayModal({
             drag={shouldReduceMotion ? false : 'y'}
             dragConstraints={{ top: 0, bottom: 0 }}
             dragElastic={0.18}
+            dragMomentum={false}
             onDragStart={() => {
               isDraggingRef.current = true;
             }}
