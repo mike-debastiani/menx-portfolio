@@ -96,6 +96,8 @@ export default function HeaderClient({
   const scrollDeltaAccRef = useRef(0);
   const tickingRef = useRef(false);
   const isNearBottomRef = useRef(false);
+  const lastStateChangeTimeRef = useRef(0);
+  const lastViewportHeightRef = useRef(0);
 
   const isAnyOverlayOpen = isMenuOpen || isQuickInfoOpen;
 
@@ -188,10 +190,13 @@ export default function HeaderClient({
   // Hide header on downscroll, show on upscroll (all breakpoints)
   useEffect(() => {
     lastScrollYRef.current = window.scrollY;
+    lastViewportHeightRef.current = window.innerHeight;
     const topThreshold = 8; // always show near top
-    const hideDeltaThreshold = 8; // a bit more sensitive on downscroll
-    const showDeltaThreshold = 4; // small but stable threshold to avoid bottom-edge flicker
+    const hideDeltaThreshold = 12; // increased threshold for hiding (hysteresis)
+    const showDeltaThreshold = 8; // threshold for showing (hysteresis - prevents flicker)
     const bottomLockThreshold = 96; // px from bottom where we avoid collapsing layout
+    const stateChangeCooldown = 150; // ms minimum between state changes (prevents rapid flickering)
+    const viewportChangeIgnoreThreshold = 50; // px viewport height change to ignore (browser UI changes)
 
     const onScroll = () => {
       if (tickingRef.current) return;
@@ -201,6 +206,18 @@ export default function HeaderClient({
         const currentY = window.scrollY;
         const lastY = lastScrollYRef.current;
         const delta = currentY - lastY;
+        const currentViewportHeight = window.innerHeight;
+        const viewportDelta = Math.abs(currentViewportHeight - lastViewportHeightRef.current);
+        
+        // Ignore scroll events that are likely caused by browser UI changes (Android Chrome)
+        // If viewport height changed significantly, it's probably the browser chrome moving
+        if (viewportDelta > viewportChangeIgnoreThreshold && Math.abs(delta) < 5) {
+          lastScrollYRef.current = currentY;
+          lastViewportHeightRef.current = currentViewportHeight;
+          tickingRef.current = false;
+          return;
+        }
+
         const dir: 'up' | 'down' | 'none' = delta > 0 ? 'down' : delta < 0 ? 'up' : 'none';
         const doc = document.documentElement;
         const maxScrollY = Math.max(0, doc.scrollHeight - window.innerHeight);
@@ -216,6 +233,7 @@ export default function HeaderClient({
           scrollDirRef.current = 'none';
           scrollDeltaAccRef.current = 0;
           lastScrollYRef.current = currentY;
+          lastViewportHeightRef.current = currentViewportHeight;
           tickingRef.current = false;
           return;
         }
@@ -224,6 +242,7 @@ export default function HeaderClient({
           setIsHeaderHidden(false);
           scrollDirRef.current = 'none';
           scrollDeltaAccRef.current = 0;
+          lastStateChangeTimeRef.current = Date.now();
         } else if (dir !== 'none') {
           // Accumulate small deltas so trackpad "slow scroll" still triggers hide/show.
           if (dir !== scrollDirRef.current) {
@@ -232,14 +251,25 @@ export default function HeaderClient({
           }
           scrollDeltaAccRef.current += delta;
 
-          if (scrollDeltaAccRef.current > hideDeltaThreshold) {
-            setIsHeaderHidden(true);
-          } else if (scrollDeltaAccRef.current < -showDeltaThreshold) {
-            setIsHeaderHidden(false);
+          const now = Date.now();
+          const timeSinceLastChange = now - lastStateChangeTimeRef.current;
+          
+          // Apply state change only if enough time has passed since last change (prevents rapid flickering)
+          if (timeSinceLastChange >= stateChangeCooldown) {
+            if (scrollDeltaAccRef.current > hideDeltaThreshold) {
+              setIsHeaderHidden(true);
+              lastStateChangeTimeRef.current = now;
+              scrollDeltaAccRef.current = 0; // Reset accumulator after state change
+            } else if (scrollDeltaAccRef.current < -showDeltaThreshold) {
+              setIsHeaderHidden(false);
+              lastStateChangeTimeRef.current = now;
+              scrollDeltaAccRef.current = 0; // Reset accumulator after state change
+            }
           }
         }
 
         lastScrollYRef.current = currentY;
+        lastViewportHeightRef.current = currentViewportHeight;
         tickingRef.current = false;
       });
     };
