@@ -265,6 +265,12 @@ export default function ImpressionOverlayModal({
           animate={{ opacity: 1, pointerEvents: 'auto' }}
           // Safety: if exit ever gets interrupted, don't keep blocking the page.
           exit={{ opacity: 0, pointerEvents: 'none' }}
+          onClick={(e) => {
+            // Close when clicking outside the sheet (on backdrop)
+            if (e.target === e.currentTarget) {
+              onClose();
+            }
+          }}
         >
           {/* Backdrop */}
           <motion.button
@@ -281,20 +287,18 @@ export default function ImpressionOverlayModal({
           {/* Bottom sheet */}
           <motion.div
             ref={sheetRef}
-            className="relative w-full max-w-[900px] rounded-t-2xl bg-transparent shadow-2xl flex flex-col overflow-x-hidden"
+            className="relative flex flex-col"
             style={{
               paddingTop: `max(env(safe-area-inset-top), ${sheetPaddingTop}px)`,
               paddingBottom: 'max(env(safe-area-inset-bottom), var(--layout-margin))',
-              touchAction: shouldReduceMotion ? 'auto' : 'pan-y',
-              minHeight: 0,
-              maxHeight: '100vh',
-              maxWidth: '100vw',
+              width: '100%',
+              maxWidth: '900px',
+              pointerEvents: 'none',
             }}
             initial={{ y: shouldReduceMotion ? 0 : 64, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: shouldReduceMotion ? 0 : 96, opacity: 0 }}
             transition={{ duration: shouldReduceMotion ? 0.12 : 0.26, ease: 'easeOut' }}
-            drag={shouldReduceMotion ? false : 'y'}
             dragConstraints={{ top: 0, bottom: 0 }}
             dragElastic={0.18}
             dragMomentum={false}
@@ -312,7 +316,6 @@ export default function ImpressionOverlayModal({
                 onClose();
               }
             }}
-            onClick={(e) => e.stopPropagation()}
           >
             {/* Focus target */}
             <div
@@ -322,11 +325,21 @@ export default function ImpressionOverlayModal({
               aria-hidden="true"
             />
 
-            <div
-              className="flex-1 flex flex-col items-center justify-center min-h-0 overflow-y-auto overflow-x-hidden"
-              style={{ paddingLeft: `${containerPadding}px`, paddingRight: `${containerPadding}px`, maxWidth: '100%' }}
-            >
-              <div className="flex flex-col items-center w-full max-w-full">
+            <motion.div
+              className="flex flex-col items-center overflow-x-hidden overflow-y-auto min-h-0"
+              style={{ 
+                paddingLeft: `${containerPadding}px`, 
+                paddingRight: `${containerPadding}px`, 
+                pointerEvents: 'auto',
+                touchAction: shouldReduceMotion ? 'auto' : 'pan-y',
+                maxHeight: '100vh',
+              }}
+              drag={shouldReduceMotion ? false : 'y'}
+          >
+              <div 
+                className="flex flex-col items-center w-full max-w-full"
+                onClick={(e) => e.stopPropagation()}
+              >
                 {/* Shared hero image */}
                 <motion.div
                   layoutId={sharedLayoutId}
@@ -371,7 +384,7 @@ export default function ImpressionOverlayModal({
                   ) : null}
                 </div>
               </div>
-            </div>
+            </motion.div>
           </motion.div>
         </motion.div>
       ) : null}

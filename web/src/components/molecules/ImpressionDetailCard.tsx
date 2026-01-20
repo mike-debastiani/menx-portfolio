@@ -23,28 +23,28 @@ export default function ImpressionDetailCard({
 }: ImpressionDetailCardProps) {
   return (
     <div 
-      className={`bg-primary-50 flex flex-col items-end justify-between overflow-hidden -mt-[40px] px-4 pb-4 pt-12 md:mt-0 md:pl-10 md:pr-5 md:py-5 lg:pr-6 lg:py-6 rounded-xl shrink-0 ${className}`}
+      className={`bg-primary-50 flex flex-col items-end gap-4 md:justify-between overflow-hidden -mt-[40px] px-4 pb-4 pt-12 md:mt-0 md:pl-10 md:pr-5 md:py-5 lg:pr-6 lg:py-6 rounded-xl shrink-0 ${className}`}
       style={{
         height: height ? `${height}px` : undefined,
         width: width ? `${width}px` : undefined,
       }}
     >
       {/* Text Container */}
-      <div className="flex flex-col gap-4 md:gap-5 lg:gap-6 h-[180px] md:h-[196px] lg:h-[212px] items-start w-full">
+      <div className="flex flex-col gap-3 md:gap-3 min-h-[180px] md:min-h-[196px] lg:min-h-[212px] items-start w-full">
         {/* Title Container */}
         <div className="flex flex-col gap-1 items-start w-full">
           {/* Project Label */}
-          <p className="font-mono font-normal text-base max-[500px]:text-base min-[500px]:text-[15px] lg:text-base leading-[1.25] text-primary-300">
+          <p className="font-mono font-normal text-sm md:text-base leading-[1.25] text-primary-300">
             Project: {projectLabel}
           </p>
           {/* Title */}
-          <h3 className="font-medium text-base max-[500px]:text-base min-[500px]:text-[22px] lg:text-2xl leading-[1.25] text-primary-950">
+          <h3 className="font-medium text-lg md:text-2xl leading-[1.25] text-primary-950">
             {title}
           </h3>
         </div>
 
         {/* Description - always visible (also <500px) */}
-        <p className="block font-normal text-sm lg:text-base leading-[1.4] text-primary-500 w-full whitespace-pre-wrap">
+        <p className="block font-normal text-sm leading-[1.4] text-primary-500 w-full whitespace-pre-wrap">
           {description}
         </p>
       </div>
