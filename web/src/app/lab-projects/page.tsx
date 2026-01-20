@@ -24,7 +24,9 @@ export default async function LabProjectsPage() {
               countLabel="Projects"
             />
           </Grid>
-          <ProjectArchive projects={projects} />
+          <div className="pb-12 md:pb-20">
+            <ProjectArchive projects={projects} />
+          </div>
         </div>
       </Container>
       <FooterSection />

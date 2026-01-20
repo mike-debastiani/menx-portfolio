@@ -334,7 +334,7 @@ export default function WorkflowAtlasSection({ data, className = '' }: WorkflowA
   }, [data.phases]);
 
   return (
-    <section id="workflow" className={`py-24 overflow-visible ${className}`}>
+    <section id="workflow" className={`py-12 md:py-20 overflow-visible ${className}`}>
       <Container>
         <div className="flex flex-col overflow-visible">
           {/* Section Header, Stats Group, and Impression Gallery with gap-20 (80px) */}

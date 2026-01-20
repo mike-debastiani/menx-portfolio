@@ -382,7 +382,7 @@ export default function WorkflowAtlasTimeline({
             className="relative w-full overflow-visible" 
             style={{ 
               marginTop: viewportWidth < 600 ? '12px' : '8px', 
-              minHeight: '20px',
+              minHeight: '50px',
             }}
           >
             {phaseLabelPositions.map(({ phase, centerPosition }) => {

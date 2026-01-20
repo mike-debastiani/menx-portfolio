@@ -18,7 +18,7 @@ export default function TextBlockSection({
   content,
 }: TextBlockSectionProps) {
   return (
-    <section className={cn('py-20 flex', className)}>
+    <section className={cn('py-12 md:py-20 flex', className)}>
       <Container className="flex flex-col gap-30">
         <Grid>
           {/* SectionDescription - Full width on tablet (768px-1199px), Column 1-5 on desktop (1200px+) */}

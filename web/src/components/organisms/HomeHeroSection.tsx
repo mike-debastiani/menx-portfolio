@@ -140,7 +140,7 @@ export default function HomeHeroSection({
   };
 
   return (
-    <section className={`pt-12 md:pt-20 pb-12 md:pb-20 max-[475px]:pb-4 overflow-x-hidden max-w-full ${className}`}>
+    <section className={`pt-12 md:pt-20 pb-12 md:pb-20 max-[475px]:pb-10 overflow-x-hidden max-w-full ${className}`}>
       <div className="flex flex-col gap-4 max-[480px]:gap-4 w-full">
         {/* SegmentedControls - full width */}
         <div className="w-full">

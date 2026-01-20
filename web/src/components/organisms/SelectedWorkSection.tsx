@@ -20,7 +20,7 @@ export default function SelectedWorkSection({ projects, className = '' }: Select
   }
 
   return (
-    <section className={cn('py-20', className)}>
+    <section className={cn('py-12 md:py-20', className)}>
       <Container>
         <div className="flex flex-col gap-10">
           {/* Section Header */}

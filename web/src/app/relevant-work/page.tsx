@@ -30,7 +30,9 @@ export default async function RelevantWorkPage() {
               countLabel="Case Studies"
             />
           </Grid>
-          <ProjectArchive projects={projects} />
+          <div className="pb-12 md:pb-20">
+            <ProjectArchive projects={projects} />
+          </div>
         </div>
       </Container>
       <FooterSection />
