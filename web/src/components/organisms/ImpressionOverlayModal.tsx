@@ -9,6 +9,10 @@ import ImpressionDetailCard, {
 } from '@/components/molecules/ImpressionDetailCard';
 import Pill, { type PillVariant } from '@/components/atoms/Pill';
 
+const HERO_WIDTH = 398;
+const HERO_HEIGHT = 436;
+const HERO_RATIO = HERO_HEIGHT / HERO_WIDTH; // height / width
+
 export interface ImpressionOverlayModalProps {
   open: boolean;
   impressionId: string | null;
@@ -46,6 +50,10 @@ export default function ImpressionOverlayModal({
   const hasClosedFromScrollAttemptRef = useRef(false);
   const isDraggingRef = useRef(false);
 
+  const [heroSize, setHeroSize] = useState<{ width: number; height: number } | null>(null);
+  const [containerPadding, setContainerPadding] = useState<number>(16);
+  const [sheetPaddingTop, setSheetPaddingTop] = useState<number>(16);
+
   const sharedLayoutId = useMemo(() => {
     if (!impressionId) return undefined;
     if (shouldReduceMotion) return undefined;
@@ -67,6 +75,127 @@ export default function ImpressionOverlayModal({
       document.body.classList.remove('overflow-hidden');
     };
   }, [open]);
+
+  // Size the hero image and detail card so they fit within the viewport, centered, with layout margin.
+  // On screens <500px, ensure both elements fit together without clipping.
+  useEffect(() => {
+    if (!open) return;
+    if (typeof window === 'undefined') return;
+
+    const readLayoutMargin = (): number => {
+      const root = document.documentElement;
+      const raw = getComputedStyle(root).getPropertyValue('--layout-margin').trim();
+      const parsed = Number.parseFloat(raw);
+      if (Number.isFinite(parsed)) return parsed;
+      return window.innerWidth >= 1280 ? 24 : window.innerWidth >= 768 ? 32 : 16;
+    };
+
+    const getViewportHeight = () => window.visualViewport?.height ?? window.innerHeight;
+
+    const update = () => {
+      const layoutMargin = readLayoutMargin();
+      const viewportWidth = window.innerWidth;
+      const viewportHeight = getViewportHeight();
+      const isSmallScreen = viewportWidth < 500;
+      const isMediumScreen = viewportWidth >= 500 && viewportWidth < 768;
+      const isMobileScreen = viewportWidth < 768;
+
+      // Determine side margin and top padding based on screen size
+      // <500px: half of layout margin (8px)
+      // 500px-768px: full layout margin (32px)
+      // >=768px: full layout margin (varies)
+      const sideMargin = isSmallScreen ? layoutMargin / 2 : layoutMargin;
+      setContainerPadding(sideMargin);
+      setSheetPaddingTop(sideMargin); // Top padding should match side margin
+
+      // Available width: viewport minus layout margins on both sides
+      const availableWidth = Math.max(240, viewportWidth - 2 * layoutMargin);
+
+      // Estimate detail card height (card content ~180px + padding + button + pill + gap)
+      // On small screens, card has pt-4 (16px), px-4 (16px), pb-4 (16px)
+      const detailCardHeight = isSmallScreen ? 180 + 16 + 16 + 16 + 40 + 12 + 24 : 212 + 20 + 20 + 20 + 40 + 12 + 24; // content + paddings + button + pill + gap
+      const detailCardOverlap = isSmallScreen ? 40 : 0; // negative margin-top overlap
+
+      if (isMobileScreen) {
+        // For <768px: apply the same logic - ensure image + card fit together within viewport height
+        // Top margin must be at least equal to side margin
+        const minTopMargin = sideMargin; // Must be >= side margin
+        
+        // Available height: viewport minus top margin (minTopMargin), bottom layout margin, and sheet padding
+        const sheetPaddingBottom = 16; // pb-6 = 24px, but we use 16px for safety
+        const availableHeight = viewportHeight - minTopMargin - layoutMargin - sheetPaddingBottom;
+
+        // Total content height = image height + (card height - overlap)
+        // We want: imageHeight + (detailCardHeight - detailCardOverlap) <= availableHeight
+        // So: imageHeight <= availableHeight - (detailCardHeight - detailCardOverlap)
+        const maxImageHeight = availableHeight - (detailCardHeight - detailCardOverlap);
+
+        // Calculate image dimensions maintaining ratio
+        const naturalImageHeight = availableWidth * HERO_RATIO;
+        const imageHeight = Math.min(naturalImageHeight, maxImageHeight);
+        const imageWidth = imageHeight / HERO_RATIO;
+
+        // Check if the image would exceed the top of viewport or if it's too small
+        // If so, fall back to simpler logic (larger image, no special constraints)
+        const wouldExceedTop = imageHeight > (viewportHeight - minTopMargin - layoutMargin - sheetPaddingBottom);
+        const isTooSmall = imageHeight < 180; // Minimum reasonable size
+
+        if (wouldExceedTop || isTooSmall) {
+          // Fall back to simpler logic: use available width, cap height if needed
+          const naturalHeight = availableWidth * HERO_RATIO;
+          const maxHeroHeight = Math.min(420, Math.max(180, viewportHeight - 380));
+          const height = Math.min(naturalHeight, maxHeroHeight);
+          const width = naturalHeight > maxHeroHeight ? height / HERO_RATIO : availableWidth;
+
+          setHeroSize({ width: Math.round(width), height: Math.round(height) });
+        } else {
+          setHeroSize({ width: Math.round(imageWidth), height: Math.round(imageHeight) });
+        }
+      } else {
+        // On larger screens (>=768px): use available width, cap height if needed
+        const naturalHeight = availableWidth * HERO_RATIO;
+        const maxHeroHeight = Math.min(420, Math.max(180, viewportHeight - 380));
+        const height = Math.min(naturalHeight, maxHeroHeight);
+        const width = naturalHeight > maxHeroHeight ? height / HERO_RATIO : availableWidth;
+
+        setHeroSize({ width: Math.round(width), height: Math.round(height) });
+      }
+    };
+
+    update();
+    window.addEventListener('resize', update);
+    window.visualViewport?.addEventListener('resize', update);
+
+    return () => {
+      window.removeEventListener('resize', update);
+      window.visualViewport?.removeEventListener('resize', update);
+    };
+  }, [open]);
+
+  const detailWidthStyle = useMemo(() => {
+    if (!heroSize) return undefined;
+
+    const viewportWidth = typeof window !== 'undefined' ? window.innerWidth : 0;
+    const isSmallScreen = viewportWidth < 500;
+    const isMediumScreen = viewportWidth >= 500 && viewportWidth < 768;
+    
+    // Determine side margin based on screen size
+    const layoutMargin = viewportWidth >= 1280 ? 24 : viewportWidth >= 768 ? 32 : 16;
+    const sideMargin = isSmallScreen ? layoutMargin / 2 : layoutMargin;
+
+    if (isSmallScreen || isMediumScreen) {
+      // On small and medium screens (<768px): DetailCard should be same width as image (1:1)
+      return {
+        width: `${heroSize.width}px`,
+        maxWidth: `calc(100vw - ${2 * sideMargin}px)`,
+      } as const;
+    }
+
+    // On larger screens (>=768px): 24px wider on both sides than the image => +48px total
+    return {
+      width: `min(${heroSize.width + 48}px, calc(100vw - ${2 * sideMargin}px))`,
+    } as const;
+  }, [heroSize]);
 
   // Focus management: move focus into modal on open
   useEffect(() => {
@@ -152,10 +281,14 @@ export default function ImpressionOverlayModal({
           {/* Bottom sheet */}
           <motion.div
             ref={sheetRef}
-            className="relative w-full max-w-[900px] rounded-t-2xl bg-transparent shadow-2xl"
+            className="relative w-full max-w-[900px] rounded-t-2xl bg-transparent shadow-2xl flex flex-col overflow-x-hidden"
             style={{
-              paddingBottom: 'max(env(safe-area-inset-bottom), 16px)',
+              paddingTop: `max(env(safe-area-inset-top), ${sheetPaddingTop}px)`,
+              paddingBottom: 'max(env(safe-area-inset-bottom), var(--layout-margin))',
               touchAction: shouldReduceMotion ? 'auto' : 'pan-y',
+              minHeight: 0,
+              maxHeight: '100vh',
+              maxWidth: '100vw',
             }}
             initial={{ y: shouldReduceMotion ? 0 : 64, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
@@ -189,49 +322,55 @@ export default function ImpressionOverlayModal({
               aria-hidden="true"
             />
 
-            <div className="px-[var(--layout-margin)] pb-6">
-              {/* Shared hero image */}
-              <motion.div
-                layoutId={sharedLayoutId}
-                className="relative w-full overflow-hidden rounded-xl bg-primary-50"
-                style={{
-                  aspectRatio: '398 / 436',
-                }}
-              >
-                {image?.src ? (
-                  <Image
-                    src={image.src}
-                    alt={image.alt || ''}
-                    fill
-                    className="object-cover"
-                    sizes="(max-width: 767px) 100vw, 900px"
-                    priority
+            <div
+              className="flex-1 flex flex-col items-center justify-center min-h-0 overflow-y-auto overflow-x-hidden"
+              style={{ paddingLeft: `${containerPadding}px`, paddingRight: `${containerPadding}px`, maxWidth: '100%' }}
+            >
+              <div className="flex flex-col items-center w-full max-w-full">
+                {/* Shared hero image */}
+                <motion.div
+                  layoutId={sharedLayoutId}
+                  className="relative mx-auto overflow-hidden rounded-xl bg-primary-50 shrink-0"
+                  style={{
+                    width: heroSize ? `${heroSize.width}px` : '100%',
+                    height: heroSize ? `${heroSize.height}px` : undefined,
+                  }}
+                >
+                  {image?.src ? (
+                    <Image
+                      src={image.src}
+                      alt={image.alt || ''}
+                      fill
+                      className="object-cover"
+                      sizes="(max-width: 767px) 100vw, 900px"
+                      priority
+                    />
+                  ) : (
+                    <div className="h-full w-full bg-primary-100" aria-hidden="true" />
+                  )}
+                </motion.div>
+
+                {/* Detail card: sits on top of the image (overlapping) and is 24px wider on both sides */}
+                <div className="relative z-10 mx-auto shrink-0" style={detailWidthStyle}>
+                  <ImpressionDetailCard
+                    projectLabel={detail.projectLabel}
+                    title={detail.title}
+                    description={detail.description}
+                    buttonLabel={detail.buttonLabel}
+                    buttonHref={detail.buttonHref}
+                    className="w-full !pt-4"
                   />
-                ) : (
-                  <div className="h-full w-full bg-primary-100" aria-hidden="true" />
-                )}
-              </motion.div>
 
-              {/* Body: reuse ImpressionDetailCard markup */}
-              <div className="mt-4">
-                <ImpressionDetailCard
-                  projectLabel={detail.projectLabel}
-                  title={detail.title}
-                  description={detail.description}
-                  buttonLabel={detail.buttonLabel}
-                  buttonHref={detail.buttonHref}
-                  className="w-full"
-                />
-              </div>
-
-              {/* Method pill below the detail card (gap 12px) */}
-              {methodLabel ? (
-                <div className="mt-3 flex flex-wrap items-start gap-3">
-                  <Pill variant={methodColorVariant} size="sm">
-                    {methodLabel}
-                  </Pill>
+                  {/* Method pill below the detail card (gap 12px) */}
+                  {methodLabel ? (
+                    <div className="mt-3 flex flex-wrap items-start gap-3">
+                      <Pill variant={methodColorVariant} size="sm">
+                        {methodLabel}
+                      </Pill>
+                    </div>
+                  ) : null}
                 </div>
-              ) : null}
+              </div>
             </div>
           </motion.div>
         </motion.div>
