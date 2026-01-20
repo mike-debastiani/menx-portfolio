@@ -98,6 +98,7 @@ export default function HeaderClient({
   const isNearBottomRef = useRef(false);
   const lastStateChangeTimeRef = useRef(0);
   const lastViewportHeightRef = useRef(0);
+  const scrollHistoryRef = useRef<Array<{ y: number; time: number }>>([]);
 
   const isAnyOverlayOpen = isMenuOpen || isQuickInfoOpen;
 
@@ -192,33 +193,81 @@ export default function HeaderClient({
     lastScrollYRef.current = window.scrollY;
     lastViewportHeightRef.current = window.innerHeight;
     const topThreshold = 8; // always show near top
-    const hideDeltaThreshold = 12; // increased threshold for hiding (hysteresis)
-    const showDeltaThreshold = 8; // threshold for showing (hysteresis - prevents flicker)
+    const hideDeltaThreshold = 12; // threshold for hiding
+    const showDeltaThreshold = 8; // threshold for showing
     const bottomLockThreshold = 96; // px from bottom where we avoid collapsing layout
-    const stateChangeCooldown = 150; // ms minimum between state changes (prevents rapid flickering)
-    const viewportChangeIgnoreThreshold = 50; // px viewport height change to ignore (browser UI changes)
+    const stateChangeCooldown = 200; // ms minimum between state changes
+    const scrollHistoryWindow = 300; // ms window for scroll history
+    const minScrollVelocity = 0.5; // px/ms minimum velocity to consider real scroll
+    const viewportChangeIgnoreThreshold = 30; // px viewport height change threshold
 
     const onScroll = () => {
       if (tickingRef.current) return;
       tickingRef.current = true;
 
       window.requestAnimationFrame(() => {
+        const now = Date.now();
         const currentY = window.scrollY;
-        const lastY = lastScrollYRef.current;
-        const delta = currentY - lastY;
         const currentViewportHeight = window.innerHeight;
         const viewportDelta = Math.abs(currentViewportHeight - lastViewportHeightRef.current);
+        const lastY = lastScrollYRef.current;
+        const delta = currentY - lastY;
+
+        // Update scroll history (keep last 300ms)
+        scrollHistoryRef.current.push({ y: currentY, time: now });
+        scrollHistoryRef.current = scrollHistoryRef.current.filter(
+          (entry) => now - entry.time <= scrollHistoryWindow
+        );
+
+        // Calculate actual scroll velocity from history (more reliable than single delta)
+        let actualDelta = 0;
+        let consistentDirection: 'up' | 'down' | 'none' = 'none';
         
-        // Ignore scroll events that are likely caused by browser UI changes (Android Chrome)
-        // If viewport height changed significantly, it's probably the browser chrome moving
-        if (viewportDelta > viewportChangeIgnoreThreshold && Math.abs(delta) < 5) {
-          lastScrollYRef.current = currentY;
-          lastViewportHeightRef.current = currentViewportHeight;
-          tickingRef.current = false;
-          return;
+        if (scrollHistoryRef.current.length >= 2) {
+          const oldest = scrollHistoryRef.current[0];
+          const newest = scrollHistoryRef.current[scrollHistoryRef.current.length - 1];
+          const timeSpan = newest.time - oldest.time;
+          actualDelta = newest.y - oldest.y;
+          
+          // Calculate velocity (px/ms)
+          const velocity = timeSpan > 0 ? Math.abs(actualDelta) / timeSpan : 0;
+          
+          // Check if scroll direction is consistent over history
+          let consistentUp = true;
+          let consistentDown = true;
+          for (let i = 1; i < scrollHistoryRef.current.length; i++) {
+            const prev = scrollHistoryRef.current[i - 1];
+            const curr = scrollHistoryRef.current[i];
+            if (curr.y >= prev.y) consistentUp = false;
+            if (curr.y <= prev.y) consistentDown = false;
+          }
+          
+          // Only trust direction if it's consistent AND has minimum velocity
+          if (velocity >= minScrollVelocity) {
+            if (consistentUp && actualDelta < 0) {
+              consistentDirection = 'up';
+            } else if (consistentDown && actualDelta > 0) {
+              consistentDirection = 'down';
+            }
+          }
         }
 
-        const dir: 'up' | 'down' | 'none' = delta > 0 ? 'down' : delta < 0 ? 'up' : 'none';
+        // Strong filter: If viewport changed significantly, ignore unless we have clear scroll direction
+        if (viewportDelta > viewportChangeIgnoreThreshold) {
+          // Only proceed if we have a clear, consistent scroll direction with good velocity
+          if (consistentDirection === 'none' || Math.abs(actualDelta) < hideDeltaThreshold) {
+            lastScrollYRef.current = currentY;
+            lastViewportHeightRef.current = currentViewportHeight;
+            tickingRef.current = false;
+            return;
+          }
+        }
+
+        // Use the more reliable actualDelta from history for direction detection
+        const dir = consistentDirection !== 'none' 
+          ? consistentDirection 
+          : delta > 0 ? 'down' : delta < 0 ? 'up' : 'none';
+        
         const doc = document.documentElement;
         const maxScrollY = Math.max(0, doc.scrollHeight - window.innerHeight);
         const nearBottomNow = currentY >= maxScrollY - bottomLockThreshold;
@@ -242,28 +291,33 @@ export default function HeaderClient({
           setIsHeaderHidden(false);
           scrollDirRef.current = 'none';
           scrollDeltaAccRef.current = 0;
-          lastStateChangeTimeRef.current = Date.now();
+          lastStateChangeTimeRef.current = now;
+          scrollHistoryRef.current = [];
         } else if (dir !== 'none') {
-          // Accumulate small deltas so trackpad "slow scroll" still triggers hide/show.
+          // Only accumulate if direction is consistent (from history) or it matches current direction
           if (dir !== scrollDirRef.current) {
             scrollDirRef.current = dir;
             scrollDeltaAccRef.current = 0;
           }
-          scrollDeltaAccRef.current += delta;
+          
+          // Use actualDelta from history if available, otherwise use current delta
+          const deltaToUse = consistentDirection !== 'none' ? actualDelta : delta;
+          scrollDeltaAccRef.current += deltaToUse;
 
-          const now = Date.now();
           const timeSinceLastChange = now - lastStateChangeTimeRef.current;
           
-          // Apply state change only if enough time has passed since last change (prevents rapid flickering)
+          // Apply state change only if enough time has passed AND we have clear intent
           if (timeSinceLastChange >= stateChangeCooldown) {
-            if (scrollDeltaAccRef.current > hideDeltaThreshold) {
+            if (scrollDeltaAccRef.current > hideDeltaThreshold && dir === 'down') {
               setIsHeaderHidden(true);
               lastStateChangeTimeRef.current = now;
-              scrollDeltaAccRef.current = 0; // Reset accumulator after state change
-            } else if (scrollDeltaAccRef.current < -showDeltaThreshold) {
+              scrollDeltaAccRef.current = 0;
+              scrollHistoryRef.current = [];
+            } else if (scrollDeltaAccRef.current < -showDeltaThreshold && dir === 'up') {
               setIsHeaderHidden(false);
               lastStateChangeTimeRef.current = now;
-              scrollDeltaAccRef.current = 0; // Reset accumulator after state change
+              scrollDeltaAccRef.current = 0;
+              scrollHistoryRef.current = [];
             }
           }
         }
