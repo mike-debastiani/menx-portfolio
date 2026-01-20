@@ -84,6 +84,7 @@ export default function HeaderClient({
   const [isQuickInfoOpen, setIsQuickInfoOpen] = useState(false);
   const [isHeaderHidden, setIsHeaderHidden] = useState(false);
   const [isNearBottom, setIsNearBottom] = useState(false);
+  const [projectCategory, setProjectCategory] = useState<'relevant-work' | 'lab' | null>(null);
 
   const menuRef = useRef<HTMLDivElement>(null);
   const hamburgerButtonRef = useRef<HTMLButtonElement>(null);
@@ -98,12 +99,52 @@ export default function HeaderClient({
 
   const isAnyOverlayOpen = isMenuOpen || isQuickInfoOpen;
 
+  // Load project category when on a project page
+  useEffect(() => {
+    const projectSlugMatch = pathname.match(/^\/projects\/(.+)$/);
+    if (projectSlugMatch) {
+      const slug = projectSlugMatch[1];
+      // Fetch project category
+      fetch(`/api/project-category?slug=${encodeURIComponent(slug)}`)
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.category === 'relevant-work' || data.category === 'lab') {
+            setProjectCategory(data.category);
+          } else {
+            setProjectCategory(null);
+          }
+        })
+        .catch((error) => {
+          console.error('Failed to fetch project category:', error);
+          setProjectCategory(null);
+        });
+    } else {
+      // Reset category when not on a project page
+      setProjectCategory(null);
+    }
+  }, [pathname]);
+
   const isActive = useCallback(
     (href: string) => {
       if (href === '/') return pathname === '/';
-      return pathname.startsWith(href);
+      
+      // Check if pathname starts with href (normal behavior)
+      if (pathname.startsWith(href)) return true;
+      
+      // Check if we're on a project page and the category matches
+      if (pathname.startsWith('/projects/') && projectCategory) {
+        // Map hrefs to categories
+        if (href === '/relevant-work' && projectCategory === 'relevant-work') {
+          return true;
+        }
+        if (href === '/lab-projects' && projectCategory === 'lab') {
+          return true;
+        }
+      }
+      
+      return false;
     },
-    [pathname],
+    [pathname, projectCategory],
   );
 
   const closeMenu = useCallback(() => {

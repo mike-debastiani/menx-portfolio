@@ -203,6 +203,16 @@ export async function getCaseStudyBySlug(slug: string): Promise<CaseStudyData | 
   return result;
 }
 
+/**
+ * Fetches the category of a project by its slug
+ * Returns 'relevant-work' or 'lab' or null if project not found
+ */
+export async function getProjectCategoryBySlug(slug: string): Promise<'relevant-work' | 'lab' | null> {
+  const query = `*[_type == "project" && slug.current == $slug][0].category`;
+  const result = await fetchSanity<'relevant-work' | 'lab' | null>(query, { slug });
+  return result;
+}
+
 export async function getSelectedProjects(): Promise<ProjectCardData[]> {
   const query = `
     *[_type == "project" && showOnHomepage == true] | order(selectedWorkOrder asc, _createdAt desc) {
