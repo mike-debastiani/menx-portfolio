@@ -1,4 +1,26 @@
+'use client';
+
+import { useState, useEffect } from 'react';
 import SubInfoGroup, { type SubInfoGroupProps, type SubInfoGroupItem } from './SubInfoGroup';
+
+// Hook to detect screen size
+function useScreenSize() {
+  const [width, setWidth] = useState<number>(0);
+
+  useEffect(() => {
+    // Set initial width
+    setWidth(window.innerWidth);
+
+    const handleResize = () => {
+      setWidth(window.innerWidth);
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  return width;
+}
 
 export interface AboutDescriptionProps {
   greeting?: string;
@@ -19,6 +41,12 @@ export default function AboutDescription({
   subInfoSize,
   className = '',
 }: AboutDescriptionProps) {
+  const screenWidth = useScreenSize();
+  const isExtraSmallScreen = screenWidth > 0 && screenWidth <= 375;
+
+  // Set size to 'sm' if screen is <= 375px, otherwise use provided size or default 'base'
+  const finalSubInfoSize: SubInfoGroupProps['size'] = isExtraSmallScreen ? 'sm' : (subInfoSize ?? 'base');
+
   return (
     <div className={`flex flex-col gap-6 items-start ${className}`}>
       {/* UpperInfo: Greeting + Heading */}
@@ -41,13 +69,13 @@ export default function AboutDescription({
         {description}
       </p>
 
-      {/* SubInfoGroup with 12px top padding */}
+      {/* SubInfoGroup with responsive styling matching HomeHeroSection */}
       {subInfoItems && subInfoItems.length > 0 && (
-        <div className="pt-3 w-full">
+        <div className="mt-6 max-[475px]:mt-10 max-[480px]:mt-8 w-full">
           <SubInfoGroup
             items={subInfoItems}
             variant={subInfoVariant || 'row'}
-            size={subInfoSize}
+            size={finalSubInfoSize}
           />
         </div>
       )}
