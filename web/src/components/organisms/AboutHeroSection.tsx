@@ -28,7 +28,7 @@ export default function AboutHeroSection({
   return (
     <section className={className}>
       <Container>
-        <Grid className="py-12 md:py-16 xl:py-20">
+        <Grid className="pt-12 md:pt-20">
           {/* AboutDescription: Mobile full width below image (span 4), Tablet 3 columns (span 3), Desktop (>=1200px) columns 1-6 (span 6) */}
           {/* Order: 2 on mobile (below image), 1 on tablet/desktop (left side) */}
           <div className="about-hero-description col-span-4 md:col-span-3 lg:col-span-6 xl:col-span-6 order-2 md:order-1 mt-8 md:mt-0">

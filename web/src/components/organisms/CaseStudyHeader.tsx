@@ -34,7 +34,7 @@ export default function CaseStudyHeader({ data, className = '' }: CaseStudyHeade
   return (
     <section className={className}>
       <Container>
-        <Grid className="py-12 md:py-16 xl:py-20">
+        <Grid className="pt-12 md:pt-20">
           {/* CaseStudyDescription: Mobile full width (span 4), Tablet columns 1-3 (span 3), Desktop columns 1-6 (span 6) */}
           <div className="col-span-4 md:col-span-6 xl:col-span-6">
             <CaseStudyDescription

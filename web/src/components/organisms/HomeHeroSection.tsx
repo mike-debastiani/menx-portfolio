@@ -140,7 +140,7 @@ export default function HomeHeroSection({
   };
 
   return (
-    <section className={`py-12 md:py-20 max-[480px]:pb-2 overflow-x-hidden max-w-full ${className}`}>
+    <section className={`pt-12 md:pt-20 pb-12 md:pb-20 max-[475px]:pb-4 overflow-x-hidden max-w-full ${className}`}>
       <div className="flex flex-col gap-4 max-[480px]:gap-4 w-full">
         {/* SegmentedControls - full width */}
         <div className="w-full">
@@ -158,7 +158,7 @@ export default function HomeHeroSection({
           <div className="col-span-4 md:col-span-12 xl:col-span-7 flex flex-col">
             {/* Fixed height container to ensure SubInfoGroup stays in same position */}
             {/* Height set to accommodate all content types (headlines and code block) */}
-            <div className="min-h-[240px] flex items-start relative">
+            <div className="min-h-[220px] md:min-h-[240px] flex items-start relative">
               <RoleBasedHero
                 {...finalHeroProps}
                 showContentOnly
@@ -169,7 +169,7 @@ export default function HomeHeroSection({
 
             {/* SubInfoGroup with 24px gap and 22px left offset for text alignment */}
             {/* Always positioned below RoleBasedHero */}
-            <div className="pl-0 md:pl-[0px] mt-6 max-[475px]:mt-10 max-[480px]:mt-8">
+            <div className="pl-0 md:pl-[0px] mt-6 max-[475px]:mt-10 max-[480px]:mt-8 max-[375px]:mt-8">
               <SubInfoGroup {...finalSubInfoProps} />
             </div>
           </div>

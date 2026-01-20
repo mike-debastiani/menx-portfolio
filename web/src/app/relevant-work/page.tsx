@@ -20,7 +20,7 @@ export default async function RelevantWorkPage() {
   return (
     <main>
       <Container>
-        <div className="flex flex-col gap-20 py-20">
+        <div className="flex flex-col gap-14 md:gap-20 pt-12 md:pt-20">
           <Grid>
             <ProjectArchiveHeader
               title="User Experience Case Studies"

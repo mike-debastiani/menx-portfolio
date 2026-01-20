@@ -14,7 +14,7 @@ export default async function LabProjectsPage() {
   return (
     <main>
       <Container>
-        <div className="flex flex-col gap-10 py-20">
+        <div className="flex flex-col gap-14 md:gap-20 pt-12 md:pt-20">
           <Grid>
             <ProjectArchiveHeader
               title="Lab Projects"
