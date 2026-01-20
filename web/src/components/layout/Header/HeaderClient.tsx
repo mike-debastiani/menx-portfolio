@@ -98,7 +98,8 @@ export default function HeaderClient({
   const isNearBottomRef = useRef(false);
   const lastStateChangeTimeRef = useRef(0);
   const lastViewportHeightRef = useRef(0);
-  const scrollHistoryRef = useRef<Array<{ y: number; time: number }>>([]);
+  const lastVisualViewportHeightRef = useRef(0);
+  const isViewportResizeRef = useRef(false);
 
   const isAnyOverlayOpen = isMenuOpen || isQuickInfoOpen;
 
@@ -192,14 +193,18 @@ export default function HeaderClient({
   useEffect(() => {
     lastScrollYRef.current = window.scrollY;
     lastViewportHeightRef.current = window.innerHeight;
+    
+    // Use visualViewport API if available (better for Android Chrome)
+    const visualViewport = typeof window !== 'undefined' && window.visualViewport;
+    if (visualViewport) {
+      lastVisualViewportHeightRef.current = visualViewport.height;
+    }
+    
     const topThreshold = 8; // always show near top
     const hideDeltaThreshold = 12; // threshold for hiding
     const showDeltaThreshold = 8; // threshold for showing
     const bottomLockThreshold = 96; // px from bottom where we avoid collapsing layout
     const stateChangeCooldown = 200; // ms minimum between state changes
-    const scrollHistoryWindow = 300; // ms window for scroll history
-    const minScrollVelocity = 0.5; // px/ms minimum velocity to consider real scroll
-    const viewportChangeIgnoreThreshold = 30; // px viewport height change threshold
 
     const onScroll = () => {
       if (tickingRef.current) return;
@@ -208,66 +213,50 @@ export default function HeaderClient({
       window.requestAnimationFrame(() => {
         const now = Date.now();
         const currentY = window.scrollY;
-        const currentViewportHeight = window.innerHeight;
-        const viewportDelta = Math.abs(currentViewportHeight - lastViewportHeightRef.current);
         const lastY = lastScrollYRef.current;
         const delta = currentY - lastY;
-
-        // Update scroll history (keep last 300ms)
-        scrollHistoryRef.current.push({ y: currentY, time: now });
-        scrollHistoryRef.current = scrollHistoryRef.current.filter(
-          (entry) => now - entry.time <= scrollHistoryWindow
-        );
-
-        // Calculate actual scroll velocity from history (more reliable than single delta)
-        let actualDelta = 0;
-        let consistentDirection: 'up' | 'down' | 'none' = 'none';
         
-        if (scrollHistoryRef.current.length >= 2) {
-          const oldest = scrollHistoryRef.current[0];
-          const newest = scrollHistoryRef.current[scrollHistoryRef.current.length - 1];
-          const timeSpan = newest.time - oldest.time;
-          actualDelta = newest.y - oldest.y;
+        // Use visualViewport API to detect browser UI changes (Android Chrome address bar)
+        let currentViewportHeight = window.innerHeight;
+        let viewportDelta = 0;
+        let isBrowserUIChange = false;
+        
+        if (visualViewport) {
+          const currentVisualHeight = visualViewport.height;
+          const visualHeightDelta = Math.abs(currentVisualHeight - lastVisualViewportHeightRef.current);
+          const scrollDelta = Math.abs(delta);
           
-          // Calculate velocity (px/ms)
-          const velocity = timeSpan > 0 ? Math.abs(actualDelta) / timeSpan : 0;
-          
-          // Check if scroll direction is consistent over history
-          let consistentUp = true;
-          let consistentDown = true;
-          for (let i = 1; i < scrollHistoryRef.current.length; i++) {
-            const prev = scrollHistoryRef.current[i - 1];
-            const curr = scrollHistoryRef.current[i];
-            if (curr.y >= prev.y) consistentUp = false;
-            if (curr.y <= prev.y) consistentDown = false;
+          // If visual viewport changed but scroll position barely changed,
+          // it's likely browser UI (address bar) hide/show, not real scroll
+          if (visualHeightDelta > 10 && scrollDelta < 3) {
+            isBrowserUIChange = true;
+            isViewportResizeRef.current = true;
+            lastVisualViewportHeightRef.current = currentVisualHeight;
+          } else {
+            lastVisualViewportHeightRef.current = currentVisualHeight;
           }
-          
-          // Only trust direction if it's consistent AND has minimum velocity
-          if (velocity >= minScrollVelocity) {
-            if (consistentUp && actualDelta < 0) {
-              consistentDirection = 'up';
-            } else if (consistentDown && actualDelta > 0) {
-              consistentDirection = 'down';
-            }
+        } else {
+          // Fallback: use innerHeight comparison
+          viewportDelta = Math.abs(currentViewportHeight - lastViewportHeightRef.current);
+          // If viewport changed significantly with minimal scroll, likely browser UI
+          if (viewportDelta > 30 && Math.abs(delta) < 3) {
+            isBrowserUIChange = true;
           }
         }
 
-        // Strong filter: If viewport changed significantly, ignore unless we have clear scroll direction
-        if (viewportDelta > viewportChangeIgnoreThreshold) {
-          // Only proceed if we have a clear, consistent scroll direction with good velocity
-          if (consistentDirection === 'none' || Math.abs(actualDelta) < hideDeltaThreshold) {
-            lastScrollYRef.current = currentY;
-            lastViewportHeightRef.current = currentViewportHeight;
-            tickingRef.current = false;
-            return;
-          }
+        // Ignore scroll events caused by browser UI changes
+        if (isBrowserUIChange) {
+          lastScrollYRef.current = currentY;
+          lastViewportHeightRef.current = currentViewportHeight;
+          tickingRef.current = false;
+          // Reset flag after a short delay
+          setTimeout(() => {
+            isViewportResizeRef.current = false;
+          }, 100);
+          return;
         }
-
-        // Use the more reliable actualDelta from history for direction detection
-        const dir = consistentDirection !== 'none' 
-          ? consistentDirection 
-          : delta > 0 ? 'down' : delta < 0 ? 'up' : 'none';
         
+        const dir: 'up' | 'down' | 'none' = delta > 0 ? 'down' : delta < 0 ? 'up' : 'none';
         const doc = document.documentElement;
         const maxScrollY = Math.max(0, doc.scrollHeight - window.innerHeight);
         const nearBottomNow = currentY >= maxScrollY - bottomLockThreshold;
@@ -292,32 +281,26 @@ export default function HeaderClient({
           scrollDirRef.current = 'none';
           scrollDeltaAccRef.current = 0;
           lastStateChangeTimeRef.current = now;
-          scrollHistoryRef.current = [];
         } else if (dir !== 'none') {
-          // Only accumulate if direction is consistent (from history) or it matches current direction
+          // Accumulate small deltas so trackpad "slow scroll" still triggers hide/show
           if (dir !== scrollDirRef.current) {
             scrollDirRef.current = dir;
             scrollDeltaAccRef.current = 0;
           }
-          
-          // Use actualDelta from history if available, otherwise use current delta
-          const deltaToUse = consistentDirection !== 'none' ? actualDelta : delta;
-          scrollDeltaAccRef.current += deltaToUse;
+          scrollDeltaAccRef.current += delta;
 
           const timeSinceLastChange = now - lastStateChangeTimeRef.current;
           
-          // Apply state change only if enough time has passed AND we have clear intent
+          // Apply state change only if enough time has passed (prevents rapid flickering)
           if (timeSinceLastChange >= stateChangeCooldown) {
-            if (scrollDeltaAccRef.current > hideDeltaThreshold && dir === 'down') {
+            if (scrollDeltaAccRef.current > hideDeltaThreshold) {
               setIsHeaderHidden(true);
               lastStateChangeTimeRef.current = now;
-              scrollDeltaAccRef.current = 0;
-              scrollHistoryRef.current = [];
-            } else if (scrollDeltaAccRef.current < -showDeltaThreshold && dir === 'up') {
+              scrollDeltaAccRef.current = 0; // Reset accumulator after state change
+            } else if (scrollDeltaAccRef.current < -showDeltaThreshold) {
               setIsHeaderHidden(false);
               lastStateChangeTimeRef.current = now;
-              scrollDeltaAccRef.current = 0;
-              scrollHistoryRef.current = [];
+              scrollDeltaAccRef.current = 0; // Reset accumulator after state change
             }
           }
         }
@@ -328,8 +311,34 @@ export default function HeaderClient({
       });
     };
 
+    // Also listen to visualViewport resize events to track browser UI changes
+    const onVisualViewportResize = () => {
+      if (visualViewport) {
+        const currentVisualHeight = visualViewport.height;
+        const visualHeightDelta = Math.abs(currentVisualHeight - lastVisualViewportHeightRef.current);
+        // Mark as browser UI change if viewport height changed significantly
+        if (visualHeightDelta > 10) {
+          isViewportResizeRef.current = true;
+          lastVisualViewportHeightRef.current = currentVisualHeight;
+          // Reset flag after browser UI animation completes
+          setTimeout(() => {
+            isViewportResizeRef.current = false;
+          }, 300);
+        }
+      }
+    };
+
     window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
+    if (visualViewport) {
+      visualViewport.addEventListener('resize', onVisualViewportResize);
+    }
+    
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      if (visualViewport) {
+        visualViewport.removeEventListener('resize', onVisualViewportResize);
+      }
+    };
   }, [isAnyOverlayOpen]);
 
   // Close quick info on small screens (safety)
