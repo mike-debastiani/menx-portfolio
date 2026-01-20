@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import AboutHeroSection from '@/components/organisms/AboutHeroSection';
 import SkillsSection from '@/components/organisms/SkillsSection';
+import TextBlockSection from '@/components/organisms/TextBlockSection';
 import FooterSection from '@/components/organisms/FooterSection';
 import { getAboutData } from '@/lib/sanity.queries';
 
@@ -45,6 +46,12 @@ export default async function AboutPage() {
           sectionTitle={aboutData.skillsSection.sectionTitle}
           description={aboutData.skillsSection.description}
           columns={aboutData.skillsSection.columns}
+        />
+      )}
+      {aboutData.textBlockSection && (
+        <TextBlockSection
+          sectionTitle={aboutData.textBlockSection.sectionTitle}
+          content={aboutData.textBlockSection.content}
         />
       )}
       <FooterSection

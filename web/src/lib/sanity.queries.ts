@@ -568,6 +568,11 @@ export interface SkillsSectionData {
   }>;
 }
 
+export interface TextBlockSectionData {
+  sectionTitle?: string;
+  content?: any[]; // Portable Text Block array
+}
+
 export interface AboutData {
   greeting?: string;
   heading: string;
@@ -578,6 +583,7 @@ export interface AboutData {
     alt: string;
   };
   skillsSection?: SkillsSectionData;
+  textBlockSection?: TextBlockSectionData;
   footerCtaTitle?: string;
   footerPrimaryButtonText?: string;
   footerPrimaryButtonFileUrl?: string;
@@ -601,6 +607,8 @@ export async function getAboutData(): Promise<AboutData | null> {
       skillsColumn1Content,
       skillsColumn2Title,
       skillsColumn2Content,
+      textBlockSectionTitle,
+      textBlockContent,
       footerCtaTitle,
       footerPrimaryButtonText,
       "footerPrimaryButtonFile": footerPrimaryButtonFile {
@@ -677,6 +685,15 @@ export async function getAboutData(): Promise<AboutData | null> {
         }
       : undefined;
   
+  // Build text block section data
+  const textBlockSection: TextBlockSectionData | undefined =
+    (about.textBlockSectionTitle || (about.textBlockContent && about.textBlockContent.length > 0))
+      ? {
+          sectionTitle: about.textBlockSectionTitle,
+          content: about.textBlockContent || [],
+        }
+      : undefined;
+  
   // Get file URL for primary button
   // Sanity provides the URL directly from the asset
   let primaryButtonFileUrl: string | undefined;
@@ -743,6 +760,7 @@ export async function getAboutData(): Promise<AboutData | null> {
         }
       : undefined,
     skillsSection,
+    textBlockSection,
     footerCtaTitle: about.footerCtaTitle,
     footerPrimaryButtonText: about.footerPrimaryButtonText,
     footerPrimaryButtonFileUrl: primaryButtonFileUrl,

@@ -101,6 +101,8 @@ export interface About extends SanityDocument {
   skillsColumn1Content?: string[];
   skillsColumn2Title?: string;
   skillsColumn2Content?: string[];
+  textBlockSectionTitle?: string;
+  textBlockContent?: any[]; // Portable Text Block array
   footerCtaTitle?: string;
   footerPrimaryButtonText?: string;
   footerPrimaryButtonFile?: SanityFile;

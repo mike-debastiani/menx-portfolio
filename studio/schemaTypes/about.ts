@@ -100,6 +100,23 @@ export default defineType({
       },
     }),
     defineField({
+      name: 'textBlockSectionTitle',
+      title: 'Text Block Section Title',
+      type: 'string',
+      description: 'Titel für die Text Block Section',
+    }),
+    defineField({
+      name: 'textBlockContent',
+      title: 'Text Block Content',
+      type: 'array',
+      description: 'Inhalt für die Text Block Section (unterstützt Formatierung, Absätze, etc.)',
+      of: [
+        {
+          type: 'block',
+        },
+      ],
+    }),
+    defineField({
       name: 'footerCtaTitle',
       title: 'Footer CTA Title',
       type: 'text',

@@ -83,14 +83,14 @@ export default function FooterSection({
 
   return (
     <section className={cn('pt-20 flex', className)}>
-      <Container className="flex flex-col gap-30">
+      <Container className="flex flex-col gap-20 md:gap-30">
         {/* SectionDescription and InfoRows wrapper */}
         <Grid>
           {/* SectionDescription - 6 columns on desktop, full width on mobile */}
           <div className="footer-col-mobile">
             {isCustomFooter ? (
               <div className="flex flex-col gap-4 items-start">
-                <h2 className="font-sans font-medium text-3xl leading-[1.2] text-primary-950">
+                <h2 className="font-sans font-medium text-2xl md:text-3xl leading-[1.2] text-primary-950">
                   {formatTitle(customCtaTitle)}
                 </h2>
                 {(primaryButtonText || secondaryButtonText) && (
@@ -147,9 +147,9 @@ export default function FooterSection({
           </div>
 
           {/* InfoRows - 6 columns on desktop, full width on mobile */}
-          <div className="footer-col-mobile mt-8 md:mt-0">
+          <div className="footer-col-mobile mt-12 md:mt-0">
             {/* >=450px: regular 50/50 layout */}
-            <div className="flex flex-col gap-[88px] max-[449px]:hidden">
+            <div className="flex flex-col gap-16 md:gap-[88px] max-[449px]:hidden">
               {footerRows.map((row, rowIndex) => (
                 <div
                   key={rowIndex}
@@ -265,7 +265,7 @@ export default function FooterSection({
                     })}
                   </div>
                   {rowIndex < footerRows.length - 1 && (
-                    <div className="col-span-2 h-[88px]" aria-hidden="true" />
+                    <div className="col-span-2 h-16 md:h-[88px]" aria-hidden="true" />
                   )}
                 </div>
               ))}
