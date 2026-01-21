@@ -8,6 +8,7 @@ import Button from '@/components/atoms/Button';
 import { Container, Grid } from '@/components/layout';
 import FooterSection from '@/components/organisms/FooterSection';
 import SubInfoGroup, { type SubInfoGroupItem } from '@/components/molecules/SubInfoGroup';
+import { useHideOnScrollHeader } from '@/lib/useHideOnScrollHeader';
 
 export interface HeaderNavItem {
   label: string;
@@ -82,8 +83,6 @@ export default function HeaderClient({
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isQuickInfoOpen, setIsQuickInfoOpen] = useState(false);
-  const [isHeaderHidden, setIsHeaderHidden] = useState(false);
-  const [isNearBottom, setIsNearBottom] = useState(false);
   const [projectCategory, setProjectCategory] = useState<'relevant-work' | 'lab' | null>(null);
 
   const menuRef = useRef<HTMLDivElement>(null);
@@ -91,17 +90,13 @@ export default function HeaderClient({
   const previousFocusRef = useRef<HTMLElement | null>(null);
   const quickInfoRef = useRef<HTMLDivElement>(null);
   const quickInfoButtonRef = useRef<HTMLButtonElement>(null);
-  const lastScrollYRef = useRef(0);
-  const scrollDirRef = useRef<'up' | 'down' | 'none'>('none');
-  const scrollDeltaAccRef = useRef(0);
-  const tickingRef = useRef(false);
-  const isNearBottomRef = useRef(false);
-  const lastStateChangeTimeRef = useRef(0);
-  const lastViewportHeightRef = useRef(0);
-  const lastVisualViewportHeightRef = useRef(0);
-  const isViewportResizeRef = useRef(false);
 
   const isAnyOverlayOpen = isMenuOpen || isQuickInfoOpen;
+  const { isVisible: isHeaderVisible, isNearBottom } = useHideOnScrollHeader({
+    isLocked: isAnyOverlayOpen,
+    resetToken: pathname,
+  });
+  const isHeaderHidden = !isHeaderVisible;
 
   // Load project category when on a project page
   useEffect(() => {
@@ -185,161 +180,8 @@ export default function HeaderClient({
   useEffect(() => {
     closeMenu();
     closeQuickInfo();
-    setIsHeaderHidden(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname]);
-
-  // Hide header on downscroll, show on upscroll (all breakpoints)
-  useEffect(() => {
-    lastScrollYRef.current = window.scrollY;
-    lastViewportHeightRef.current = window.innerHeight;
-    
-    // Use visualViewport API if available (better for Android Chrome)
-    const visualViewport = typeof window !== 'undefined' && window.visualViewport;
-    if (visualViewport) {
-      lastVisualViewportHeightRef.current = visualViewport.height;
-    }
-    
-    const topThreshold = 8; // always show near top
-    const hideDeltaThreshold = 12; // threshold for hiding
-    const showDeltaThreshold = 8; // threshold for showing
-    const bottomLockThreshold = 96; // px from bottom where we avoid collapsing layout
-    const stateChangeCooldown = 200; // ms minimum between state changes
-
-    const onScroll = () => {
-      if (tickingRef.current) return;
-      tickingRef.current = true;
-
-      window.requestAnimationFrame(() => {
-        const now = Date.now();
-        const currentY = window.scrollY;
-        const lastY = lastScrollYRef.current;
-        const delta = currentY - lastY;
-        
-        // Use visualViewport API to detect browser UI changes (Android Chrome address bar)
-        let currentViewportHeight = window.innerHeight;
-        let viewportDelta = 0;
-        let isBrowserUIChange = false;
-        
-        if (visualViewport) {
-          const currentVisualHeight = visualViewport.height;
-          const visualHeightDelta = Math.abs(currentVisualHeight - lastVisualViewportHeightRef.current);
-          const scrollDelta = Math.abs(delta);
-          
-          // If visual viewport changed but scroll position barely changed,
-          // it's likely browser UI (address bar) hide/show, not real scroll
-          if (visualHeightDelta > 10 && scrollDelta < 3) {
-            isBrowserUIChange = true;
-            isViewportResizeRef.current = true;
-            lastVisualViewportHeightRef.current = currentVisualHeight;
-          } else {
-            lastVisualViewportHeightRef.current = currentVisualHeight;
-          }
-        } else {
-          // Fallback: use innerHeight comparison
-          viewportDelta = Math.abs(currentViewportHeight - lastViewportHeightRef.current);
-          // If viewport changed significantly with minimal scroll, likely browser UI
-          if (viewportDelta > 30 && Math.abs(delta) < 3) {
-            isBrowserUIChange = true;
-          }
-        }
-
-        // Ignore scroll events caused by browser UI changes
-        if (isBrowserUIChange) {
-          lastScrollYRef.current = currentY;
-          lastViewportHeightRef.current = currentViewportHeight;
-          tickingRef.current = false;
-          // Reset flag after a short delay
-          setTimeout(() => {
-            isViewportResizeRef.current = false;
-          }, 100);
-          return;
-        }
-        
-        const dir: 'up' | 'down' | 'none' = delta > 0 ? 'down' : delta < 0 ? 'up' : 'none';
-        const doc = document.documentElement;
-        const maxScrollY = Math.max(0, doc.scrollHeight - window.innerHeight);
-        const nearBottomNow = currentY >= maxScrollY - bottomLockThreshold;
-        if (nearBottomNow !== isNearBottomRef.current) {
-          isNearBottomRef.current = nearBottomNow;
-          setIsNearBottom(nearBottomNow);
-        }
-
-        // Keep header visible while any overlay is open (menu / quick info)
-        if (isAnyOverlayOpen) {
-          setIsHeaderHidden(false);
-          scrollDirRef.current = 'none';
-          scrollDeltaAccRef.current = 0;
-          lastScrollYRef.current = currentY;
-          lastViewportHeightRef.current = currentViewportHeight;
-          tickingRef.current = false;
-          return;
-        }
-
-        if (currentY <= topThreshold) {
-          setIsHeaderHidden(false);
-          scrollDirRef.current = 'none';
-          scrollDeltaAccRef.current = 0;
-          lastStateChangeTimeRef.current = now;
-        } else if (dir !== 'none') {
-          // Accumulate small deltas so trackpad "slow scroll" still triggers hide/show
-          if (dir !== scrollDirRef.current) {
-            scrollDirRef.current = dir;
-            scrollDeltaAccRef.current = 0;
-          }
-          scrollDeltaAccRef.current += delta;
-
-          const timeSinceLastChange = now - lastStateChangeTimeRef.current;
-          
-          // Apply state change only if enough time has passed (prevents rapid flickering)
-          if (timeSinceLastChange >= stateChangeCooldown) {
-            if (scrollDeltaAccRef.current > hideDeltaThreshold) {
-              setIsHeaderHidden(true);
-              lastStateChangeTimeRef.current = now;
-              scrollDeltaAccRef.current = 0; // Reset accumulator after state change
-            } else if (scrollDeltaAccRef.current < -showDeltaThreshold) {
-              setIsHeaderHidden(false);
-              lastStateChangeTimeRef.current = now;
-              scrollDeltaAccRef.current = 0; // Reset accumulator after state change
-            }
-          }
-        }
-
-        lastScrollYRef.current = currentY;
-        lastViewportHeightRef.current = currentViewportHeight;
-        tickingRef.current = false;
-      });
-    };
-
-    // Also listen to visualViewport resize events to track browser UI changes
-    const onVisualViewportResize = () => {
-      if (visualViewport) {
-        const currentVisualHeight = visualViewport.height;
-        const visualHeightDelta = Math.abs(currentVisualHeight - lastVisualViewportHeightRef.current);
-        // Mark as browser UI change if viewport height changed significantly
-        if (visualHeightDelta > 10) {
-          isViewportResizeRef.current = true;
-          lastVisualViewportHeightRef.current = currentVisualHeight;
-          // Reset flag after browser UI animation completes
-          setTimeout(() => {
-            isViewportResizeRef.current = false;
-          }, 300);
-        }
-      }
-    };
-
-    window.addEventListener('scroll', onScroll, { passive: true });
-    if (visualViewport) {
-      visualViewport.addEventListener('resize', onVisualViewportResize);
-    }
-    
-    return () => {
-      window.removeEventListener('scroll', onScroll);
-      if (visualViewport) {
-        visualViewport.removeEventListener('resize', onVisualViewportResize);
-      }
-    };
-  }, [isAnyOverlayOpen]);
 
   // Close quick info on small screens (safety)
   useEffect(() => {
