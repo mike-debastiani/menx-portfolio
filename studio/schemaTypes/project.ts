@@ -148,6 +148,7 @@ export default defineType({
       of: [
         defineArrayMember({ type: 'fullImage' }),
         defineArrayMember({ type: 'imageGallery' }),
+        defineArrayMember({ type: 'sectionBlock' }),
         defineArrayMember({ type: 'textBlock' }),
         defineArrayMember({ type: 'twoColumn' }),
         defineArrayMember({ type: 'video' }),

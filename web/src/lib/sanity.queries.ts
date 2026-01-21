@@ -179,6 +179,36 @@ export async function getCaseStudyBySlug(slug: string): Promise<CaseStudyData | 
         },
         gridPlacement
       },
+      _type == "sectionBlock" => {
+        sectionTitle,
+        contentBlocks[] {
+          _key,
+          _type,
+          _type == "sectionBlockText" => {
+            content
+          },
+          _type == "sectionBlockColumns" => {
+            columns[] {
+              title,
+              items
+            }
+          },
+          _type == "sectionBlockRows" => {
+            rows[] {
+              label,
+              items[] {
+                label,
+                href
+              }
+            }
+          },
+          _type == "sectionBlockImage" => {
+            image,
+            alt,
+            caption
+          }
+        }
+      },
       _type == "textBlock" => {
         content,
         alignment,

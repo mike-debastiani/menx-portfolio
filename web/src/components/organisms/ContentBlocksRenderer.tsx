@@ -1,6 +1,7 @@
 import {
   FullImageBlock,
   ImageGalleryBlock,
+  SectionBlock,
   TextBlock,
   TwoColumnBlock,
   VideoBlock,
@@ -9,6 +10,7 @@ import {
 export type ContentBlock =
   | ({ _type: 'fullImage' } & Parameters<typeof FullImageBlock>[0])
   | ({ _type: 'imageGallery' } & Parameters<typeof ImageGalleryBlock>[0])
+  | ({ _type: 'sectionBlock' } & Parameters<typeof SectionBlock>[0])
   | ({ _type: 'textBlock' } & Parameters<typeof TextBlock>[0])
   | ({ _type: 'twoColumn' } & Parameters<typeof TwoColumnBlock>[0])
   | ({ _type: 'video' } & Parameters<typeof VideoBlock>[0])
@@ -33,6 +35,8 @@ export default function ContentBlocksRenderer({ blocks }: ContentBlocksRendererP
             return <FullImageBlock key={key} {...block} />
           case 'imageGallery':
             return <ImageGalleryBlock key={key} {...block} />
+          case 'sectionBlock':
+            return <SectionBlock key={key} {...block} />
           case 'textBlock':
             return <TextBlock key={key} {...block} />
           case 'twoColumn':
