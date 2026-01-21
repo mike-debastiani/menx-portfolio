@@ -8,6 +8,8 @@ interface UseHideOnScrollHeaderOptions {
   topThreshold?: number;
   deltaThreshold?: number;
   minDelta?: number;
+  toggleCooldownMs?: number;
+  layoutShiftLockMs?: number;
   bottomThreshold?: number;
 }
 
@@ -27,6 +29,8 @@ export function useHideOnScrollHeader(
     topThreshold = 8,
     deltaThreshold = 12,
     minDelta = 2,
+    toggleCooldownMs = 200,
+    layoutShiftLockMs = 140,
     bottomThreshold = 96,
   } = options;
 
@@ -39,10 +43,14 @@ export function useHideOnScrollHeader(
   const tickingRef = useRef(false);
   const visibleRef = useRef(true);
   const nearBottomRef = useRef(false);
+  const lastToggleTimeRef = useRef(0);
+  const suppressUntilRef = useRef(0);
 
   const setVisible = useCallback((next: boolean) => {
     if (visibleRef.current === next) return;
     visibleRef.current = next;
+    lastToggleTimeRef.current = performance.now();
+    suppressUntilRef.current = lastToggleTimeRef.current + layoutShiftLockMs;
     setIsVisible(next);
   }, []);
 
@@ -90,12 +98,20 @@ export function useHideOnScrollHeader(
         const currentY = clampScrollY(window.scrollY);
         const lastY = lastScrollYRef.current;
         const delta = currentY - lastY;
+        const now = performance.now();
 
         updateNearBottom(currentY);
 
         if (isLocked) {
           setVisible(true);
           directionRef.current = 'none';
+          lastScrollYRef.current = currentY;
+          anchorYRef.current = currentY;
+          tickingRef.current = false;
+          return;
+        }
+
+        if (now < suppressUntilRef.current) {
           lastScrollYRef.current = currentY;
           anchorYRef.current = currentY;
           tickingRef.current = false;
@@ -125,12 +141,15 @@ export function useHideOnScrollHeader(
 
         // Only toggle once the user has moved a clear distance
         const distanceFromAnchor = currentY - anchorYRef.current;
-        if (direction === 'down' && distanceFromAnchor >= deltaThreshold && visibleRef.current) {
-          setVisible(false);
-          anchorYRef.current = currentY;
-        } else if (direction === 'up' && distanceFromAnchor <= -deltaThreshold && !visibleRef.current) {
-          setVisible(true);
-          anchorYRef.current = currentY;
+        const canToggle = now - lastToggleTimeRef.current >= toggleCooldownMs;
+        if (canToggle) {
+          if (direction === 'down' && distanceFromAnchor >= deltaThreshold && visibleRef.current) {
+            setVisible(false);
+            anchorYRef.current = currentY;
+          } else if (direction === 'up' && distanceFromAnchor <= -deltaThreshold && !visibleRef.current) {
+            setVisible(true);
+            anchorYRef.current = currentY;
+          }
         }
 
         lastScrollYRef.current = currentY;
@@ -140,7 +159,16 @@ export function useHideOnScrollHeader(
 
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
-  }, [bottomThreshold, deltaThreshold, isLocked, minDelta, setVisible, topThreshold]);
+  }, [
+    bottomThreshold,
+    deltaThreshold,
+    isLocked,
+    layoutShiftLockMs,
+    minDelta,
+    setVisible,
+    toggleCooldownMs,
+    topThreshold,
+  ]);
 
   return { isVisible, isNearBottom };
 }
