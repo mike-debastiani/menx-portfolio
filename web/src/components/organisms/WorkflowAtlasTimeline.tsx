@@ -207,6 +207,7 @@ export default function WorkflowAtlasTimeline({
 
   // Determine active ID (controlled vs uncontrolled)
   const activeId = controlledActiveId !== undefined ? controlledActiveId : internalActiveId;
+  const isTooltipEnabled = viewportWidth >= 600;
 
   // Set mounted flag after hydration and track viewport width
   useEffect(() => {
@@ -289,6 +290,7 @@ export default function WorkflowAtlasTimeline({
 
   const handleSegmentMouseEnter = useCallback(
     (segment: WorkflowSegment, e: React.MouseEvent<HTMLElement>) => {
+      if (!isTooltipEnabled) return;
       if (hoverTimeoutRef.current) {
         window.clearTimeout(hoverTimeoutRef.current);
       }
@@ -296,7 +298,7 @@ export default function WorkflowAtlasTimeline({
         positionTooltipFromMouse(segment, e.clientX, e.clientY);
       }, TOOLTIP_DELAY_MS);
     },
-    [positionTooltipFromMouse]
+    [positionTooltipFromMouse, isTooltipEnabled]
   );
 
   const handleSegmentMouseLeave = useCallback(() => {
@@ -309,6 +311,7 @@ export default function WorkflowAtlasTimeline({
 
   const handleSegmentFocus = useCallback(
     (segment: WorkflowSegment, target: HTMLElement) => {
+      if (!isTooltipEnabled) return;
       if (hoverTimeoutRef.current) {
         window.clearTimeout(hoverTimeoutRef.current);
       }
@@ -316,7 +319,7 @@ export default function WorkflowAtlasTimeline({
         positionTooltipFromTarget(segment, target);
       }, TOOLTIP_DELAY_MS);
     },
-    [positionTooltipFromTarget]
+    [positionTooltipFromTarget, isTooltipEnabled]
   );
 
   useLayoutEffect(() => {
@@ -430,7 +433,7 @@ export default function WorkflowAtlasTimeline({
     <div className={`flex flex-col items-start w-full ${className}`}>
       {/* Timeline with labels */}
       <div className="relative w-full">
-        {tooltipData && (
+        {tooltipData && isTooltipEnabled && (
           <div
             id={`workflow-tooltip-${tooltipData.segment.id}`}
             role="tooltip"
