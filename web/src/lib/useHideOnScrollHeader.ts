@@ -7,6 +7,7 @@ interface UseHideOnScrollHeaderOptions {
   resetToken?: string | number;
   topThreshold?: number;
   deltaThreshold?: number;
+  minDelta?: number;
   bottomThreshold?: number;
 }
 
@@ -25,6 +26,7 @@ export function useHideOnScrollHeader(
     resetToken,
     topThreshold = 8,
     deltaThreshold = 12,
+    minDelta = 2,
     bottomThreshold = 96,
   } = options;
 
@@ -33,7 +35,7 @@ export function useHideOnScrollHeader(
 
   const lastScrollYRef = useRef(0);
   const directionRef = useRef<ScrollDirection>('none');
-  const deltaAccRef = useRef(0);
+  const anchorYRef = useRef(0);
   const tickingRef = useRef(false);
   const visibleRef = useRef(true);
   const nearBottomRef = useRef(false);
@@ -50,22 +52,23 @@ export function useHideOnScrollHeader(
 
   useEffect(() => {
     lastScrollYRef.current = clampScrollY(window.scrollY);
+    anchorYRef.current = lastScrollYRef.current;
   }, []);
 
   useEffect(() => {
     if (!isLocked) return;
     setVisible(true);
     directionRef.current = 'none';
-    deltaAccRef.current = 0;
     lastScrollYRef.current = clampScrollY(window.scrollY);
+    anchorYRef.current = lastScrollYRef.current;
   }, [isLocked, setVisible]);
 
   useEffect(() => {
     if (resetToken === undefined) return;
     setVisible(true);
     directionRef.current = 'none';
-    deltaAccRef.current = 0;
     lastScrollYRef.current = clampScrollY(window.scrollY);
+    anchorYRef.current = lastScrollYRef.current;
   }, [resetToken, setVisible]);
 
   useEffect(() => {
@@ -93,8 +96,8 @@ export function useHideOnScrollHeader(
         if (isLocked) {
           setVisible(true);
           directionRef.current = 'none';
-          deltaAccRef.current = 0;
           lastScrollYRef.current = currentY;
+          anchorYRef.current = currentY;
           tickingRef.current = false;
           return;
         }
@@ -102,28 +105,32 @@ export function useHideOnScrollHeader(
         if (currentY <= topThreshold) {
           setVisible(true);
           directionRef.current = 'none';
-          deltaAccRef.current = 0;
+          lastScrollYRef.current = currentY;
+          anchorYRef.current = currentY;
+          tickingRef.current = false;
+          return;
+        }
+
+        if (Math.abs(delta) < minDelta) {
           lastScrollYRef.current = currentY;
           tickingRef.current = false;
           return;
         }
 
-        if (delta !== 0) {
-          const direction: ScrollDirection = delta > 0 ? 'down' : 'up';
-          if (direction !== directionRef.current) {
-            directionRef.current = direction;
-            deltaAccRef.current = 0;
-          }
+        const direction: ScrollDirection = delta > 0 ? 'down' : 'up';
+        if (direction !== directionRef.current) {
+          directionRef.current = direction;
+          anchorYRef.current = currentY;
+        }
 
-          deltaAccRef.current += delta;
-
-          if (direction === 'down' && deltaAccRef.current >= deltaThreshold) {
-            setVisible(false);
-            deltaAccRef.current = 0;
-          } else if (direction === 'up' && deltaAccRef.current <= -deltaThreshold) {
-            setVisible(true);
-            deltaAccRef.current = 0;
-          }
+        // Only toggle once the user has moved a clear distance
+        const distanceFromAnchor = currentY - anchorYRef.current;
+        if (direction === 'down' && distanceFromAnchor >= deltaThreshold && visibleRef.current) {
+          setVisible(false);
+          anchorYRef.current = currentY;
+        } else if (direction === 'up' && distanceFromAnchor <= -deltaThreshold && !visibleRef.current) {
+          setVisible(true);
+          anchorYRef.current = currentY;
         }
 
         lastScrollYRef.current = currentY;
@@ -133,7 +140,7 @@ export function useHideOnScrollHeader(
 
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
-  }, [bottomThreshold, deltaThreshold, isLocked, setVisible, topThreshold]);
+  }, [bottomThreshold, deltaThreshold, isLocked, minDelta, setVisible, topThreshold]);
 
   return { isVisible, isNearBottom };
 }
