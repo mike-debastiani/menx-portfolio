@@ -314,7 +314,7 @@ export default function SectionBlock({ sectionTitle, contentBlocks }: SectionBlo
 
           <div className="col-span-4 info-col-single">
             {contentBlocks && contentBlocks.length > 0 && (
-              <div className="mt-6 md:mt-6 lg:mt-0 flex flex-col gap-10 md:gap-12">
+              <div className="mt-0 flex flex-col gap-10 md:gap-12">
                 {contentBlocks.map((block, index) => renderContentBlock(block, index))}
               </div>
             )}
