@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
+import { useState, useEffect, useRef, useCallback, useMemo, useLayoutEffect } from 'react';
 
 export type WorkflowPhaseKey =
   | 'research'
@@ -187,6 +187,13 @@ export default function WorkflowAtlasTimeline({
   const [internalActiveId, setInternalActiveId] = useState<string | undefined>(defaultActiveId);
   const [segmentWidths, setSegmentWidths] = useState<number[]>([]);
   const [isMounted, setIsMounted] = useState(false);
+  const [tooltipData, setTooltipData] = useState<{
+    segment: WorkflowSegment;
+    anchorRightX: number;
+    anchorLeftX: number;
+    top: number;
+  } | null>(null);
+  const [tooltipPosition, setTooltipPosition] = useState<{ left: number; top: number } | null>(null);
   const [viewportWidth, setViewportWidth] = useState<number>(() => {
     if (typeof window !== 'undefined') {
       return window.innerWidth;
@@ -194,6 +201,9 @@ export default function WorkflowAtlasTimeline({
     return 1200; // Default to desktop width for SSR
   });
   const containerRef = useRef<HTMLDivElement>(null);
+  const tooltipRef = useRef<HTMLDivElement>(null);
+  const hoverTimeoutRef = useRef<number | null>(null);
+  const TOOLTIP_DELAY_MS = 500;
 
   // Determine active ID (controlled vs uncontrolled)
   const activeId = controlledActiveId !== undefined ? controlledActiveId : internalActiveId;
@@ -248,6 +258,90 @@ export default function WorkflowAtlasTimeline({
     };
   }, [segments, isMounted]);
 
+  const positionTooltipFromTarget = useCallback((segment: WorkflowSegment, target: HTMLElement) => {
+    if (!containerRef.current) return;
+    const containerRect = containerRef.current.getBoundingClientRect();
+    const targetRect = target.getBoundingClientRect();
+    const top = targetRect.top - containerRect.top - 8;
+    setTooltipData({
+      segment,
+      anchorRightX: targetRect.right - containerRect.left,
+      anchorLeftX: targetRect.left - containerRect.left,
+      top,
+    });
+  }, []);
+
+  const positionTooltipFromMouse = useCallback(
+    (segment: WorkflowSegment, clientX: number, clientY: number) => {
+      if (!containerRef.current) return;
+      const containerRect = containerRef.current.getBoundingClientRect();
+      const top = clientY - containerRect.top - 12;
+      const anchorX = clientX - containerRect.left;
+      setTooltipData({
+        segment,
+        anchorRightX: anchorX,
+        anchorLeftX: anchorX,
+        top,
+      });
+    },
+    []
+  );
+
+  const handleSegmentMouseEnter = useCallback(
+    (segment: WorkflowSegment, e: React.MouseEvent<HTMLElement>) => {
+      if (hoverTimeoutRef.current) {
+        window.clearTimeout(hoverTimeoutRef.current);
+      }
+      hoverTimeoutRef.current = window.setTimeout(() => {
+        positionTooltipFromMouse(segment, e.clientX, e.clientY);
+      }, TOOLTIP_DELAY_MS);
+    },
+    [positionTooltipFromMouse]
+  );
+
+  const handleSegmentMouseLeave = useCallback(() => {
+    if (hoverTimeoutRef.current) {
+      window.clearTimeout(hoverTimeoutRef.current);
+      hoverTimeoutRef.current = null;
+    }
+    setTooltipData(null);
+  }, []);
+
+  const handleSegmentFocus = useCallback(
+    (segment: WorkflowSegment, target: HTMLElement) => {
+      if (hoverTimeoutRef.current) {
+        window.clearTimeout(hoverTimeoutRef.current);
+      }
+      hoverTimeoutRef.current = window.setTimeout(() => {
+        positionTooltipFromTarget(segment, target);
+      }, TOOLTIP_DELAY_MS);
+    },
+    [positionTooltipFromTarget]
+  );
+
+  useLayoutEffect(() => {
+    if (!tooltipData || !containerRef.current || !tooltipRef.current) return;
+    const tooltipWidth = tooltipRef.current.offsetWidth;
+    const containerRect = containerRef.current.getBoundingClientRect();
+    const viewportPadding = 8;
+    const preferredLeft = tooltipData.anchorRightX + 12;
+    const preferredRight = containerRect.left + preferredLeft + tooltipWidth;
+    let nextLeft = preferredLeft;
+    if (preferredRight > window.innerWidth - viewportPadding) {
+      const altLeft = tooltipData.anchorLeftX - 12 - tooltipWidth;
+      nextLeft = Math.max(viewportPadding, altLeft);
+    }
+    setTooltipPosition({ left: nextLeft, top: tooltipData.top });
+  }, [tooltipData]);
+
+  useEffect(() => {
+    return () => {
+      if (hoverTimeoutRef.current) {
+        window.clearTimeout(hoverTimeoutRef.current);
+      }
+    };
+  }, []);
+
   const handleSegmentClick = useCallback(
     (segment: WorkflowSegment) => {
       if (controlledActiveId === undefined) {
@@ -276,6 +370,10 @@ export default function WorkflowAtlasTimeline({
   // Get phase label (with override support)
   const getPhaseLabel = (phase: WorkflowPhaseKey): string => {
     return phaseLabels[phase] ?? DEFAULT_PHASE_LABELS[phase];
+  };
+
+  const getExamplesLabel = (count: number): string => {
+    return count === 1 ? 'Application Example' : 'Application Examples';
   };
 
   // Calculate phase label positions
@@ -332,6 +430,32 @@ export default function WorkflowAtlasTimeline({
     <div className={`flex flex-col items-start w-full ${className}`}>
       {/* Timeline with labels */}
       <div className="relative w-full">
+        {tooltipData && (
+          <div
+            id={`workflow-tooltip-${tooltipData.segment.id}`}
+            role="tooltip"
+            className="pointer-events-none absolute z-10"
+            style={{
+              left: `${tooltipPosition?.left ?? tooltipData.anchorRightX + 12}px`,
+              top: `${tooltipPosition?.top ?? tooltipData.top}px`,
+            }}
+          >
+            <div
+              ref={tooltipRef}
+              className={`rounded-md px-3 py-2 text-xs text-white shadow-lg ${getPhaseColorClass(
+                tooltipData.segment.phase
+              )}`}
+            >
+              <div className="font-mono text-[11px] uppercase tracking-wide text-white/80">
+                METHOD
+              </div>
+              <div className="font-medium">{tooltipData.segment.methodName}</div>
+              <div className="mt-1 font-mono text-[11px] text-white/80">
+                {tooltipData.segment.count} {getExamplesLabel(tooltipData.segment.count)}
+              </div>
+            </div>
+          </div>
+        )}
         {/* Timeline */}
         <div
           ref={containerRef}
@@ -354,9 +478,17 @@ export default function WorkflowAtlasTimeline({
                 key={segment.id}
                 type="button"
                 onClick={() => handleSegmentClick(segment)}
+                onMouseEnter={(e) => handleSegmentMouseEnter(segment, e)}
+                onMouseLeave={handleSegmentMouseLeave}
+                onFocus={(e) => handleSegmentFocus(segment, e.currentTarget)}
+                onBlur={handleSegmentMouseLeave}
                 onKeyDown={(e) => handleKeyDown(e, segment)}
                 aria-pressed={isActive}
-                title={`${segment.methodName} — ${segment.count} examples`}
+                aria-describedby={
+                  tooltipData?.segment.id === segment.id
+                    ? `workflow-tooltip-${tooltipData.segment.id}`
+                    : undefined
+                }
                 className={`
                   ${getPhaseColorClass(segment.phase)}
                   rounded-full
