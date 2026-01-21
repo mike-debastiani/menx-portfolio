@@ -29,20 +29,10 @@ export default defineType({
       initialValue: 'left',
     }),
     defineField({
-      name: 'maxWidth',
-      title: 'Maximale Breite',
-      type: 'string',
-      description: 'Begrenzt die Breite des Textblocks für bessere Lesbarkeit',
-      options: {
-        list: [
-          { title: 'Vollbreite', value: 'full' },
-          { title: 'Schmal (ca. 65ch)', value: 'narrow' },
-          { title: 'Mittel (ca. 80ch)', value: 'medium' },
-          { title: 'Breit (ca. 100ch)', value: 'wide' },
-        ],
-        layout: 'radio',
-      },
-      initialValue: 'medium',
+      name: 'gridPlacement',
+      title: 'Layout im Grid',
+      type: 'gridPlacement',
+      description: 'Steuert die Platzierung im Layout-Grid pro Breakpoint.',
     }),
   ],
   preview: {

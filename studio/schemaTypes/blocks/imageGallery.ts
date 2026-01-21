@@ -69,6 +69,12 @@ export default defineType({
       },
       initialValue: 'grid',
     }),
+    defineField({
+      name: 'gridPlacement',
+      title: 'Layout im Grid',
+      type: 'gridPlacement',
+      description: 'Steuert die Platzierung im Layout-Grid pro Breakpoint.',
+    }),
   ],
   preview: {
     select: {

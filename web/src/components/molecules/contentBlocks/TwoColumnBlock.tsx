@@ -1,9 +1,11 @@
 import Image from 'next/image'
 import Container from '@/components/layout/Container'
+import Grid from '@/components/layout/Grid'
 import PortableText from '@/components/atoms/PortableText'
 import { urlForImage } from '@/lib/sanity.client'
 import { stegaClean } from '@sanity/client/stega'
 import type { PortableTextBlock } from '@portabletext/types'
+import { getGridPlacementProps, type GridPlacement } from './gridPlacement'
 
 export interface ColumnContent {
   type?: string
@@ -17,9 +19,10 @@ export interface TwoColumnBlockProps {
   leftColumn?: ColumnContent
   rightColumn?: ColumnContent
   columnRatio?: string
+  gridPlacement?: GridPlacement | string
 }
 
-export default function TwoColumnBlock({ leftColumn, rightColumn, columnRatio }: TwoColumnBlockProps) {
+export default function TwoColumnBlock({ leftColumn, rightColumn, columnRatio, gridPlacement }: TwoColumnBlockProps) {
   const cleanRatio = stegaClean(columnRatio) || '50-50'
 
   // Map ratio to flex widths
@@ -32,6 +35,7 @@ export default function TwoColumnBlock({ leftColumn, rightColumn, columnRatio }:
   }
 
   const widths = ratioMap[cleanRatio] || ratioMap['50-50']
+  const placementProps = getGridPlacementProps(gridPlacement)
 
   const renderColumn = (column: ColumnContent | undefined) => {
     if (!column) return null
@@ -40,8 +44,9 @@ export default function TwoColumnBlock({ leftColumn, rightColumn, columnRatio }:
 
     if (cleanType === 'image' && column.image) {
       const imageUrl = urlForImage(column.image, {
-        width: 1200,
-        quality: 90,
+        // Column images can still be large on desktop/retina
+        width: 2000,
+        quality: 92,
         auto: 'format',
       })
 
@@ -54,6 +59,8 @@ export default function TwoColumnBlock({ leftColumn, rightColumn, columnRatio }:
             alt={column.imageAlt || 'Column image'}
             fill
             className="object-cover"
+            sizes="(min-width: 1200px) 50vw, (min-width: 768px) 50vw, 100vw"
+            quality={90}
           />
         </div>
       )
@@ -69,14 +76,18 @@ export default function TwoColumnBlock({ leftColumn, rightColumn, columnRatio }:
   return (
     <section className="py-8 md:py-12 xl:py-16">
       <Container>
-        <div className="flex flex-col gap-4 md:flex-row">
-          <div className="w-full md:w-auto" style={{ flex: `0 0 ${widths.left}` }}>
-            {renderColumn(leftColumn)}
+        <Grid>
+          <div className={placementProps.className} style={placementProps.style}>
+            <div className="flex flex-col gap-4 md:flex-row">
+              <div className="w-full md:w-auto" style={{ flex: `0 0 ${widths.left}` }}>
+                {renderColumn(leftColumn)}
+              </div>
+              <div className="w-full md:w-auto" style={{ flex: `0 0 ${widths.right}` }}>
+                {renderColumn(rightColumn)}
+              </div>
+            </div>
           </div>
-          <div className="w-full md:w-auto" style={{ flex: `0 0 ${widths.right}` }}>
-            {renderColumn(rightColumn)}
-          </div>
-        </div>
+        </Grid>
       </Container>
     </section>
   )

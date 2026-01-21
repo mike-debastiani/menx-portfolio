@@ -28,6 +28,12 @@ export default defineType({
       type: 'string',
       description: 'Optionale Bildunterschrift',
     }),
+    defineField({
+      name: 'gridPlacement',
+      title: 'Layout im Grid',
+      type: 'gridPlacement',
+      description: 'Steuert die Platzierung im Layout-Grid pro Breakpoint.',
+    }),
   ],
   preview: {
     select: {

@@ -18,10 +18,10 @@ export default function PortableText({ content, className = '' }: PortableTextPr
         components={{
           block: {
             normal: ({ children }) => <p className="mb-4 text-base leading-relaxed text-primary-950">{children}</p>,
-            h1: ({ children }) => <h1 className="mb-4 text-3xl font-bold text-primary-950">{children}</h1>,
-            h2: ({ children }) => <h2 className="mb-3 text-2xl font-semibold text-primary-950">{children}</h2>,
-            h3: ({ children }) => <h3 className="mb-2 text-xl font-semibold text-primary-950">{children}</h3>,
-            h4: ({ children }) => <h4 className="mb-2 text-lg font-semibold text-primary-950">{children}</h4>,
+            h1: ({ children }) => <h1 className="mb-4 text-4xl font-medium text-primary-950">{children}</h1>,
+            h2: ({ children }) => <h2 className="mb-3 text-3xl font-medium text-primary-950">{children}</h2>,
+            h3: ({ children }) => <h3 className="mb-2 text-2xl font-medium text-primary-950">{children}</h3>,
+            h4: ({ children }) => <h4 className="mb-2 text-xl font-medium text-primary-950">{children}</h4>,
             blockquote: ({ children }) => (
               <blockquote className="my-4 border-l-4 border-primary-300 pl-4 italic text-primary-700">
                 {children}

@@ -1,5 +1,7 @@
 import Container from '@/components/layout/Container'
+import Grid from '@/components/layout/Grid'
 import { stegaClean } from '@sanity/client/stega'
+import { getGridPlacementProps, type GridPlacement } from './gridPlacement'
 
 export interface VideoBlockProps {
   _key: string
@@ -12,6 +14,7 @@ export interface VideoBlockProps {
   autoplay?: boolean
   loop?: boolean
   muted?: boolean
+  gridPlacement?: GridPlacement | string
 }
 
 export default function VideoBlock({
@@ -24,11 +27,13 @@ export default function VideoBlock({
   autoplay,
   loop,
   muted,
+  gridPlacement,
 }: VideoBlockProps) {
   const cleanVideoType = stegaClean(videoType) || 'youtube'
   const cleanAutoplay = stegaClean(autoplay) || false
   const cleanLoop = stegaClean(loop) || false
   const cleanMuted = stegaClean(muted) || false
+  const placementProps = getGridPlacementProps(gridPlacement)
 
   const renderVideo = () => {
     if (cleanVideoType === 'youtube' && youtubeId) {
@@ -106,10 +111,12 @@ export default function VideoBlock({
   return (
     <section className="py-8 md:py-12 xl:py-16">
       <Container>
-        <figure className="w-full">
-          {videoElement}
-          {caption && <figcaption className="mt-4 text-sm text-primary-600">{caption}</figcaption>}
-        </figure>
+        <Grid>
+          <figure className={`${placementProps.className} w-full`} style={placementProps.style}>
+            {videoElement}
+            {caption && <figcaption className="mt-4 text-sm text-primary-600">{caption}</figcaption>}
+          </figure>
+        </Grid>
       </Container>
     </section>
   )

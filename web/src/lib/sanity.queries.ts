@@ -156,7 +156,8 @@ export async function getCaseStudyBySlug(slug: string): Promise<CaseStudyData | 
       _type == "fullImage" => {
         image,
         alt,
-        caption
+        caption,
+        gridPlacement
       },
       _type == "imageGallery" => {
         images[] {
@@ -164,12 +165,13 @@ export async function getCaseStudyBySlug(slug: string): Promise<CaseStudyData | 
           alt,
           caption
         },
-        layout
+        layout,
+        gridPlacement
       },
       _type == "textBlock" => {
         content,
         alignment,
-        maxWidth
+        gridPlacement
       },
       _type == "twoColumn" => {
         leftColumn {
@@ -184,18 +186,24 @@ export async function getCaseStudyBySlug(slug: string): Promise<CaseStudyData | 
           image,
           imageAlt
         },
-        columnRatio
+        columnRatio,
+        gridPlacement
       },
       _type == "video" => {
         videoType,
         youtubeId,
         vimeoId,
-        sanityVideo,
+        "sanityVideo": sanityVideo {
+          asset-> {
+            url
+          }
+        },
         videoUrl,
         caption,
         autoplay,
         loop,
-        muted
+        muted,
+        gridPlacement
       }
     }
   }`;
