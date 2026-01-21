@@ -84,6 +84,7 @@ export default function HeaderClient({
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isQuickInfoOpen, setIsQuickInfoOpen] = useState(false);
   const [projectCategory, setProjectCategory] = useState<'relevant-work' | 'lab' | null>(null);
+  const [isWorkflowInView, setIsWorkflowInView] = useState(false);
 
   const menuRef = useRef<HTMLDivElement>(null);
   const hamburgerButtonRef = useRef<HTMLButtonElement>(null);
@@ -123,9 +124,33 @@ export default function HeaderClient({
     }
   }, [pathname]);
 
+  useEffect(() => {
+    if (pathname !== '/') {
+      setIsWorkflowInView(false);
+      return;
+    }
+
+    const section = document.getElementById('workflow');
+    if (!section) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsWorkflowInView(entry.isIntersecting);
+      },
+      {
+        root: null,
+        threshold: 0.4,
+      }
+    );
+
+    observer.observe(section);
+    return () => observer.disconnect();
+  }, [pathname]);
+
   const isActive = useCallback(
     (href: string) => {
       if (href === '/') return pathname === '/';
+      if (href === '/#workflow') return pathname === '/' && isWorkflowInView;
       
       // Check if pathname starts with href (normal behavior)
       if (pathname.startsWith(href)) return true;
@@ -143,7 +168,7 @@ export default function HeaderClient({
       
       return false;
     },
-    [pathname, projectCategory],
+    [pathname, projectCategory, isWorkflowInView],
   );
 
   const closeMenu = useCallback(() => {
