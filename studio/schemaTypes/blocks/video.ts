@@ -1,5 +1,6 @@
 import { defineType, defineField } from 'sanity'
 import { VideoIcon } from '@sanity/icons'
+import { paddingField } from './padding'
 
 export default defineType({
   name: 'video',
@@ -104,6 +105,7 @@ export default defineType({
       description: 'Video stumm abspielen (oft für Autoplay erforderlich)',
       initialValue: false,
     }),
+    paddingField,
     defineField({
       name: 'gridPlacement',
       title: 'Layout im Grid',

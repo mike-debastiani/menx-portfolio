@@ -1,5 +1,6 @@
 import { defineType, defineField } from 'sanity'
 import { BlockContentIcon } from '@sanity/icons'
+import { paddingField } from './padding'
 
 export default defineType({
   name: 'twoColumn',
@@ -92,22 +93,248 @@ export default defineType({
       ],
     }),
     defineField({
-      name: 'columnRatio',
-      title: 'Spaltenverhältnis',
-      type: 'string',
-      description: 'Verhältnis der Spaltenbreiten',
-      options: {
-        list: [
-          { title: '50/50', value: '50-50' },
-          { title: '40/60', value: '40-60' },
-          { title: '60/40', value: '60-40' },
-          { title: '33/67', value: '33-67' },
-          { title: '67/33', value: '67-33' },
-        ],
-        layout: 'radio',
+      name: 'columnColumns',
+      title: 'Spaltenbereich (Columns)',
+      type: 'object',
+      description: 'Start- und End-Spalten pro Breakpoint.',
+      fields: [
+        defineField({
+          name: 'base',
+          title: 'Mobile (4 Spalten)',
+          type: 'object',
+          fields: [
+            defineField({
+              name: 'left',
+              title: 'Links Start',
+              type: 'number',
+              options: {
+                list: [
+                  { title: '1', value: 1 },
+                  { title: '2', value: 2 },
+                  { title: '3', value: 3 },
+                  { title: '4', value: 4 },
+                ],
+              },
+              validation: (Rule) => Rule.min(1).max(4),
+            }),
+            defineField({
+              name: 'leftEnd',
+              title: 'Links Ende (Column)',
+              type: 'number',
+              options: {
+                list: [
+                  { title: '1', value: 1 },
+                  { title: '2', value: 2 },
+                  { title: '3', value: 3 },
+                  { title: '4', value: 4 },
+                ],
+              },
+              validation: (Rule) => Rule.min(1).max(4),
+            }),
+            defineField({
+              name: 'right',
+              title: 'Rechts Start',
+              type: 'number',
+              options: {
+                list: [
+                  { title: '1', value: 1 },
+                  { title: '2', value: 2 },
+                  { title: '3', value: 3 },
+                  { title: '4', value: 4 },
+                ],
+              },
+              validation: (Rule) => Rule.min(1).max(4),
+            }),
+            defineField({
+              name: 'rightEnd',
+              title: 'Rechts Ende (Column)',
+              type: 'number',
+              options: {
+                list: [
+                  { title: '1', value: 1 },
+                  { title: '2', value: 2 },
+                  { title: '3', value: 3 },
+                  { title: '4', value: 4 },
+                ],
+              },
+              validation: (Rule) => Rule.min(1).max(4),
+            }),
+          ],
+        }),
+        defineField({
+          name: 'md',
+          title: 'Tablet (6 Spalten)',
+          type: 'object',
+          fields: [
+            defineField({
+              name: 'left',
+              title: 'Links Start',
+              type: 'number',
+              options: {
+                list: [
+                  { title: '1', value: 1 },
+                  { title: '2', value: 2 },
+                  { title: '3', value: 3 },
+                  { title: '4', value: 4 },
+                  { title: '5', value: 5 },
+                  { title: '6', value: 6 },
+                ],
+              },
+              validation: (Rule) => Rule.min(1).max(6),
+            }),
+            defineField({
+              name: 'leftEnd',
+              title: 'Links Ende (Column)',
+              type: 'number',
+              options: {
+                list: [
+                  { title: '1', value: 1 },
+                  { title: '2', value: 2 },
+                  { title: '3', value: 3 },
+                  { title: '4', value: 4 },
+                  { title: '5', value: 5 },
+                  { title: '6', value: 6 },
+                ],
+              },
+              validation: (Rule) => Rule.min(1).max(6),
+            }),
+            defineField({
+              name: 'right',
+              title: 'Rechts Start',
+              type: 'number',
+              options: {
+                list: [
+                  { title: '1', value: 1 },
+                  { title: '2', value: 2 },
+                  { title: '3', value: 3 },
+                  { title: '4', value: 4 },
+                  { title: '5', value: 5 },
+                  { title: '6', value: 6 },
+                ],
+              },
+              validation: (Rule) => Rule.min(1).max(6),
+            }),
+            defineField({
+              name: 'rightEnd',
+              title: 'Rechts Ende (Column)',
+              type: 'number',
+              options: {
+                list: [
+                  { title: '1', value: 1 },
+                  { title: '2', value: 2 },
+                  { title: '3', value: 3 },
+                  { title: '4', value: 4 },
+                  { title: '5', value: 5 },
+                  { title: '6', value: 6 },
+                ],
+              },
+              validation: (Rule) => Rule.min(1).max(6),
+            }),
+          ],
+        }),
+        defineField({
+          name: 'lg',
+          title: 'Desktop (12 Spalten)',
+          type: 'object',
+          fields: [
+            defineField({
+              name: 'left',
+              title: 'Links Start',
+              type: 'number',
+              options: {
+                list: [
+                  { title: '1', value: 1 },
+                  { title: '2', value: 2 },
+                  { title: '3', value: 3 },
+                  { title: '4', value: 4 },
+                  { title: '5', value: 5 },
+                  { title: '6', value: 6 },
+                  { title: '7', value: 7 },
+                  { title: '8', value: 8 },
+                  { title: '9', value: 9 },
+                  { title: '10', value: 10 },
+                  { title: '11', value: 11 },
+                  { title: '12', value: 12 },
+                ],
+              },
+              validation: (Rule) => Rule.min(1).max(12),
+            }),
+            defineField({
+              name: 'leftEnd',
+              title: 'Links Ende (Column)',
+              type: 'number',
+              options: {
+                list: [
+                  { title: '1', value: 1 },
+                  { title: '2', value: 2 },
+                  { title: '3', value: 3 },
+                  { title: '4', value: 4 },
+                  { title: '5', value: 5 },
+                  { title: '6', value: 6 },
+                  { title: '7', value: 7 },
+                  { title: '8', value: 8 },
+                  { title: '9', value: 9 },
+                  { title: '10', value: 10 },
+                  { title: '11', value: 11 },
+                  { title: '12', value: 12 },
+                ],
+              },
+              validation: (Rule) => Rule.min(1).max(12),
+            }),
+            defineField({
+              name: 'right',
+              title: 'Rechts Start',
+              type: 'number',
+              options: {
+                list: [
+                  { title: '1', value: 1 },
+                  { title: '2', value: 2 },
+                  { title: '3', value: 3 },
+                  { title: '4', value: 4 },
+                  { title: '5', value: 5 },
+                  { title: '6', value: 6 },
+                  { title: '7', value: 7 },
+                  { title: '8', value: 8 },
+                  { title: '9', value: 9 },
+                  { title: '10', value: 10 },
+                  { title: '11', value: 11 },
+                  { title: '12', value: 12 },
+                ],
+              },
+              validation: (Rule) => Rule.min(1).max(12),
+            }),
+            defineField({
+              name: 'rightEnd',
+              title: 'Rechts Ende (Column)',
+              type: 'number',
+              options: {
+                list: [
+                  { title: '1', value: 1 },
+                  { title: '2', value: 2 },
+                  { title: '3', value: 3 },
+                  { title: '4', value: 4 },
+                  { title: '5', value: 5 },
+                  { title: '6', value: 6 },
+                  { title: '7', value: 7 },
+                  { title: '8', value: 8 },
+                  { title: '9', value: 9 },
+                  { title: '10', value: 10 },
+                  { title: '11', value: 11 },
+                  { title: '12', value: 12 },
+                ],
+              },
+              validation: (Rule) => Rule.min(1).max(12),
+            }),
+          ],
+        }),
+      ],
+      initialValue: {
+        base: { left: 1, leftEnd: 2, right: 3, rightEnd: 4 },
+        md: { left: 1, leftEnd: 3, right: 4, rightEnd: 6 },
+        lg: { left: 1, leftEnd: 6, right: 7, rightEnd: 12 },
       },
-      initialValue: '50-50',
     }),
+    paddingField,
     defineField({
       name: 'gridPlacement',
       title: 'Layout im Grid',

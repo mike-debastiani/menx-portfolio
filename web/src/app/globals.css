@@ -156,6 +156,10 @@ main {
     grid-column: var(--gp-start) / var(--gp-end);
   }
 
+  .two-column-span {
+    grid-column: var(--tc-start) / var(--tc-end);
+  }
+
   .footer-col-mobile {
     grid-column: span 4 / span 4;
   }
@@ -163,6 +167,10 @@ main {
   @media (min-width: 768px) {
     .case-block-placement {
       grid-column: var(--gp-md-start) / var(--gp-md-end);
+    }
+
+    .two-column-span {
+      grid-column: var(--tc-md-start) / var(--tc-md-end);
     }
 
     .footer-col-mobile {
@@ -175,6 +183,12 @@ main {
     .about-hero-image {
       grid-column: span 2 / span 2 !important;
       grid-column-start: 5 !important;
+    }
+  }
+
+  @media (min-width: 1200px) {
+    .two-column-span {
+      grid-column: var(--tc-lg-start) / var(--tc-lg-end);
     }
   }
 

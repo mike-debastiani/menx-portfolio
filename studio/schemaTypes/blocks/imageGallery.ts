@@ -1,5 +1,6 @@
 import { defineType, defineField, defineArrayMember } from 'sanity'
 import { ImagesIcon } from '@sanity/icons'
+import { paddingField } from './padding'
 
 export default defineType({
   name: 'imageGallery',
@@ -63,12 +64,30 @@ export default defineType({
         list: [
           { title: 'Grid (gleichmäßig)', value: 'grid' },
           { title: 'Masonry (gestapelt)', value: 'masonry' },
+          { title: 'Bento Box', value: 'bento' },
           { title: 'Carousel (Slideshow)', value: 'carousel' },
         ],
         layout: 'radio',
       },
       initialValue: 'grid',
     }),
+    defineField({
+      name: 'bentoLayout',
+      title: 'Bento Layout',
+      type: 'string',
+      description: 'Wähle ein Bento-Pattern für die Bilder.',
+      options: {
+        list: [
+          { title: 'Bento A (1 groß, 4 klein)', value: 'bento-a' },
+          { title: 'Bento B (2 groß, 3 klein)', value: 'bento-b' },
+          { title: 'Bento C (1 breit, 4 klein)', value: 'bento-c' },
+        ],
+        layout: 'radio',
+      },
+      initialValue: 'bento-a',
+      hidden: ({ parent }) => parent?.layout !== 'bento',
+    }),
+    paddingField,
     defineField({
       name: 'gridPlacement',
       title: 'Layout im Grid',

@@ -157,6 +157,11 @@ export async function getCaseStudyBySlug(slug: string): Promise<CaseStudyData | 
         image,
         alt,
         caption,
+        padding {
+          base { pt, pb },
+          md { pt, pb },
+          xl { pt, pb }
+        },
         gridPlacement
       },
       _type == "imageGallery" => {
@@ -166,11 +171,22 @@ export async function getCaseStudyBySlug(slug: string): Promise<CaseStudyData | 
           caption
         },
         layout,
+        bentoLayout,
+        padding {
+          base { pt, pb },
+          md { pt, pb },
+          xl { pt, pb }
+        },
         gridPlacement
       },
       _type == "textBlock" => {
         content,
         alignment,
+        padding {
+          base { pt, pb },
+          md { pt, pb },
+          xl { pt, pb }
+        },
         gridPlacement
       },
       _type == "twoColumn" => {
@@ -186,7 +202,31 @@ export async function getCaseStudyBySlug(slug: string): Promise<CaseStudyData | 
           image,
           imageAlt
         },
-        columnRatio,
+        columnColumns {
+          base {
+            left,
+            leftEnd,
+            right,
+            rightEnd
+          },
+          md {
+            left,
+            leftEnd,
+            right,
+            rightEnd
+          },
+          lg {
+            left,
+            leftEnd,
+            right,
+            rightEnd
+          }
+        },
+        padding {
+          base { pt, pb },
+          md { pt, pb },
+          xl { pt, pb }
+        },
         gridPlacement
       },
       _type == "video" => {
@@ -203,6 +243,11 @@ export async function getCaseStudyBySlug(slug: string): Promise<CaseStudyData | 
         autoplay,
         loop,
         muted,
+        padding {
+          base { pt, pb },
+          md { pt, pb },
+          xl { pt, pb }
+        },
         gridPlacement
       }
     }

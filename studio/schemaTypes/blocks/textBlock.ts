@@ -1,5 +1,6 @@
 import { defineType, defineField } from 'sanity'
 import { TextIcon } from '@sanity/icons'
+import { paddingField } from './padding'
 
 export default defineType({
   name: 'textBlock',
@@ -28,6 +29,7 @@ export default defineType({
       },
       initialValue: 'left',
     }),
+    paddingField,
     defineField({
       name: 'gridPlacement',
       title: 'Layout im Grid',

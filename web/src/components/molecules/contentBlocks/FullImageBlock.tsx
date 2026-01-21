@@ -3,16 +3,18 @@ import Container from '@/components/layout/Container'
 import Grid from '@/components/layout/Grid'
 import { urlForImage } from '@/lib/sanity.client'
 import { getGridPlacementProps, getGridPlacementSizes, type GridPlacement } from './gridPlacement'
+import { getBlockPaddingClasses, type BlockPadding } from './padding'
 
 export interface FullImageBlockProps {
   _key: string
   image?: any
   alt?: string
   caption?: string
+  padding?: BlockPadding
   gridPlacement?: GridPlacement | string
 }
 
-export default function FullImageBlock({ image, alt, caption, gridPlacement }: FullImageBlockProps) {
+export default function FullImageBlock({ image, alt, caption, padding, gridPlacement }: FullImageBlockProps) {
   if (!image) {
     return null
   }
@@ -29,9 +31,10 @@ export default function FullImageBlock({ image, alt, caption, gridPlacement }: F
   }
 
   const placementProps = getGridPlacementProps(gridPlacement)
+  const paddingClasses = getBlockPaddingClasses(padding)
 
   return (
-    <section className="py-8 md:py-12 xl:py-16">
+    <section className={paddingClasses}>
       <Container>
         <Grid>
           <figure className={`${placementProps.className} w-full`} style={placementProps.style}>

@@ -1,5 +1,6 @@
 import { defineType, defineField } from 'sanity'
 import { ImageIcon } from '@sanity/icons'
+import { paddingField } from './padding'
 
 export default defineType({
   name: 'fullImage',
@@ -28,6 +29,7 @@ export default defineType({
       type: 'string',
       description: 'Optionale Bildunterschrift',
     }),
+    paddingField,
     defineField({
       name: 'gridPlacement',
       title: 'Layout im Grid',

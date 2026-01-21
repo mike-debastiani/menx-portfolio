@@ -4,8 +4,10 @@ import Grid from '@/components/layout/Grid'
 import PortableText from '@/components/atoms/PortableText'
 import { urlForImage } from '@/lib/sanity.client'
 import { stegaClean } from '@sanity/client/stega'
+import type { CSSProperties } from 'react'
 import type { PortableTextBlock } from '@portabletext/types'
 import { getGridPlacementProps, type GridPlacement } from './gridPlacement'
+import { getBlockPaddingClasses, type BlockPadding } from './padding'
 
 export interface ColumnContent {
   type?: string
@@ -18,24 +20,101 @@ export interface TwoColumnBlockProps {
   _key: string
   leftColumn?: ColumnContent
   rightColumn?: ColumnContent
-  columnRatio?: string
+  columnColumns?: {
+    base?: { left?: number; leftEnd?: number; right?: number; rightEnd?: number }
+    md?: { left?: number; leftEnd?: number; right?: number; rightEnd?: number }
+    lg?: { left?: number; leftEnd?: number; right?: number; rightEnd?: number }
+  }
+  padding?: BlockPadding
   gridPlacement?: GridPlacement | string
 }
 
-export default function TwoColumnBlock({ leftColumn, rightColumn, columnRatio, gridPlacement }: TwoColumnBlockProps) {
-  const cleanRatio = stegaClean(columnRatio) || '50-50'
+const clampColumn = (value: number | undefined, max: number, fallback: number) => {
+  if (!value || Number.isNaN(value)) return fallback
+  return Math.max(1, Math.min(max, value))
+}
 
-  // Map ratio to flex widths
-  const ratioMap: Record<string, { left: string; right: string }> = {
-    '50-50': { left: '50%', right: '50%' },
-    '40-60': { left: '40%', right: '60%' },
-    '60-40': { left: '60%', right: '40%' },
-    '33-67': { left: '33.33%', right: '66.67%' },
-    '67-33': { left: '66.67%', right: '33.33%' },
+const ensureRange = (start: number, end: number, maxColumns: number) => {
+  const safeStart = clampColumn(start, maxColumns, 1)
+  const safeEnd = clampColumn(end, maxColumns, Math.min(maxColumns, safeStart))
+  if (safeEnd < safeStart) return { start: safeStart, end: safeStart }
+  return { start: safeStart, end: safeEnd }
+}
+
+const getColumnRanges = (columnColumns: TwoColumnBlockProps['columnColumns']) => {
+  const fallback = {
+    base: { left: { start: 1, end: 2 }, right: { start: 3, end: 4 } },
+    md: { left: { start: 1, end: 3 }, right: { start: 4, end: 6 } },
+    lg: { left: { start: 1, end: 6 }, right: { start: 7, end: 12 } },
   }
 
-  const widths = ratioMap[cleanRatio] || ratioMap['50-50']
+  return {
+    base: {
+      left: ensureRange(
+        columnColumns?.base?.left ?? fallback.base.left.start,
+        columnColumns?.base?.leftEnd ?? fallback.base.left.end,
+        4
+      ),
+      right: ensureRange(
+        columnColumns?.base?.right ?? fallback.base.right.start,
+        columnColumns?.base?.rightEnd ?? fallback.base.right.end,
+        4
+      ),
+    },
+    md: {
+      left: ensureRange(
+        columnColumns?.md?.left ?? fallback.md.left.start,
+        columnColumns?.md?.leftEnd ?? fallback.md.left.end,
+        6
+      ),
+      right: ensureRange(
+        columnColumns?.md?.right ?? fallback.md.right.start,
+        columnColumns?.md?.rightEnd ?? fallback.md.right.end,
+        6
+      ),
+    },
+    lg: {
+      left: ensureRange(
+        columnColumns?.lg?.left ?? fallback.lg.left.start,
+        columnColumns?.lg?.leftEnd ?? fallback.lg.left.end,
+        12
+      ),
+      right: ensureRange(
+        columnColumns?.lg?.right ?? fallback.lg.right.start,
+        columnColumns?.lg?.rightEnd ?? fallback.lg.right.end,
+        12
+      ),
+    },
+  }
+}
+
+const buildRangeStyle = (
+  baseStart: number,
+  baseEnd: number,
+  mdStart: number,
+  mdEnd: number,
+  lgStart: number,
+  lgEnd: number
+): CSSProperties =>
+  ({
+    '--tc-start': String(baseStart),
+    '--tc-end': String(baseEnd + 1),
+    '--tc-md-start': String(mdStart),
+    '--tc-md-end': String(mdEnd + 1),
+    '--tc-lg-start': String(lgStart),
+    '--tc-lg-end': String(lgEnd + 1),
+  }) as CSSProperties
+
+export default function TwoColumnBlock({
+  leftColumn,
+  rightColumn,
+  columnColumns,
+  padding,
+  gridPlacement,
+}: TwoColumnBlockProps) {
+  const ranges = getColumnRanges(columnColumns)
   const placementProps = getGridPlacementProps(gridPlacement)
+  const paddingClasses = getBlockPaddingClasses(padding)
 
   const renderColumn = (column: ColumnContent | undefined) => {
     if (!column) return null
@@ -74,15 +153,35 @@ export default function TwoColumnBlock({ leftColumn, rightColumn, columnRatio, g
   }
 
   return (
-    <section className="py-8 md:py-12 xl:py-16">
+    <section className={paddingClasses}>
       <Container>
         <Grid>
           <div className={placementProps.className} style={placementProps.style}>
-            <div className="flex flex-col gap-4 md:flex-row">
-              <div className="w-full md:w-auto" style={{ flex: `0 0 ${widths.left}` }}>
+            <div className="layout-grid gap-y-4">
+              <div
+                className="two-column-span"
+                style={buildRangeStyle(
+                  ranges.base.left.start,
+                  ranges.base.left.end,
+                  ranges.md.left.start,
+                  ranges.md.left.end,
+                  ranges.lg.left.start,
+                  ranges.lg.left.end
+                )}
+              >
                 {renderColumn(leftColumn)}
               </div>
-              <div className="w-full md:w-auto" style={{ flex: `0 0 ${widths.right}` }}>
+              <div
+                className="two-column-span"
+                style={buildRangeStyle(
+                  ranges.base.right.start,
+                  ranges.base.right.end,
+                  ranges.md.right.start,
+                  ranges.md.right.end,
+                  ranges.lg.right.start,
+                  ranges.lg.right.end
+                )}
+              >
                 {renderColumn(rightColumn)}
               </div>
             </div>

@@ -11,13 +11,30 @@ export default function PortableText({ content, className = '' }: PortableTextPr
     return null
   }
 
+  const isEmptyChildren = (children: any) => {
+    if (!children) return true
+    if (typeof children === 'string') return children.trim().length === 0
+    if (Array.isArray(children)) {
+      return children.every((child) => {
+        if (typeof child === 'string') return child.trim().length === 0
+        if (child === null || child === undefined || child === false) return true
+        return false
+      })
+    }
+    return false
+  }
+
   return (
     <div className={className}>
       <SanityPortableText
         value={content}
         components={{
           block: {
-            normal: ({ children }) => <p className="mb-4 text-base leading-relaxed text-primary-950">{children}</p>,
+            normal: ({ children }) => (
+              <p className="mb-4 text-base leading-relaxed text-primary-950">
+                {isEmptyChildren(children) ? '\u00A0' : children}
+              </p>
+            ),
             h1: ({ children }) => <h1 className="mb-4 text-4xl font-medium text-primary-950">{children}</h1>,
             h2: ({ children }) => <h2 className="mb-3 text-3xl font-medium text-primary-950">{children}</h2>,
             h3: ({ children }) => <h3 className="mb-2 text-2xl font-medium text-primary-950">{children}</h3>,

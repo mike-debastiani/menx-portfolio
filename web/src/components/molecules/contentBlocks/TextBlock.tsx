@@ -4,15 +4,17 @@ import PortableText from '@/components/atoms/PortableText'
 import { stegaClean } from '@sanity/client/stega'
 import type { PortableTextBlock } from '@portabletext/types'
 import { getGridPlacementProps, type GridPlacement } from './gridPlacement'
+import { getBlockPaddingClasses, type BlockPadding } from './padding'
 
 export interface TextBlockProps {
   _key: string
   content?: PortableTextBlock[]
   alignment?: string
+  padding?: BlockPadding
   gridPlacement?: GridPlacement | string
 }
 
-export default function TextBlock({ content, alignment, gridPlacement }: TextBlockProps) {
+export default function TextBlock({ content, alignment, padding, gridPlacement }: TextBlockProps) {
   if (!content || !Array.isArray(content) || content.length === 0) {
     return null
   }
@@ -25,9 +27,10 @@ export default function TextBlock({ content, alignment, gridPlacement }: TextBlo
   }
 
   const placementProps = getGridPlacementProps(gridPlacement)
+  const paddingClasses = getBlockPaddingClasses(padding)
 
   return (
-    <section className="py-8 md:py-12 xl:py-16">
+    <section className={paddingClasses}>
       <Container>
         <Grid>
           <div className={placementProps.className} style={placementProps.style}>
