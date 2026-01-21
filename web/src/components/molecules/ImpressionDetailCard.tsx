@@ -38,7 +38,7 @@ export default function ImpressionDetailCard({
             Project: {projectLabel}
           </p>
           {/* Title */}
-          <h3 className="font-medium text-lg md:text-2xl leading-[1.25] text-primary-950">
+          <h3 className="font-medium text-lg md:text-[20px] leading-[1.25] text-primary-950">
             {title}
           </h3>
         </div>
