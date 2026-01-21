@@ -1,6 +1,10 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { PortableText as SanityPortableText } from '@portabletext/react'
+import type {
+  PortableTextComponentProps,
+  PortableTextReactComponents,
+} from '@portabletext/react'
 import type { PortableTextBlock } from '@portabletext/types'
 import type { ReactNode } from 'react'
 import Container from '@/components/layout/Container'
@@ -60,31 +64,21 @@ const isEmptyChildren = (children: ReactNode) => {
   return false
 }
 
-const titlePortableTextComponents = {
+const renderTitleBlock = ({ children }: PortableTextComponentProps<PortableTextBlock>) => (
+  <span className="block">{isEmptyChildren(children as ReactNode) ? '\u00A0' : children}</span>
+)
+
+const titlePortableTextComponents: Partial<PortableTextReactComponents> = {
   block: {
-    normal: ({ children }: { children: ReactNode }) => (
-      <span className="block">{isEmptyChildren(children) ? '\u00A0' : children}</span>
-    ),
-    h1: ({ children }: { children: ReactNode }) => (
-      <span className="block">{isEmptyChildren(children) ? '\u00A0' : children}</span>
-    ),
-    h2: ({ children }: { children: ReactNode }) => (
-      <span className="block">{isEmptyChildren(children) ? '\u00A0' : children}</span>
-    ),
-    h3: ({ children }: { children: ReactNode }) => (
-      <span className="block">{isEmptyChildren(children) ? '\u00A0' : children}</span>
-    ),
-    h4: ({ children }: { children: ReactNode }) => (
-      <span className="block">{isEmptyChildren(children) ? '\u00A0' : children}</span>
-    ),
+    normal: renderTitleBlock,
+    h1: renderTitleBlock,
+    h2: renderTitleBlock,
+    h3: renderTitleBlock,
+    h4: renderTitleBlock,
   },
   marks: {
-    strong: ({ children }: { children: ReactNode }) => (
-      <strong className="font-semibold">{children}</strong>
-    ),
-    em: ({ children }: { children: ReactNode }) => (
-      <em className="italic">{children}</em>
-    ),
+    strong: ({ children }) => <strong className="font-semibold">{children}</strong>,
+    em: ({ children }) => <em className="italic">{children}</em>,
   },
 }
 
