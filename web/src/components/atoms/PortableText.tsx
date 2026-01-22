@@ -72,6 +72,14 @@ export default function PortableText({ content, className = '' }: PortableTextPr
             textWeight: ({ children, value }) => (
               <span className={value?.weight || undefined}>{children}</span>
             ),
+            textSize: ({ children, value }) => (
+              <span className={value?.size || undefined}>{children}</span>
+            ),
+            textLineHeight: ({ children, value }) => (
+              <span style={value?.lineHeight ? { lineHeight: value.lineHeight } : undefined}>
+                {children}
+              </span>
+            ),
             link: ({ children, value }) => {
               const href = value?.href || '#'
               return (

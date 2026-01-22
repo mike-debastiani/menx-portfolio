@@ -81,6 +81,44 @@ export const coloredTextBlock = defineArrayMember({
           }),
         ],
       }),
+      defineArrayMember({
+        name: 'textSize',
+        title: 'Size',
+        type: 'object',
+        fields: [
+          defineField({
+            name: 'size',
+            title: 'Font Size',
+            type: 'string',
+            options: {
+              list: [
+                { title: 'text-xs', value: 'text-xs' },
+                { title: 'text-sm', value: 'text-sm' },
+                { title: 'text-base', value: 'text-base' },
+                { title: 'text-lg', value: 'text-lg' },
+                { title: 'text-xl', value: 'text-xl' },
+                { title: 'text-2xl', value: 'text-2xl' },
+                { title: 'text-3xl', value: 'text-3xl' },
+                { title: 'text-4xl', value: 'text-4xl' },
+              ],
+            },
+          }),
+        ],
+      }),
+      defineArrayMember({
+        name: 'textLineHeight',
+        title: 'Line Height',
+        type: 'object',
+        fields: [
+          defineField({
+            name: 'lineHeight',
+            title: 'Line Height',
+            type: 'number',
+            description: 'Example: 1.3',
+            validation: (Rule) => Rule.min(0.8).max(3),
+          }),
+        ],
+      }),
     ],
   },
 })
