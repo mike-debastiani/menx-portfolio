@@ -56,6 +56,27 @@ export default defineType({
       initialValue: false,
     }),
     defineField({
+      name: 'contentBlocks',
+      title: 'About Content Blocks',
+      type: 'array',
+      description: 'Flexible Blöcke für die About-Seite.',
+      of: [
+        { type: 'fullImage' },
+        { type: 'imageGallery' },
+        { type: 'sectionBlock' },
+        { type: 'textBlock' },
+        { type: 'twoColumn' },
+        { type: 'video' },
+      ],
+      options: {
+        insertMenu: {
+          views: [
+            { name: 'grid' },
+          ],
+        },
+      },
+    }),
+    defineField({
       name: 'skillsSectionTitle',
       title: 'Skills Section Title',
       type: 'string',

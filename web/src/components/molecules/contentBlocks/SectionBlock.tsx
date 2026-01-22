@@ -112,7 +112,10 @@ function renderContentBlock(block: SectionBlockContent, index: number) {
       const columns = block.columns ?? []
       if (columns.length === 0) return null
       return (
-        <div key={`section-block-columns-${index}`} className={`mb-4 grid ${getColumnGridClasses(columns.length)} gap-8 md:gap-10`}>
+        <div
+          key={`section-block-columns-${index}`}
+          className={`mb-4 grid ${getColumnGridClasses(columns.length)} gap-x-4 gap-y-10 xl:gap-x-8`}
+        >
           {columns.map((column, columnIndex) => (
             <div key={columnIndex} className="flex flex-col gap-6">
               {column.title && (
@@ -298,7 +301,7 @@ export default function SectionBlock({ sectionTitle, contentBlocks }: SectionBlo
     <section className="py-12 md:py-20 flex">
       <Container className="flex flex-col gap-30">
         <Grid>
-          <div className="col-span-4 skills-col-lg">
+          <div className="col-span-4 skills-col-lg mb-6">
             {sectionTitle && sectionTitle.length > 0 && (
               <h2 className="font-sans font-medium text-2xl min-[450px]:text-3xl leading-[1.2] text-primary-950">
                 <SanityPortableText value={sectionTitle} components={titlePortableTextComponents} />
@@ -308,7 +311,7 @@ export default function SectionBlock({ sectionTitle, contentBlocks }: SectionBlo
 
           <div className="col-span-4 info-col-single">
             {contentBlocks && contentBlocks.length > 0 && (
-              <div className="mt-0 flex flex-col gap-10 md:gap-12">
+              <div className="mt-0 flex flex-col gap-6 min-[500px]:gap-8 xl:gap-12">
                 {contentBlocks.map((block, index) => renderContentBlock(block, index))}
               </div>
             )}

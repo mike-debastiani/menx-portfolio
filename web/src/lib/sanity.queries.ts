@@ -675,6 +675,7 @@ export interface AboutData {
     src: string;
     alt: string;
   };
+  contentBlocks?: any[];
   skillsSection?: SkillsSectionData;
   textBlockSection?: TextBlockSectionData;
   footerCtaTitle?: string;
@@ -694,6 +695,137 @@ export async function getAboutData(): Promise<AboutData | null> {
       location,
       status,
       showStatusDot,
+      contentBlocks[] {
+        _key,
+        _type,
+        _type == "fullImage" => {
+          image,
+          alt,
+          caption,
+          padding {
+            base { pt, pb },
+            md { pt, pb },
+            xl { pt, pb }
+          },
+          gridPlacement
+        },
+        _type == "imageGallery" => {
+          images[] {
+            image,
+            alt,
+            caption
+          },
+          layout,
+          bentoLayout,
+          padding {
+            base { pt, pb },
+            md { pt, pb },
+            xl { pt, pb }
+          },
+          gridPlacement
+        },
+        _type == "sectionBlock" => {
+          sectionTitle,
+          contentBlocks[] {
+            _key,
+            _type,
+            _type == "sectionBlockText" => {
+              content
+            },
+            _type == "sectionBlockColumns" => {
+              columns[] {
+                title,
+                items
+              }
+            },
+            _type == "sectionBlockRows" => {
+              rows[] {
+                label,
+                items[] {
+                  label,
+                  href
+                }
+              }
+            },
+            _type == "sectionBlockImage" => {
+              image,
+              alt,
+              caption
+            }
+          }
+        },
+        _type == "textBlock" => {
+          content,
+          alignment,
+          padding {
+            base { pt, pb },
+            md { pt, pb },
+            xl { pt, pb }
+          },
+          gridPlacement
+        },
+        _type == "twoColumn" => {
+          leftColumn {
+            type,
+            text,
+            image,
+            imageAlt
+          },
+          rightColumn {
+            type,
+            text,
+            image,
+            imageAlt
+          },
+          columnColumns {
+            base {
+              left,
+              leftEnd,
+              right,
+              rightEnd
+            },
+            md {
+              left,
+              leftEnd,
+              right,
+              rightEnd
+            },
+            lg {
+              left,
+              leftEnd,
+              right,
+              rightEnd
+            }
+          },
+          padding {
+            base { pt, pb },
+            md { pt, pb },
+            xl { pt, pb }
+          },
+          gridPlacement
+        },
+        _type == "video" => {
+          videoType,
+          youtubeId,
+          vimeoId,
+          "sanityVideo": sanityVideo {
+            asset-> {
+              url
+            }
+          },
+          videoUrl,
+          caption,
+          autoplay,
+          loop,
+          muted,
+          padding {
+            base { pt, pb },
+            md { pt, pb },
+            xl { pt, pb }
+          },
+          gridPlacement
+        }
+      },
       skillsSectionTitle,
       skillsParagraphText,
       skillsColumn1Title,
@@ -852,6 +984,7 @@ export async function getAboutData(): Promise<AboutData | null> {
           alt: 'Mike De Bastiani - Digital Product Designer',
         }
       : undefined,
+    contentBlocks: about.contentBlocks || [],
     skillsSection,
     textBlockSection,
     footerCtaTitle: about.footerCtaTitle,
