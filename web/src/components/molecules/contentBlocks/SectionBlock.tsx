@@ -38,7 +38,20 @@ type SectionBlockImage = {
   caption?: string
 }
 
-type SectionBlockContent = SectionBlockText | SectionBlockColumns | SectionBlockRows | SectionBlockImage
+type SectionBlockDetailedRows = {
+  _type: 'sectionBlockDetailedRows'
+  title?: PortableTextBlock[]
+  rows?: Array<{
+    content?: PortableTextBlock[]
+  }>
+}
+
+type SectionBlockContent =
+  | SectionBlockText
+  | SectionBlockColumns
+  | SectionBlockRows
+  | SectionBlockImage
+  | SectionBlockDetailedRows
 
 export interface SectionBlockProps {
   _key: string
@@ -68,7 +81,7 @@ function renderContentBlock(block: SectionBlockContent, index: number) {
     case 'sectionBlockText': {
       if (!block.content || block.content.length === 0) return null
       return (
-        <div key={`section-block-text-${index}`} className="text-block-content [&_p]:!font-sans [&_p]:!text-base [&_p]:!text-primary-500 [&_p]:!leading-[1.4]">
+        <div key={`section-block-text-${index}`} className="text-block-content [&_p]:!font-sans [&_p]:!text-base [&_p]:!text-primary-500 [&_p]:!leading-[1.5]">
           <PortableText content={block.content} />
         </div>
       )
@@ -250,6 +263,34 @@ function renderContentBlock(block: SectionBlockContent, index: number) {
             <figcaption className="mt-4 text-sm text-primary-600">{block.caption}</figcaption>
           )}
         </figure>
+      )
+    }
+    case 'sectionBlockDetailedRows': {
+      const rows = block.rows ?? []
+      if ((!block.title || block.title.length === 0) && rows.length === 0) return null
+      return (
+        <div key={`section-block-detailed-rows-${index}`} className="mb-4 flex flex-col gap-3">
+          {block.title && block.title.length > 0 && (
+            <div className="[&_*]:!mb-0">
+              <PortableText content={block.title} />
+            </div>
+          )}
+          {rows.length > 0 && (
+            <div className="flex flex-col gap-3">
+              {rows.map((row, rowIndex) => (
+                <div
+                  key={rowIndex}
+                  className="border-t border-primary-200 pt-3"
+                  style={{ borderTopWidth: '0.5px' }}
+                >
+                  {row.content && row.content.length > 0 && (
+                    <PortableText content={row.content} />
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
       )
     }
     default:

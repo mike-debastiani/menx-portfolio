@@ -211,6 +211,12 @@ export async function getCaseStudyBySlug(slug: string): Promise<CaseStudyData | 
             image,
             alt,
             caption
+          },
+          _type == "sectionBlockDetailedRows" => {
+            title,
+            rows[] {
+              content
+            }
           }
         }
       },
@@ -730,6 +736,12 @@ export async function getAboutData(): Promise<AboutData | null> {
               image,
               alt,
               caption
+          },
+          _type == "sectionBlockDetailedRows" => {
+            title,
+            rows[] {
+              content
+            }
             }
           }
         },

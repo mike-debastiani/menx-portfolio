@@ -99,7 +99,7 @@ export default function ProjectCard({ project, className = '', maxColumns = 2 }:
         {/* Text Container */}
         <div className="flex flex-col gap-3 2xl:gap-2 px-2">
           <h3 className="text-lg min-[1301px]:text-2xl font-medium text-primary-950 leading-[1.2]">{project.title}</h3>
-          <p className="text-sm min-[1301px]:text-base font-normal text-primary-950 leading-[1.4]">{project.excerpt}</p>
+          <p className="text-sm min-[1301px]:text-base font-normal text-primary-950 leading-[1.5]">{project.excerpt}</p>
         </div>
       </div>
     </Link>

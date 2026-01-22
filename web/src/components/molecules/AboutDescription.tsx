@@ -65,7 +65,7 @@ export default function AboutDescription({
       </div>
 
       {/* Description */}
-      <p className="text-base leading-[1.4] font-normal text-primary-300 w-full">
+      <p className="text-base leading-[1.5] font-normal text-primary-300 w-full">
         {description}
       </p>
 

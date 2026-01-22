@@ -34,7 +34,7 @@ export default function TextBlockSection({
           {/* TextBlock - Columns 7-12 on desktop, positioned similarly to InfoColumns */}
           <div className="col-span-4 info-col-single">
             {content && content.length > 0 && (
-              <div className="text-block-content mt-6 md:mt-6 lg:mt-0 [&_p]:!font-sans [&_p]:!text-base [&_p]:!text-primary-500 [&_p]:!leading-[1.4]">
+              <div className="text-block-content mt-6 md:mt-6 lg:mt-0 [&_p]:!font-sans [&_p]:!text-base [&_p]:!text-primary-500 [&_p]:!leading-[1.5]">
                 <PortableText content={content} />
               </div>
             )}

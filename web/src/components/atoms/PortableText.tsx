@@ -31,7 +31,7 @@ export default function PortableText({ content, className = '' }: PortableTextPr
         components={{
           block: {
             normal: ({ children }) => (
-              <p className="mb-4 text-base leading-relaxed text-primary-950">
+              <p className="mb-2.5 text-base leading-[1.5] text-primary-950">
                 {isEmptyChildren(children) ? '\u00A0' : children}
               </p>
             ),
@@ -47,7 +47,11 @@ export default function PortableText({ content, className = '' }: PortableTextPr
           },
           marks: {
             strong: ({ children }) => <strong className="font-semibold">{children}</strong>,
-            regular: ({ children }) => <span className="font-normal">{children}</span>,
+            fontSans: ({ children }) => <span className="font-sans">{children}</span>,
+            fontMono: ({ children }) => <span className="font-mono">{children}</span>,
+            weightRegular: ({ children }) => <span className="font-normal">{children}</span>,
+            weightMedium: ({ children }) => <span className="font-medium">{children}</span>,
+            weightBold: ({ children }) => <span className="font-bold">{children}</span>,
             em: ({ children }) => <em className="italic">{children}</em>,
             code: ({ children }) => (
               <code className="rounded bg-primary-100 px-1 py-0.5 font-mono text-sm text-primary-800">
@@ -61,6 +65,12 @@ export default function PortableText({ content, className = '' }: PortableTextPr
               >
                 {children}
               </span>
+            ),
+            textFont: ({ children, value }) => (
+              <span className={value?.font || undefined}>{children}</span>
+            ),
+            textWeight: ({ children, value }) => (
+              <span className={value?.weight || undefined}>{children}</span>
             ),
             link: ({ children, value }) => {
               const href = value?.href || '#'

@@ -5,7 +5,6 @@ export const coloredTextBlock = defineArrayMember({
   marks: {
     decorators: [
       { title: 'Strong', value: 'strong' },
-      { title: 'Regular', value: 'regular' },
       { title: 'Emphasis', value: 'em' },
       { title: 'Underline', value: 'underline' },
       { title: 'Code', value: 'code' },
@@ -42,6 +41,43 @@ export const coloredTextBlock = defineArrayMember({
             title: 'Custom Color',
             type: 'string',
             description: 'Optional CSS color (e.g. #ff00aa or rgb(0,0,0))',
+          }),
+        ],
+      }),
+      defineArrayMember({
+        name: 'textFont',
+        title: 'Font',
+        type: 'object',
+        fields: [
+          defineField({
+            name: 'font',
+            title: 'Font',
+            type: 'string',
+            options: {
+              list: [
+                { title: 'Sans', value: 'font-sans' },
+                { title: 'Mono', value: 'font-mono' },
+              ],
+            },
+          }),
+        ],
+      }),
+      defineArrayMember({
+        name: 'textWeight',
+        title: 'Weight',
+        type: 'object',
+        fields: [
+          defineField({
+            name: 'weight',
+            title: 'Weight',
+            type: 'string',
+            options: {
+              list: [
+                { title: 'Regular', value: 'font-normal' },
+                { title: 'Medium', value: 'font-medium' },
+                { title: 'Strong', value: 'font-bold' },
+              ],
+            },
           }),
         ],
       }),
