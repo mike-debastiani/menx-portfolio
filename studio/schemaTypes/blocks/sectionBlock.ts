@@ -2,6 +2,7 @@ import { defineType, defineField, defineArrayMember } from 'sanity'
 import { BlockContentIcon, ImageIcon, ListIcon, TextIcon } from '@sanity/icons'
 import { paddingField } from './padding'
 import { coloredTextBlock } from './richText'
+import RichTextInput from '../../components/RichTextInput'
 
 export default defineType({
   name: 'sectionBlock',
@@ -14,6 +15,7 @@ export default defineType({
       title: 'Section Title (Rich Text)',
       type: 'array',
       of: [coloredTextBlock],
+      components: { input: RichTextInput },
     }),
     defineField({
       name: 'contentBlocks',
@@ -31,6 +33,7 @@ export default defineType({
               title: 'Content',
               type: 'array',
               of: [coloredTextBlock],
+              components: { input: RichTextInput },
             }),
           ],
           preview: {
@@ -213,6 +216,7 @@ export default defineType({
               title: 'Title',
               type: 'array',
               of: [coloredTextBlock],
+              components: { input: RichTextInput },
             }),
             defineField({
               name: 'rows',
@@ -229,6 +233,7 @@ export default defineType({
                       title: 'Content',
                       type: 'array',
                       of: [coloredTextBlock],
+                      components: { input: RichTextInput },
                     }),
                   ],
                   preview: {
@@ -298,12 +303,14 @@ export default defineType({
                       title: 'Title',
                       type: 'array',
                       of: [coloredTextBlock],
+                      components: { input: RichTextInput },
                     }),
                     defineField({
                       name: 'content',
                       title: 'Content',
                       type: 'array',
                       of: [coloredTextBlock],
+                      components: { input: RichTextInput },
                     }),
                   ],
                   preview: {

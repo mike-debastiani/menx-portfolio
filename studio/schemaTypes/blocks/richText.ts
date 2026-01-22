@@ -1,4 +1,5 @@
-import { defineArrayMember, defineField } from 'sanity'
+import {defineArrayMember, defineField} from 'sanity'
+import {ColorIcon, FontIcon, LineHeightIcon, SizeIcon, WeightIcon} from '../../components/richTextIcons'
 
 export const coloredTextBlock = defineArrayMember({
   type: 'block',
@@ -14,6 +15,7 @@ export const coloredTextBlock = defineArrayMember({
         name: 'textColor',
         title: 'Text Color',
         type: 'object',
+        icon: ColorIcon,
         fields: [
           defineField({
             name: 'color',
@@ -48,6 +50,7 @@ export const coloredTextBlock = defineArrayMember({
         name: 'textFont',
         title: 'Font',
         type: 'object',
+        icon: FontIcon,
         fields: [
           defineField({
             name: 'font',
@@ -66,6 +69,7 @@ export const coloredTextBlock = defineArrayMember({
         name: 'textWeight',
         title: 'Weight',
         type: 'object',
+        icon: WeightIcon,
         fields: [
           defineField({
             name: 'weight',
@@ -85,6 +89,7 @@ export const coloredTextBlock = defineArrayMember({
         name: 'textSize',
         title: 'Size',
         type: 'object',
+        icon: SizeIcon,
         fields: [
           defineField({
             name: 'size',
@@ -109,6 +114,7 @@ export const coloredTextBlock = defineArrayMember({
         name: 'textLineHeight',
         title: 'Line Height',
         type: 'object',
+        icon: LineHeightIcon,
         fields: [
           defineField({
             name: 'lineHeight',

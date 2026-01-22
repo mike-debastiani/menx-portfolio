@@ -2,6 +2,7 @@ import { defineType, defineField } from 'sanity'
 import { TextIcon } from '@sanity/icons'
 import { paddingField } from './padding'
 import { coloredTextBlock } from './richText'
+import RichTextInput from '../../components/RichTextInput'
 
 export default defineType({
   name: 'textBlock',
@@ -15,6 +16,7 @@ export default defineType({
       type: 'array',
       of: [coloredTextBlock],
       description: 'Rich Text Inhalt für den Textblock',
+      components: { input: RichTextInput },
     }),
     defineField({
       name: 'alignment',

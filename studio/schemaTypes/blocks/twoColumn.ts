@@ -2,6 +2,7 @@ import { defineType, defineField } from 'sanity'
 import { BlockContentIcon } from '@sanity/icons'
 import { paddingField } from './padding'
 import { coloredTextBlock } from './richText'
+import RichTextInput from '../../components/RichTextInput'
 
 export default defineType({
   name: 'twoColumn',
@@ -33,6 +34,7 @@ export default defineType({
           type: 'array',
           of: [coloredTextBlock],
           hidden: ({ parent }) => parent?.type !== 'text',
+          components: { input: RichTextInput },
         }),
         defineField({
           name: 'image',
@@ -75,6 +77,7 @@ export default defineType({
           type: 'array',
           of: [coloredTextBlock],
           hidden: ({ parent }) => parent?.type !== 'text',
+          components: { input: RichTextInput },
         }),
         defineField({
           name: 'image',
