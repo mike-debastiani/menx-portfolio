@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef, useEffect, ReactNode } from 'react';
+import { useState, ReactNode } from 'react';
 
 export interface AccordionItemProps {
   title: ReactNode;
@@ -22,8 +22,6 @@ export default function AccordionItem({
   id,
 }: AccordionItemProps) {
   const [internalOpen, setInternalOpen] = useState(defaultOpen);
-  const [contentHeight, setContentHeight] = useState<number | string>('0px');
-  const contentRef = useRef<HTMLDivElement>(null);
   const isControlled = controlledOpen !== undefined;
   const isOpen = isControlled ? controlledOpen : internalOpen;
 
@@ -37,36 +35,6 @@ export default function AccordionItem({
     }
     onOpenChange?.(newOpen);
   };
-
-  // Update content height when open state changes
-  useEffect(() => {
-    if (contentRef.current) {
-      if (isOpen) {
-        // Set to actual height when opening
-        setContentHeight(`${contentRef.current.scrollHeight}px`);
-      } else {
-        // Set to 0 when closing
-        setContentHeight('0px');
-      }
-    }
-  }, [isOpen]);
-
-  // Recalculate height when content changes (e.g., children update)
-  useEffect(() => {
-    if (isOpen && contentRef.current) {
-      const resizeObserver = new ResizeObserver(() => {
-        if (contentRef.current) {
-          setContentHeight(`${contentRef.current.scrollHeight}px`);
-        }
-      });
-
-      resizeObserver.observe(contentRef.current);
-
-      return () => {
-        resizeObserver.disconnect();
-      };
-    }
-  }, [isOpen, children]);
 
   return (
     <div
@@ -113,16 +81,15 @@ export default function AccordionItem({
         role="region"
         aria-labelledby={buttonId}
         className={`
-          overflow-hidden
-          transition-all duration-300 ease-out
-          ${isOpen ? 'opacity-100 mt-6' : 'opacity-0 mt-0'}
+          grid
+          transition-[grid-template-rows,opacity,margin] duration-300 ease-out
+          ${isOpen ? 'grid-rows-[1fr] opacity-100 mt-6' : 'grid-rows-[0fr] opacity-0 mt-0'}
         `}
-        style={{
-          maxHeight: contentHeight,
-        }}
       >
-        <div ref={contentRef} className="font-sans font-normal text-base leading-[1.5] text-primary-500">
-          {children}
+        <div className="overflow-hidden">
+          <div className="font-sans font-normal text-base leading-[1.5] text-primary-500">
+            {children}
+          </div>
         </div>
       </div>
     </div>
