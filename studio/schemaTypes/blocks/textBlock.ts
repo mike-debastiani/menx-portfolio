@@ -1,6 +1,7 @@
 import { defineType, defineField } from 'sanity'
 import { TextIcon } from '@sanity/icons'
 import { paddingField } from './padding'
+import { coloredTextBlock } from './richText'
 
 export default defineType({
   name: 'textBlock',
@@ -12,7 +13,7 @@ export default defineType({
       name: 'content',
       title: 'Inhalt',
       type: 'array',
-      of: [{ type: 'block' }],
+      of: [coloredTextBlock],
       description: 'Rich Text Inhalt für den Textblock',
     }),
     defineField({

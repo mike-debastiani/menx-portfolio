@@ -181,6 +181,11 @@ export async function getCaseStudyBySlug(slug: string): Promise<CaseStudyData | 
       },
       _type == "sectionBlock" => {
         sectionTitle,
+        padding {
+          base { pt, pb },
+          md { pt, pb },
+          xl { pt, pb }
+        },
         contentBlocks[] {
           _key,
           _type,
@@ -646,38 +651,7 @@ export interface AboutData {
     src: string;
     alt: string;
   };
-}
-
-/**
- * Fetches the About page data from Sanity.
- * Returns the first (and should be only) about document.
- */
-export interface SkillsSectionData {
-  sectionTitle?: string;
-  description?: string;
-  columns: Array<{
-    title: string;
-    items: string[];
-  }>;
-}
-
-export interface TextBlockSectionData {
-  sectionTitle?: string;
-  content?: any[]; // Portable Text Block array
-}
-
-export interface AboutData {
-  greeting?: string;
-  heading: string;
-  description: string;
-  subInfoItems?: SubInfoGroupItem[];
-  image?: {
-    src: string;
-    alt: string;
-  };
   contentBlocks?: any[];
-  skillsSection?: SkillsSectionData;
-  textBlockSection?: TextBlockSectionData;
   footerCtaTitle?: string;
   footerPrimaryButtonText?: string;
   footerPrimaryButtonFileUrl?: string;
@@ -726,6 +700,11 @@ export async function getAboutData(): Promise<AboutData | null> {
         },
         _type == "sectionBlock" => {
           sectionTitle,
+        padding {
+          base { pt, pb },
+          md { pt, pb },
+          xl { pt, pb }
+        },
           contentBlocks[] {
             _key,
             _type,
@@ -826,14 +805,6 @@ export async function getAboutData(): Promise<AboutData | null> {
           gridPlacement
         }
       },
-      skillsSectionTitle,
-      skillsParagraphText,
-      skillsColumn1Title,
-      skillsColumn1Content,
-      skillsColumn2Title,
-      skillsColumn2Content,
-      textBlockSectionTitle,
-      textBlockContent,
       footerCtaTitle,
       footerPrimaryButtonText,
       "footerPrimaryButtonFile": footerPrimaryButtonFile {
@@ -882,42 +853,6 @@ export async function getAboutData(): Promise<AboutData | null> {
         auto: 'format',
       })
     : undefined;
-  
-  // Build skills section data
-  const skillsSection: SkillsSectionData | undefined = 
-    (about.skillsSectionTitle || about.skillsColumn1Title || about.skillsColumn2Title)
-      ? {
-          sectionTitle: about.skillsSectionTitle,
-          description: about.skillsParagraphText,
-          columns: [
-            ...(about.skillsColumn1Title
-              ? [
-                  {
-                    title: about.skillsColumn1Title,
-                    items: about.skillsColumn1Content || [],
-                  },
-                ]
-              : []),
-            ...(about.skillsColumn2Title
-              ? [
-                  {
-                    title: about.skillsColumn2Title,
-                    items: about.skillsColumn2Content || [],
-                  },
-                ]
-              : []),
-          ],
-        }
-      : undefined;
-  
-  // Build text block section data
-  const textBlockSection: TextBlockSectionData | undefined =
-    (about.textBlockSectionTitle || (about.textBlockContent && about.textBlockContent.length > 0))
-      ? {
-          sectionTitle: about.textBlockSectionTitle,
-          content: about.textBlockContent || [],
-        }
-      : undefined;
   
   // Get file URL for primary button
   // Sanity provides the URL directly from the asset
@@ -985,8 +920,6 @@ export async function getAboutData(): Promise<AboutData | null> {
         }
       : undefined,
     contentBlocks: about.contentBlocks || [],
-    skillsSection,
-    textBlockSection,
     footerCtaTitle: about.footerCtaTitle,
     footerPrimaryButtonText: about.footerPrimaryButtonText,
     footerPrimaryButtonFileUrl: primaryButtonFileUrl,

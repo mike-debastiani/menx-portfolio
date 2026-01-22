@@ -36,7 +36,7 @@ export default function PortableText({ content, className = '' }: PortableTextPr
               </p>
             ),
             h1: ({ children }) => <h1 className="mb-4 text-4xl font-medium text-primary-950">{children}</h1>,
-            h2: ({ children }) => <h2 className="mb-3 text-3xl font-medium text-primary-950">{children}</h2>,
+            h2: ({ children }) => <h2 className="mb-2 text-3xl font-medium text-primary-950">{children}</h2>,
             h3: ({ children }) => <h3 className="mb-2 text-2xl font-medium text-primary-950">{children}</h3>,
             h4: ({ children }) => <h4 className="mb-2 text-xl font-medium text-primary-950">{children}</h4>,
             blockquote: ({ children }) => (
@@ -47,11 +47,20 @@ export default function PortableText({ content, className = '' }: PortableTextPr
           },
           marks: {
             strong: ({ children }) => <strong className="font-semibold">{children}</strong>,
+            regular: ({ children }) => <span className="font-normal">{children}</span>,
             em: ({ children }) => <em className="italic">{children}</em>,
             code: ({ children }) => (
               <code className="rounded bg-primary-100 px-1 py-0.5 font-mono text-sm text-primary-800">
                 {children}
               </code>
+            ),
+            textColor: ({ children, value }) => (
+              <span
+                className={value?.color || undefined}
+                style={value?.customColor ? { color: value.customColor } : undefined}
+              >
+                {children}
+              </span>
             ),
             link: ({ children, value }) => {
               const href = value?.href || '#'

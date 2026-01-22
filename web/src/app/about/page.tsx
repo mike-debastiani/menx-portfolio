@@ -1,7 +1,5 @@
 import type { Metadata } from 'next';
 import AboutHeroSection from '@/components/organisms/AboutHeroSection';
-import SkillsSection from '@/components/organisms/SkillsSection';
-import TextBlockSection from '@/components/organisms/TextBlockSection';
 import FooterSection from '@/components/organisms/FooterSection';
 import ContentBlocksRenderer from '@/components/organisms/ContentBlocksRenderer';
 import { getAboutData } from '@/lib/sanity.queries';
@@ -42,24 +40,8 @@ export default async function AboutPage() {
           subInfoItems: aboutData.subInfoItems,
         }}
       />
-      {aboutData.contentBlocks && aboutData.contentBlocks.length > 0 ? (
+      {aboutData.contentBlocks && aboutData.contentBlocks.length > 0 && (
         <ContentBlocksRenderer blocks={aboutData.contentBlocks} />
-      ) : (
-        <>
-          {aboutData.skillsSection && (
-            <SkillsSection
-              sectionTitle={aboutData.skillsSection.sectionTitle}
-              description={aboutData.skillsSection.description}
-              columns={aboutData.skillsSection.columns}
-            />
-          )}
-          {aboutData.textBlockSection && (
-            <TextBlockSection
-              sectionTitle={aboutData.textBlockSection.sectionTitle}
-              content={aboutData.textBlockSection.content}
-            />
-          )}
-        </>
       )}
       <FooterSection
         customCtaTitle={aboutData.footerCtaTitle}

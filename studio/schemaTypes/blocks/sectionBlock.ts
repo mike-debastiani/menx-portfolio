@@ -1,5 +1,7 @@
 import { defineType, defineField, defineArrayMember } from 'sanity'
 import { BlockContentIcon, ImageIcon, ListIcon, TextIcon } from '@sanity/icons'
+import { paddingField } from './padding'
+import { coloredTextBlock } from './richText'
 
 export default defineType({
   name: 'sectionBlock',
@@ -11,7 +13,7 @@ export default defineType({
       name: 'sectionTitle',
       title: 'Section Title (Rich Text)',
       type: 'array',
-      of: [{ type: 'block' }],
+      of: [coloredTextBlock],
     }),
     defineField({
       name: 'contentBlocks',
@@ -28,7 +30,7 @@ export default defineType({
               name: 'content',
               title: 'Content',
               type: 'array',
-              of: [{ type: 'block' }],
+              of: [coloredTextBlock],
             }),
           ],
           preview: {
@@ -241,6 +243,7 @@ export default defineType({
         }),
       ],
     }),
+    paddingField,
   ],
   preview: {
     select: {

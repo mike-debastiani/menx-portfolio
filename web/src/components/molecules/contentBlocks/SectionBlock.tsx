@@ -1,16 +1,11 @@
 import Image from 'next/image'
 import Link from 'next/link'
-import { PortableText as SanityPortableText } from '@portabletext/react'
-import type {
-  PortableTextComponentProps,
-  PortableTextReactComponents,
-} from '@portabletext/react'
 import type { PortableTextBlock } from '@portabletext/types'
-import type { ReactNode } from 'react'
 import Container from '@/components/layout/Container'
 import Grid from '@/components/layout/Grid'
 import PortableText from '@/components/atoms/PortableText'
 import { urlForImage } from '@/lib/sanity.client'
+import { getBlockPaddingClasses, type BlockPadding } from './padding'
 
 type SectionBlockText = {
   _type: 'sectionBlockText'
@@ -49,37 +44,7 @@ export interface SectionBlockProps {
   _key: string
   sectionTitle?: PortableTextBlock[]
   contentBlocks?: SectionBlockContent[]
-}
-
-const isEmptyChildren = (children: ReactNode) => {
-  if (!children) return true
-  if (typeof children === 'string') return children.trim().length === 0
-  if (Array.isArray(children)) {
-    return children.every((child) => {
-      if (typeof child === 'string') return child.trim().length === 0
-      if (child === null || child === undefined || child === false) return true
-      return false
-    })
-  }
-  return false
-}
-
-const renderTitleBlock = ({ children }: PortableTextComponentProps<PortableTextBlock>) => (
-  <span className="block">{isEmptyChildren(children as ReactNode) ? '\u00A0' : children}</span>
-)
-
-const titlePortableTextComponents: Partial<PortableTextReactComponents> = {
-  block: {
-    normal: renderTitleBlock,
-    h1: renderTitleBlock,
-    h2: renderTitleBlock,
-    h3: renderTitleBlock,
-    h4: renderTitleBlock,
-  },
-  marks: {
-    strong: ({ children }) => <strong className="font-semibold">{children}</strong>,
-    em: ({ children }) => <em className="italic">{children}</em>,
-  },
+  padding?: BlockPadding
 }
 
 function isExternalUrl(url: string): boolean {
@@ -292,20 +257,20 @@ function renderContentBlock(block: SectionBlockContent, index: number) {
   }
 }
 
-export default function SectionBlock({ sectionTitle, contentBlocks }: SectionBlockProps) {
+export default function SectionBlock({ sectionTitle, contentBlocks, padding }: SectionBlockProps) {
   if ((!sectionTitle || sectionTitle.length === 0) && (!contentBlocks || contentBlocks.length === 0)) {
     return null
   }
 
+  const paddingClasses = getBlockPaddingClasses(padding)
+
   return (
-    <section className="py-12 md:py-20 flex">
+    <section className={`${paddingClasses} flex`}>
       <Container className="flex flex-col gap-30">
         <Grid>
           <div className="col-span-4 skills-col-lg mb-6">
             {sectionTitle && sectionTitle.length > 0 && (
-              <h2 className="font-sans font-medium text-2xl min-[450px]:text-3xl leading-[1.2] text-primary-950">
-                <SanityPortableText value={sectionTitle} components={titlePortableTextComponents} />
-              </h2>
+              <PortableText content={sectionTitle} />
             )}
           </div>
 
