@@ -8,6 +8,7 @@ import ImpressionDetailCard, {
   type ImpressionDetailCardProps,
 } from '@/components/molecules/ImpressionDetailCard';
 import Pill, { type PillVariant } from '@/components/atoms/Pill';
+import { lockBodyScroll } from '@/lib/scrollLock';
 
 const HERO_WIDTH = 398;
 const HERO_HEIGHT = 436;
@@ -68,12 +69,8 @@ export default function ImpressionOverlayModal({
   // Body scroll lock while open
   useEffect(() => {
     if (!open) return;
-    if (typeof document === 'undefined') return;
-
-    document.body.classList.add('overflow-hidden');
-    return () => {
-      document.body.classList.remove('overflow-hidden');
-    };
+    const unlock = lockBodyScroll();
+    return unlock;
   }, [open]);
 
   // Size the hero image and detail card so they fit within the viewport, centered, with layout margin.

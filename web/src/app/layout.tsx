@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { Inter, Geist_Mono } from 'next/font/google';
 import { Header } from '@/components/layout/Header';
+import ScrollLockReset from '@/components/layout/ScrollLockReset';
 import './globals.css';
 
 const inter = Inter({
@@ -28,6 +29,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.variable} ${geistMono.variable}`}>
       <body className="antialiased">
+        <ScrollLockReset />
         <Header />
         {children}
       </body>

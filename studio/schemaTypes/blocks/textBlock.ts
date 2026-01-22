@@ -1,8 +1,10 @@
+import type { ArrayOfPrimitivesInputProps, ArraySchemaType } from 'sanity'
 import { defineType, defineField } from 'sanity'
 import { TextIcon } from '@sanity/icons'
 import { paddingField } from './padding'
 import { coloredTextBlock } from './richText'
 import RichTextInput from '../../components/RichTextInput'
+import type { ComponentType } from 'react'
 
 export default defineType({
   name: 'textBlock',
@@ -16,7 +18,11 @@ export default defineType({
       type: 'array',
       of: [coloredTextBlock],
       description: 'Rich Text Inhalt für den Textblock',
-      components: { input: RichTextInput },
+      components: {
+        input: RichTextInput as ComponentType<
+          ArrayOfPrimitivesInputProps<string | number | boolean, ArraySchemaType<unknown>>
+        >,
+      },
     }),
     defineField({
       name: 'alignment',

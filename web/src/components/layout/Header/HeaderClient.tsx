@@ -9,6 +9,7 @@ import { Container, Grid } from '@/components/layout';
 import FooterSection from '@/components/organisms/FooterSection';
 import SubInfoGroup, { type SubInfoGroupItem } from '@/components/molecules/SubInfoGroup';
 import { useHideOnScrollHeader } from '@/lib/useHideOnScrollHeader';
+import { lockBodyScroll } from '@/lib/scrollLock';
 
 export interface HeaderNavItem {
   label: string;
@@ -253,36 +254,8 @@ export default function HeaderClient({
   // Lock body scroll when any overlay is open
   useEffect(() => {
     if (!isAnyOverlayOpen) return;
-
-    const body = document.body;
-    const html = document.documentElement;
-    const scrollY = window.scrollY;
-
-    const originalBodyOverflow = body.style.overflow;
-    const originalBodyPosition = body.style.position;
-    const originalBodyTop = body.style.top;
-    const originalBodyWidth = body.style.width;
-    const originalBodyPaddingRight = body.style.paddingRight;
-    const originalHtmlOverflow = html.style.overflow;
-
-    const scrollbarWidth = window.innerWidth - html.clientWidth;
-    if (scrollbarWidth > 0) body.style.paddingRight = `${scrollbarWidth}px`;
-
-    html.style.overflow = 'hidden';
-    body.style.position = 'fixed';
-    body.style.top = `-${scrollY}px`;
-    body.style.width = '100%';
-    body.style.overflow = 'hidden';
-
-    return () => {
-      body.style.overflow = originalBodyOverflow;
-      body.style.position = originalBodyPosition;
-      body.style.top = originalBodyTop;
-      body.style.width = originalBodyWidth;
-      body.style.paddingRight = originalBodyPaddingRight;
-      html.style.overflow = originalHtmlOverflow;
-      window.scrollTo(0, scrollY);
-    };
+    const unlock = lockBodyScroll();
+    return unlock;
   }, [isAnyOverlayOpen]);
 
   // Focus trap (mobile menu)

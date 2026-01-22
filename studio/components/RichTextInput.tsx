@@ -1,5 +1,5 @@
 import React from 'react'
-import type {PortableTextInputProps} from 'sanity'
+import type {ArrayOfPrimitivesInputProps, ArraySchemaType, PortableTextInputProps} from 'sanity'
 import {PortableTextInput} from 'sanity'
 
 const COLOR_MAP: Record<string, string> = {
@@ -95,6 +95,10 @@ const richTextComponents: PortableTextInputProps['components'] = {
   },
 }
 
-export default function RichTextInput(props: PortableTextInputProps) {
-  return <PortableTextInput {...props} components={richTextComponents} />
+type RichTextInputProps =
+  | PortableTextInputProps
+  | ArrayOfPrimitivesInputProps<string | number | boolean, ArraySchemaType<unknown>>
+
+export default function RichTextInput(props: RichTextInputProps) {
+  return <PortableTextInput {...(props as PortableTextInputProps)} components={richTextComponents} />
 }
