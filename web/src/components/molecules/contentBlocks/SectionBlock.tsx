@@ -6,6 +6,7 @@ import Grid from '@/components/layout/Grid'
 import PortableText from '@/components/atoms/PortableText'
 import { urlForImage } from '@/lib/sanity.client'
 import { getBlockPaddingClasses, type BlockPadding } from './padding'
+import AccordionGroup from '@/components/organisms/AccordionGroup'
 
 type SectionBlockText = {
   _type: 'sectionBlockText'
@@ -46,12 +47,21 @@ type SectionBlockDetailedRows = {
   }>
 }
 
+type SectionBlockAccordion = {
+  _type: 'sectionBlockAccordion'
+  items?: Array<{
+    title?: PortableTextBlock[]
+    content?: PortableTextBlock[]
+  }>
+}
+
 type SectionBlockContent =
   | SectionBlockText
   | SectionBlockColumns
   | SectionBlockRows
   | SectionBlockImage
   | SectionBlockDetailedRows
+  | SectionBlockAccordion
 
 export interface SectionBlockProps {
   _key: string
@@ -290,6 +300,29 @@ function renderContentBlock(block: SectionBlockContent, index: number) {
               ))}
             </div>
           )}
+        </div>
+      )
+    }
+    case 'sectionBlockAccordion': {
+      const items = block.items ?? []
+      if (items.length === 0) return null
+      return (
+        <div key={`section-block-accordion-${index}`} className="mb-4">
+          <AccordionGroup
+            items={items.map((item, itemIndex) => ({
+              id: `section-block-accordion-${index}-${itemIndex}`,
+              title: item.title && item.title.length > 0 ? (
+                <PortableText
+                  content={item.title}
+                  className="[&_p]:!mb-0 [&_h1]:!mb-0 [&_h2]:!mb-0 [&_h3]:!mb-0 [&_h4]:!mb-0"
+                />
+              ) : null,
+              content:
+                item.content && item.content.length > 0 ? (
+                  <PortableText content={item.content} />
+                ) : null,
+            }))}
+          />
         </div>
       )
     }

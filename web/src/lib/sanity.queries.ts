@@ -217,6 +217,12 @@ export async function getCaseStudyBySlug(slug: string): Promise<CaseStudyData | 
             rows[] {
               content
             }
+          },
+          _type == "sectionBlockAccordion" => {
+            items[] {
+              title,
+              content
+            }
           }
         }
       },
@@ -740,6 +746,12 @@ export async function getAboutData(): Promise<AboutData | null> {
           _type == "sectionBlockDetailedRows" => {
             title,
             rows[] {
+              content
+            }
+          },
+          _type == "sectionBlockAccordion" => {
+            items[] {
+              title,
               content
             }
             }

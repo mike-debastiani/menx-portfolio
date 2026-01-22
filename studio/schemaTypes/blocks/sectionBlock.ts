@@ -278,6 +278,81 @@ export default defineType({
           },
         }),
         defineArrayMember({
+          name: 'sectionBlockAccordion',
+          title: 'Accordion',
+          type: 'object',
+          icon: ListIcon,
+          fields: [
+            defineField({
+              name: 'items',
+              title: 'Items',
+              type: 'array',
+              of: [
+                defineArrayMember({
+                  name: 'sectionBlockAccordionItem',
+                  title: 'Accordion Item',
+                  type: 'object',
+                  fields: [
+                    defineField({
+                      name: 'title',
+                      title: 'Title',
+                      type: 'array',
+                      of: [coloredTextBlock],
+                    }),
+                    defineField({
+                      name: 'content',
+                      title: 'Content',
+                      type: 'array',
+                      of: [coloredTextBlock],
+                    }),
+                  ],
+                  preview: {
+                    select: {
+                      title: 'title',
+                      content: 'content',
+                    },
+                    prepare({ title, content }) {
+                      const titleText = title
+                        ? title
+                            .filter((block: any) => block._type === 'block')
+                            .map((block: any) => block.children?.map((child: any) => child.text).join(''))
+                            .join(' ')
+                            .slice(0, 60)
+                        : ''
+                      const contentText = content
+                        ? content
+                            .filter((block: any) => block._type === 'block')
+                            .map((block: any) => block.children?.map((child: any) => child.text).join(''))
+                            .join(' ')
+                            .slice(0, 60)
+                        : ''
+                      return {
+                        title: titleText || 'Accordion Item',
+                        subtitle: contentText || 'Accordion Content',
+                        media: ListIcon,
+                      }
+                    },
+                  },
+                }),
+              ],
+              validation: (Rule) => Rule.min(1).error('Mindestens ein Item erforderlich'),
+            }),
+          ],
+          preview: {
+            select: {
+              items: 'items',
+            },
+            prepare({ items }) {
+              const count = items?.length || 0
+              return {
+                title: `Accordion (${count})`,
+                subtitle: 'Accordion Block',
+                media: ListIcon,
+              }
+            },
+          },
+        }),
+        defineArrayMember({
           name: 'sectionBlockImage',
           title: 'Image Block',
           type: 'object',

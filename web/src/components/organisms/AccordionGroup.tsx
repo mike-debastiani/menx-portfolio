@@ -5,7 +5,7 @@ import AccordionItem from '@/components/molecules/AccordionItem';
 
 export interface AccordionGroupItem {
   id: string;
-  title: string;
+  title: ReactNode;
   content: ReactNode;
 }
 
