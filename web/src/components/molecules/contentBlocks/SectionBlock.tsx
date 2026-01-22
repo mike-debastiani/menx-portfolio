@@ -155,13 +155,13 @@ function renderContentBlock(block: SectionBlockContent, index: number) {
                 className="info-rows-row border-t border-primary-200 pt-3 grid grid-cols-2 gap-3 md:gap-6"
                 style={{ borderTopWidth: '0.5px' }}
               >
-                <div className="info-rows-label font-mono font-normal text-base leading-[1.4] text-primary-300">
+                <div className="info-rows-label font-mono font-normal text-base leading-[1.4] text-primary-300 max-[449px]:!text-base">
                   {row.label}
                 </div>
                 <div className="flex flex-col">
                   {(row.items ?? []).map((item, itemIndex) => {
                     const isLast = itemIndex === (row.items?.length || 0) - 1
-                    const itemClasses = `info-rows-item block font-sans font-medium text-base leading-[1.4] text-primary-950 ${
+                    const itemClasses = `info-rows-item block font-sans font-medium text-base leading-[1.4] text-primary-950 max-[449px]:!text-base ${
                       isLast ? '' : 'mb-[9px] max-[449px]:mb-[6px]'
                     }`
 
@@ -207,13 +207,13 @@ function renderContentBlock(block: SectionBlockContent, index: number) {
             {rows.map((row, rowIndex) => (
               <div key={rowIndex} className="contents">
                 <div className="col-span-2 border-t border-primary-200" style={{ borderTopWidth: '0.5px' }} />
-                <div className="info-rows-label min-w-0 pt-3 font-mono font-normal text-base leading-[1.4] text-primary-300">
+                <div className="info-rows-label min-w-0 pt-3 font-mono font-normal text-base leading-[1.4] text-primary-300 max-[449px]:!text-base">
                   {row.label}
                 </div>
                 <div className="pt-3 flex flex-col">
                   {(row.items ?? []).map((item, itemIndex) => {
                     const isLast = itemIndex === (row.items?.length || 0) - 1
-                    const itemClasses = `info-rows-item block font-sans font-medium text-base leading-[1.4] text-primary-950 ${
+                    const itemClasses = `info-rows-item block font-sans font-medium text-base leading-[1.4] text-primary-950 max-[449px]:!text-base ${
                       isLast ? '' : 'mb-[9px] max-[449px]:mb-[6px]'
                     }`
 
