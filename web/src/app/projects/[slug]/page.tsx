@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
-import { getCaseStudyBySlug } from '@/lib/sanity.queries';
-import { CaseStudyHeader, ContentBlocksRenderer } from '@/components/organisms';
+import { getCaseStudyBySlug, getWorkflowAtlasProjectData } from '@/lib/sanity.queries';
+import { CaseStudyHeader, ContentBlocksRenderer, WorkflowAtlasSection } from '@/components/organisms';
 import FooterSection from '@/components/organisms/FooterSection';
 import { notFound } from 'next/navigation';
 
@@ -27,6 +27,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 export default async function CaseStudy({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const caseStudyData = await getCaseStudyBySlug(slug);
+  const workflowAtlasData = await getWorkflowAtlasProjectData(slug);
 
   if (!caseStudyData) {
     notFound();
@@ -37,6 +38,15 @@ export default async function CaseStudy({ params }: { params: Promise<{ slug: st
       <CaseStudyHeader data={caseStudyData} />
       {caseStudyData.contentBlocks && caseStudyData.contentBlocks.length > 0 && (
         <ContentBlocksRenderer blocks={caseStudyData.contentBlocks as any} />
+      )}
+      {workflowAtlasData.impressions.length > 0 && (
+        <WorkflowAtlasSection
+          data={workflowAtlasData}
+          title="Workflow Atlas of this Project"
+          description="A focused snapshot of the methods behind this project. This condensed Workflow Atlas highlights only the phases and techniques applied here, showing the key artifacts and decisions that shaped the outcome."
+          showStats={false}
+          showProjectLink={false}
+        />
       )}
       <FooterSection />
     </main>

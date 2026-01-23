@@ -368,6 +368,7 @@ export default function ImpressionOverlayModal({
                     description={detail.description}
                     buttonLabel={detail.buttonLabel}
                     buttonHref={detail.buttonHref}
+                    showButton={detail.showButton}
                     className="w-full !pt-4"
                   />
 

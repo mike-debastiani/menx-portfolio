@@ -6,6 +6,7 @@ export interface ImpressionDetailCardProps {
   description: string;
   buttonLabel: string;
   buttonHref: string;
+  showButton?: boolean;
   className?: string;
   height?: number;
   width?: number;
@@ -17,6 +18,7 @@ export default function ImpressionDetailCard({
   description,
   buttonLabel,
   buttonHref,
+  showButton = true,
   className = '',
   height,
   width,
@@ -50,11 +52,13 @@ export default function ImpressionDetailCard({
       </div>
 
       {/* Button - always use the “large screen” variant (also <500px) */}
-      <div className="self-end relative z-20 w-auto">
-        <Button variant="primary" icon="right" size="sm" href={buttonHref}>
-          {buttonLabel}
-        </Button>
-      </div>
+      {showButton && (
+        <div className="self-end relative z-20 w-auto">
+          <Button variant="primary" icon="right" size="sm" href={buttonHref}>
+            {buttonLabel}
+          </Button>
+        </div>
+      )}
     </div>
   );
 }

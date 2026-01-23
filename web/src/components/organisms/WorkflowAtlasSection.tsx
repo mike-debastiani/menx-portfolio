@@ -16,13 +16,24 @@ import ImpressionOverlayModal from '@/components/organisms/ImpressionOverlayModa
 export interface WorkflowAtlasSectionProps {
   data: WorkflowAtlasData;
   className?: string;
+  title?: string;
+  description?: string;
+  showStats?: boolean;
+  showProjectLink?: boolean;
 }
 
 /**
  * WorkflowAtlasSection - Homepage section displaying stats, impression gallery, and timeline.
  * Supports bidirectional interaction between gallery and timeline.
  */
-export default function WorkflowAtlasSection({ data, className = '' }: WorkflowAtlasSectionProps) {
+export default function WorkflowAtlasSection({
+  data,
+  className = '',
+  title,
+  description,
+  showStats,
+  showProjectLink,
+}: WorkflowAtlasSectionProps) {
   const galleryRef = useRef<ImpressionGalleryRef>(null);
   const isMobileOverlay = useIsMobileOverlay();
   const lastTriggerElementRef = useRef<HTMLElement | null>(null);
@@ -32,6 +43,7 @@ export default function WorkflowAtlasSection({ data, className = '' }: WorkflowA
   const [focusedImpressionId, setFocusedImpressionId] = useState<string | null>(null);
   const [expandedImpressionId, setExpandedImpressionId] = useState<string | null>(null);
   const [overlayImpressionId, setOverlayImpressionId] = useState<string | null>(null);
+  const shouldShowProjectLink = showProjectLink ?? true;
 
   // Convert impressions to gallery items
   const galleryItems: ImpressionGalleryItem[] = useMemo(() => {
@@ -81,10 +93,11 @@ export default function WorkflowAtlasSection({ data, className = '' }: WorkflowA
           description: impression.description || '',
           buttonLabel: 'VIEW PROJECT',
           buttonHref: `/projects/${impression.project.slug.current}`,
+          showButton: shouldShowProjectLink,
         },
       };
     });
-  }, [data.impressions]);
+  }, [data.impressions, shouldShowProjectLink]);
 
   const overlayGalleryItem = useMemo(() => {
     if (!overlayImpressionId) return null;
@@ -318,6 +331,10 @@ export default function WorkflowAtlasSection({ data, className = '' }: WorkflowA
     },
   ], [data.stats]);
 
+  const sectionTitle = title ?? 'Workflow Atlas';
+  const sectionDescription = description ?? 'A visual archive of my practical experience. This interactive timeline maps out the specific methodologies and artifacts I have applied across real projects. It offers a transparent look into my daily toolkit from initial discovery to final delivery.';
+  const shouldShowStats = showStats ?? true;
+
   // Extract phase labels from Sanity CMS data
   const phaseLabels = useMemo(() => {
     const labels: Partial<Record<WorkflowPhaseKey, string>> = {};
@@ -342,15 +359,15 @@ export default function WorkflowAtlasSection({ data, className = '' }: WorkflowA
             {/* Section Header */}
             <div className="flex flex-col gap-4">
               <h2 className="font-sans font-medium text-3xl min-[450px]:text-3xl leading-[1.2] text-primary-950">
-                Workflow Atlas
+                {sectionTitle}
               </h2>
               <p className="font-sans font-normal text-sm min-[450px]:text-base leading-[1.5] text-primary-300 max-w-3xl">
-                A visual archive of my practical experience. This interactive timeline maps out the specific methodologies and artifacts I have applied across real projects. It offers a transparent look into my daily toolkit from initial discovery to final delivery.
+                {sectionDescription}
               </p>
             </div>
 
             {/* Stats Group */}
-            <StatsGroup items={statsItems} />
+            {shouldShowStats && <StatsGroup items={statsItems} />}
 
             {/* Impression Gallery - Break out of container padding to reach viewport edges */}
             <LayoutGroup>

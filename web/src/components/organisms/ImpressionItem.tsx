@@ -227,6 +227,7 @@ export default function ImpressionItem({
             description={detail.description}
             buttonLabel={detail.buttonLabel}
             buttonHref={detail.buttonHref}
+            showButton={detail.showButton}
             height={detailCardHeight}
             width={detailCardWidth}
           />

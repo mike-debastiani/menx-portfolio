@@ -654,6 +654,139 @@ export async function getWorkflowAtlasData(): Promise<WorkflowAtlasData> {
   return data;
 }
 
+/**
+ * Fetches WorkflowAtlas data for a single project (by slug).
+ * Returns impressions ordered by: phase.order -> method.order -> impression.order/_createdAt
+ * Only includes methods/phases that have at least 1 impression for this project.
+ */
+export async function getWorkflowAtlasProjectData(slug: string): Promise<WorkflowAtlasData> {
+  const query = `
+    {
+      "impressions": *[_type == "impression" && defined(method) && defined(project) && method-> != null && project-> != null && project->slug.current == $slug] {
+        _id,
+        _type,
+        _createdAt,
+        _updatedAt,
+        _rev,
+        image,
+        headline,
+        description,
+        order,
+        "method": method-> {
+          _id,
+          _type,
+          name,
+          slug,
+          order,
+          "phase": phase-> {
+            _id,
+            _type,
+            name,
+            order,
+            slug,
+            color
+          }
+        },
+        "project": project-> {
+          _id,
+          _type,
+          projectTitle,
+          slug,
+          year,
+          timeframe,
+          context,
+          role,
+          team,
+          outcome
+        }
+      },
+      "methods": *[_type == "method" && count(*[_type == "impression" && references(^._id) && project->slug.current == $slug]) > 0] {
+        _id,
+        _type,
+        name,
+        slug,
+        order,
+        "impressionCount": count(*[_type == "impression" && references(^._id) && project->slug.current == $slug]),
+        "phase": phase-> {
+          _id,
+          _type,
+          name,
+          order,
+          slug,
+          color
+        }
+      },
+      "phases": *[_type == "phase" && count(*[_type == "method" && references(^._id) && count(*[_type == "impression" && references(^._id) && project->slug.current == $slug]) > 0]) > 0] | order(order asc) {
+        _id,
+        _type,
+        name,
+        order,
+        slug,
+        color,
+        "methods": *[_type == "method" && references(^._id) && count(*[_type == "impression" && references(^._id) && project->slug.current == $slug]) > 0] | order(order asc) {
+          _id,
+          _type,
+          name,
+          slug,
+          order,
+          "impressionCount": count(*[_type == "impression" && references(^._id) && project->slug.current == $slug])
+        }
+      },
+      "stats": {
+        "impressionsCount": count(*[_type == "impression" && project->slug.current == $slug]),
+        "methodsWithImpressionsCount": count(*[_type == "method" && count(*[_type == "impression" && references(^._id) && project->slug.current == $slug]) > 0]),
+        "phasesInDatasetCount": count(*[_type == "phase" && count(*[_type == "method" && references(^._id) && count(*[_type == "impression" && references(^._id) && project->slug.current == $slug]) > 0]) > 0]),
+        "projectsTotalCount": 1
+      }
+    }
+  `;
+
+  const data = await fetchSanity<WorkflowAtlasData>(query, { slug });
+
+  // Filter out any impressions with invalid method or project references (safety check)
+  data.impressions = data.impressions.filter((impression) => {
+    const hasMethod = impression.method && typeof impression.method === 'object' && 'name' in impression.method;
+    const hasProject = impression.project && typeof impression.project === 'object' && 'projectTitle' in impression.project;
+    const method = impression.method as WorkflowAtlasMethod | null;
+    const hasPhase = method && method.phase && typeof method.phase === 'object' && 'name' in method.phase;
+    return hasMethod && hasProject && hasPhase;
+  });
+
+  // Sort impressions: phase.order -> method.order -> impression.order -> _createdAt
+  data.impressions.sort((a, b) => {
+    const aPhase = (a.method as WorkflowAtlasMethod).phase;
+    const bPhase = (b.method as WorkflowAtlasMethod).phase;
+    const aMethod = a.method as WorkflowAtlasMethod;
+    const bMethod = b.method as WorkflowAtlasMethod;
+
+    if (aPhase.order !== bPhase.order) {
+      return aPhase.order - bPhase.order;
+    }
+
+    if (aMethod.order !== bMethod.order) {
+      return aMethod.order - bMethod.order;
+    }
+
+    const aOrder = a.order ?? 0;
+    const bOrder = b.order ?? 0;
+    if (aOrder !== bOrder) {
+      return aOrder - bOrder;
+    }
+
+    return new Date(a._createdAt).getTime() - new Date(b._createdAt).getTime();
+  });
+
+  // Sort methods: phase.order -> method.order
+  data.methods.sort((a, b) => {
+    if (a.phase.order !== b.phase.order) {
+      return a.phase.order - b.phase.order;
+    }
+    return a.order - b.order;
+  });
+
+  return data;
+}
+
 export interface AboutData {
   greeting?: string;
   heading: string;
