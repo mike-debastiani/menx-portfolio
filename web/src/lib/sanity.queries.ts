@@ -154,7 +154,16 @@ export async function getCaseStudyBySlug(slug: string): Promise<CaseStudyData | 
       _key,
       _type,
       _type == "fullImage" => {
-        image,
+        image {
+          ...,
+          "asset": asset,
+          "assetMetadata": asset->metadata {
+            dimensions {
+              width,
+              height
+            }
+          }
+        },
         alt,
         caption,
         padding {
@@ -818,7 +827,16 @@ export async function getAboutData(): Promise<AboutData | null> {
         _key,
         _type,
         _type == "fullImage" => {
-          image,
+          image {
+            ...,
+            "asset": asset,
+            "assetMetadata": asset->metadata {
+              dimensions {
+                width,
+                height
+              }
+            }
+          },
           alt,
           caption,
           padding {

@@ -19,10 +19,16 @@ export default function FullImageBlock({ image, alt, caption, padding, gridPlace
     return null
   }
 
+  const dimensions = image?.assetMetadata?.dimensions
+  const intrinsicWidth = dimensions?.width ?? 1920
+  const intrinsicHeight = dimensions?.height ?? 1080
+  const requestedWidth = Math.min(intrinsicWidth, 4800)
+
   const imageUrl = urlForImage(image, {
     // Higher source pixels for desktop/retina
-    width: 3200,
-    quality: 92,
+    width: requestedWidth,
+    fit: 'max',
+    quality: 95,
     auto: 'format',
   })
 
@@ -42,11 +48,11 @@ export default function FullImageBlock({ image, alt, caption, padding, gridPlace
               <Image
                 src={imageUrl}
                 alt={alt || caption || 'Case Study Image'}
-                width={1920}
-                height={1080}
+                width={intrinsicWidth}
+                height={intrinsicHeight}
                 className="h-auto w-full object-cover"
                 sizes={getGridPlacementSizes(gridPlacement)}
-                quality={92}
+                unoptimized
                 priority={false}
               />
             </div>

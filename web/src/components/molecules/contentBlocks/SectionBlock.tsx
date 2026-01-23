@@ -251,8 +251,9 @@ function renderContentBlock(block: SectionBlockContent, index: number) {
     case 'sectionBlockImage': {
       if (!block.image) return null
       const imageUrl = urlForImage(block.image, {
-        width: 2000,
-        quality: 90,
+        width: 2400,
+        fit: 'max',
+        quality: 95,
         auto: 'format',
       })
       if (!imageUrl) return null
@@ -266,7 +267,7 @@ function renderContentBlock(block: SectionBlockContent, index: number) {
               height={900}
               className="h-auto w-full object-cover"
               sizes="(min-width: 1200px) 50vw, (min-width: 768px) 66vw, 100vw"
-              quality={90}
+              unoptimized
             />
           </div>
           {block.caption && (
