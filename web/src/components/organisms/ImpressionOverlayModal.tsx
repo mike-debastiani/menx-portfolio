@@ -353,6 +353,7 @@ export default function ImpressionOverlayModal({
                       fill
                       className="object-cover"
                       sizes="(max-width: 767px) 100vw, 900px"
+                      quality={80}
                       priority
                     />
                   ) : (

@@ -73,9 +73,11 @@ export default function WorkflowAtlasSection({
 
       // Build image URL
       const imageUrl = urlForImage(impression.image, {
-        width: 398,
-        height: 436,
+        width: 800,
+        height: 872,
         fit: 'crop',
+        quality: 85,
+        auto: 'format',
       });
 
       return {
