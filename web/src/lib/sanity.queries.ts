@@ -199,13 +199,25 @@ export async function getCaseStudyBySlug(slug: string): Promise<CaseStudyData | 
           _key,
           _type,
           _type == "sectionBlockText" => {
-            content
+            content,
+            padding {
+              base { pt, pb },
+              md { pt, pb },
+              xl { pt, pb }
+            },
+            gridPlacement
           },
           _type == "sectionBlockColumns" => {
             columns[] {
               title,
               items
-            }
+            },
+            padding {
+              base { pt, pb },
+              md { pt, pb },
+              xl { pt, pb }
+            },
+            gridPlacement
           },
           _type == "sectionBlockRows" => {
             rows[] {
@@ -214,26 +226,121 @@ export async function getCaseStudyBySlug(slug: string): Promise<CaseStudyData | 
                 label,
                 href
               }
-            }
+            },
+            padding {
+              base { pt, pb },
+              md { pt, pb },
+              xl { pt, pb }
+            },
+            gridPlacement
           },
           _type == "sectionBlockImage" => {
             image,
             alt,
-            caption
+            caption,
+            padding {
+              base { pt, pb },
+              md { pt, pb },
+              xl { pt, pb }
+            },
+            gridPlacement
           },
           _type == "sectionBlockDetailedRows" => {
             title,
             rows[] {
               content
-            }
+            },
+            padding {
+              base { pt, pb },
+              md { pt, pb },
+              xl { pt, pb }
+            },
+            gridPlacement
           },
           _type == "sectionBlockAccordion" => {
             items[] {
               title,
               content
-            }
+            },
+            padding {
+              base { pt, pb },
+              md { pt, pb },
+              xl { pt, pb }
+            },
+            gridPlacement
           }
         }
+      },
+      _type == "sectionBlockText" => {
+        content,
+        padding {
+          base { pt, pb },
+          md { pt, pb },
+          xl { pt, pb }
+        },
+        gridPlacement
+      },
+      _type == "sectionBlockColumns" => {
+        columns[] {
+          title,
+          items
+        },
+        padding {
+          base { pt, pb },
+          md { pt, pb },
+          xl { pt, pb }
+        },
+        gridPlacement
+      },
+      _type == "sectionBlockRows" => {
+        rows[] {
+          label,
+          items[] {
+            label,
+            href
+          }
+        },
+        padding {
+          base { pt, pb },
+          md { pt, pb },
+          xl { pt, pb }
+        },
+        gridPlacement
+      },
+      _type == "sectionBlockImage" => {
+        image,
+        alt,
+        caption,
+        padding {
+          base { pt, pb },
+          md { pt, pb },
+          xl { pt, pb }
+        },
+        gridPlacement
+      },
+      _type == "sectionBlockDetailedRows" => {
+        title,
+        rows[] {
+          content
+        },
+        padding {
+          base { pt, pb },
+          md { pt, pb },
+          xl { pt, pb }
+        },
+        gridPlacement
+      },
+      _type == "sectionBlockAccordion" => {
+        items[] {
+          title,
+          content
+        },
+        padding {
+          base { pt, pb },
+          md { pt, pb },
+          xl { pt, pb }
+        },
+        gridPlacement
       },
       _type == "textBlock" => {
         content,
@@ -265,6 +372,178 @@ export async function getCaseStudyBySlug(slug: string): Promise<CaseStudyData | 
             right,
             rightEnd
           },
+          md {
+            left,
+            leftEnd,
+            right,
+            rightEnd
+          },
+          lg {
+            left,
+            leftEnd,
+            right,
+            rightEnd
+          }
+        },
+        padding {
+          base { pt, pb },
+          md { pt, pb },
+          xl { pt, pb }
+        },
+        gridPlacement
+      },
+      _type == "twoColumnLayout" => {
+        leftBlock[] {
+          _key,
+          _type,
+          _type == "sectionBlockText" => {
+            content,
+            padding {
+              base { pt, pb },
+              md { pt, pb },
+              xl { pt, pb }
+            },
+            gridPlacement
+          },
+          _type == "sectionBlockColumns" => {
+            columns[] {
+              title,
+              items
+            },
+            padding {
+              base { pt, pb },
+              md { pt, pb },
+              xl { pt, pb }
+            },
+            gridPlacement
+          },
+          _type == "sectionBlockRows" => {
+            rows[] {
+              label,
+              items[] {
+                label,
+                href
+              }
+            },
+            padding {
+              base { pt, pb },
+              md { pt, pb },
+              xl { pt, pb }
+            },
+            gridPlacement
+          },
+          _type == "sectionBlockImage" => {
+            image,
+            alt,
+            caption,
+            padding {
+              base { pt, pb },
+              md { pt, pb },
+              xl { pt, pb }
+            },
+            gridPlacement
+          },
+          _type == "sectionBlockDetailedRows" => {
+            title,
+            rows[] {
+              content
+            },
+            padding {
+              base { pt, pb },
+              md { pt, pb },
+              xl { pt, pb }
+            },
+            gridPlacement
+          },
+          _type == "sectionBlockAccordion" => {
+            items[] {
+              title,
+              content
+            },
+            padding {
+              base { pt, pb },
+              md { pt, pb },
+              xl { pt, pb }
+            },
+            gridPlacement
+          }
+        },
+        rightBlock[] {
+          _key,
+          _type,
+          _type == "sectionBlockText" => {
+            content,
+            padding {
+              base { pt, pb },
+              md { pt, pb },
+              xl { pt, pb }
+            },
+            gridPlacement
+          },
+          _type == "sectionBlockColumns" => {
+            columns[] {
+              title,
+              items
+            },
+            padding {
+              base { pt, pb },
+              md { pt, pb },
+              xl { pt, pb }
+            },
+            gridPlacement
+          },
+          _type == "sectionBlockRows" => {
+            rows[] {
+              label,
+              items[] {
+                label,
+                href
+              }
+            },
+            padding {
+              base { pt, pb },
+              md { pt, pb },
+              xl { pt, pb }
+            },
+            gridPlacement
+          },
+          _type == "sectionBlockImage" => {
+            image,
+            alt,
+            caption,
+            padding {
+              base { pt, pb },
+              md { pt, pb },
+              xl { pt, pb }
+            },
+            gridPlacement
+          },
+          _type == "sectionBlockDetailedRows" => {
+            title,
+            rows[] {
+              content
+            },
+            padding {
+              base { pt, pb },
+              md { pt, pb },
+              xl { pt, pb }
+            },
+            gridPlacement
+          },
+          _type == "sectionBlockAccordion" => {
+            items[] {
+              title,
+              content
+            },
+            padding {
+              base { pt, pb },
+              md { pt, pb },
+              xl { pt, pb }
+            },
+            gridPlacement
+          }
+        },
+        columnColumns {
           md {
             left,
             leftEnd,
@@ -872,13 +1151,25 @@ export async function getAboutData(): Promise<AboutData | null> {
             _key,
             _type,
             _type == "sectionBlockText" => {
-              content
+              content,
+              padding {
+                base { pt, pb },
+                md { pt, pb },
+                xl { pt, pb }
+              },
+              gridPlacement
             },
             _type == "sectionBlockColumns" => {
               columns[] {
                 title,
                 items
-              }
+              },
+              padding {
+                base { pt, pb },
+                md { pt, pb },
+                xl { pt, pb }
+              },
+              gridPlacement
             },
             _type == "sectionBlockRows" => {
               rows[] {
@@ -887,26 +1178,121 @@ export async function getAboutData(): Promise<AboutData | null> {
                   label,
                   href
                 }
-              }
+              },
+              padding {
+                base { pt, pb },
+                md { pt, pb },
+                xl { pt, pb }
+              },
+              gridPlacement
             },
             _type == "sectionBlockImage" => {
               image,
               alt,
-              caption
+              caption,
+              padding {
+                base { pt, pb },
+                md { pt, pb },
+                xl { pt, pb }
+              },
+              gridPlacement
           },
           _type == "sectionBlockDetailedRows" => {
             title,
             rows[] {
               content
-            }
+            },
+            padding {
+              base { pt, pb },
+              md { pt, pb },
+              xl { pt, pb }
+            },
+            gridPlacement
           },
           _type == "sectionBlockAccordion" => {
             items[] {
               title,
               content
-            }
+            },
+            padding {
+              base { pt, pb },
+              md { pt, pb },
+              xl { pt, pb }
+            },
+            gridPlacement
             }
           }
+        },
+        _type == "sectionBlockText" => {
+          content,
+          padding {
+            base { pt, pb },
+            md { pt, pb },
+            xl { pt, pb }
+          },
+          gridPlacement
+        },
+        _type == "sectionBlockColumns" => {
+          columns[] {
+            title,
+            items
+          },
+          padding {
+            base { pt, pb },
+            md { pt, pb },
+            xl { pt, pb }
+          },
+          gridPlacement
+        },
+        _type == "sectionBlockRows" => {
+          rows[] {
+            label,
+            items[] {
+              label,
+              href
+            }
+          },
+          padding {
+            base { pt, pb },
+            md { pt, pb },
+            xl { pt, pb }
+          },
+          gridPlacement
+        },
+        _type == "sectionBlockImage" => {
+          image,
+          alt,
+          caption,
+          padding {
+            base { pt, pb },
+            md { pt, pb },
+            xl { pt, pb }
+          },
+          gridPlacement
+        },
+        _type == "sectionBlockDetailedRows" => {
+          title,
+          rows[] {
+            content
+          },
+          padding {
+            base { pt, pb },
+            md { pt, pb },
+            xl { pt, pb }
+          },
+          gridPlacement
+        },
+        _type == "sectionBlockAccordion" => {
+          items[] {
+            title,
+            content
+          },
+          padding {
+            base { pt, pb },
+            md { pt, pb },
+            xl { pt, pb }
+          },
+          gridPlacement
         },
         _type == "textBlock" => {
           content,
@@ -932,12 +1318,178 @@ export async function getAboutData(): Promise<AboutData | null> {
             imageAlt
           },
           columnColumns {
-            base {
+            md {
               left,
               leftEnd,
               right,
               rightEnd
             },
+            lg {
+              left,
+              leftEnd,
+              right,
+              rightEnd
+            }
+          },
+          padding {
+            base { pt, pb },
+            md { pt, pb },
+            xl { pt, pb }
+          },
+          gridPlacement
+        },
+        _type == "twoColumnLayout" => {
+          leftBlock[] {
+            _key,
+            _type,
+            _type == "sectionBlockText" => {
+              content,
+              padding {
+                base { pt, pb },
+                md { pt, pb },
+                xl { pt, pb }
+              },
+              gridPlacement
+            },
+            _type == "sectionBlockColumns" => {
+              columns[] {
+                title,
+                items
+              },
+              padding {
+                base { pt, pb },
+                md { pt, pb },
+                xl { pt, pb }
+              },
+              gridPlacement
+            },
+            _type == "sectionBlockRows" => {
+              rows[] {
+                label,
+                items[] {
+                  label,
+                  href
+                }
+              },
+              padding {
+                base { pt, pb },
+                md { pt, pb },
+                xl { pt, pb }
+              },
+              gridPlacement
+            },
+            _type == "sectionBlockImage" => {
+              image,
+              alt,
+              caption,
+              padding {
+                base { pt, pb },
+                md { pt, pb },
+                xl { pt, pb }
+              },
+              gridPlacement
+            },
+            _type == "sectionBlockDetailedRows" => {
+              title,
+              rows[] {
+                content
+              },
+              padding {
+                base { pt, pb },
+                md { pt, pb },
+                xl { pt, pb }
+              },
+              gridPlacement
+            },
+            _type == "sectionBlockAccordion" => {
+              items[] {
+                title,
+                content
+              },
+              padding {
+                base { pt, pb },
+                md { pt, pb },
+                xl { pt, pb }
+              },
+              gridPlacement
+            }
+          },
+          rightBlock[] {
+            _key,
+            _type,
+            _type == "sectionBlockText" => {
+              content,
+              padding {
+                base { pt, pb },
+                md { pt, pb },
+                xl { pt, pb }
+              },
+              gridPlacement
+            },
+            _type == "sectionBlockColumns" => {
+              columns[] {
+                title,
+                items
+              },
+              padding {
+                base { pt, pb },
+                md { pt, pb },
+                xl { pt, pb }
+              },
+              gridPlacement
+            },
+            _type == "sectionBlockRows" => {
+              rows[] {
+                label,
+                items[] {
+                  label,
+                  href
+                }
+              },
+              padding {
+                base { pt, pb },
+                md { pt, pb },
+                xl { pt, pb }
+              },
+              gridPlacement
+            },
+            _type == "sectionBlockImage" => {
+              image,
+              alt,
+              caption,
+              padding {
+                base { pt, pb },
+                md { pt, pb },
+                xl { pt, pb }
+              },
+              gridPlacement
+            },
+            _type == "sectionBlockDetailedRows" => {
+              title,
+              rows[] {
+                content
+              },
+              padding {
+                base { pt, pb },
+                md { pt, pb },
+                xl { pt, pb }
+              },
+              gridPlacement
+            },
+            _type == "sectionBlockAccordion" => {
+              items[] {
+                title,
+                content
+              },
+              padding {
+                base { pt, pb },
+                md { pt, pb },
+                xl { pt, pb }
+              },
+              gridPlacement
+            }
+          },
+          columnColumns {
             md {
               left,
               leftEnd,

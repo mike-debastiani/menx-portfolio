@@ -144,7 +144,7 @@ export default function ImpressionCard({
               fill
               className="object-cover"
               sizes={`${cardWidth}px`}
-              quality={85}
+              quality={80}
             />
           ) : (
             <div className="w-full h-full bg-primary-100" aria-hidden="true" />
