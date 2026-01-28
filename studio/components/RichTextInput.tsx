@@ -7,6 +7,7 @@ const COLOR_MAP: Record<string, string> = {
   'text-primary-100': '#e7e7e7',
   'text-primary-200': '#d1d1d1',
   'text-primary-300': '#b0b0b0',
+  'text-primary-350': '#9c9c9c',
   'text-primary-400': '#888888',
   'text-primary-500': '#6d6d6d',
   'text-primary-600': '#5d5d5d',

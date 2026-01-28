@@ -27,6 +27,7 @@ export const coloredTextBlock = defineArrayMember({
                 { title: 'Primary 100', value: 'text-primary-100' },
                 { title: 'Primary 200', value: 'text-primary-200' },
                 { title: 'Primary 300', value: 'text-primary-300' },
+                { title: 'Primary 350', value: 'text-primary-350' },
                 { title: 'Primary 400', value: 'text-primary-400' },
                 { title: 'Primary 500', value: 'text-primary-500' },
                 { title: 'Primary 600', value: 'text-primary-600' },
