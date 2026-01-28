@@ -3,6 +3,7 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --font-sans: var(--font-geist);
   
   /* Layout Tokens - Mobile (base) */
   --layout-columns: 4;
@@ -13,6 +14,10 @@
   --impression-card-width: 280;
   --impression-card-height: 310;
   --impression-card-overlap-margin: 16;
+}
+
+html.font-sans-geist {
+  --font-sans: var(--font-geist);
 }
 
 /* Layout Tokens - Tablet (md: 768px) */

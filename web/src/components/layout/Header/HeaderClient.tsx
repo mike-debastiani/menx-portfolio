@@ -348,9 +348,9 @@ export default function HeaderClient({
           <div className="flex h-16 items-center justify-between">
             <Link
               href="/"
-              className="font-mono text-base font-medium text-primary-950 hover:text-primary-700 transition-colors"
+              className="font-sans text-lg font-medium text-primary-950 hover:text-primary-700 transition-colors"
             >
-              &lt;mike de bastiani/&gt;
+              Mike De Bastiani
             </Link>
 
             {/* Desktop Navigation */}
@@ -419,9 +419,9 @@ export default function HeaderClient({
                   <Link
                     href="/"
                     onClick={closeQuickInfo}
-                    className="font-mono text-base font-medium text-primary-950 hover:text-primary-700 transition-colors"
+                    className="font-sans text-lg font-medium text-primary-950 hover:text-primary-700 transition-colors"
                   >
-                    &lt;mike de bastiani/&gt;
+                    Mike De Bastiani
                   </Link>
 
                   <button
@@ -546,9 +546,9 @@ export default function HeaderClient({
             <Link
               href="/"
               onClick={closeMenu}
-              className="font-mono text-base font-medium text-primary-950 hover:text-primary-700 transition-colors"
+              className="font-sans text-lg font-medium text-primary-950 hover:text-primary-700 transition-colors"
             >
-              &lt;mdb/&gt;
+              MDB
             </Link>
 
             <button
