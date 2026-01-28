@@ -25,7 +25,7 @@ export default function SuggestedCaseStudiesSection({
         <div className="flex flex-col gap-10">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 sm:gap-6">
             <SectionDescription
-              title="More interesting case studies"
+              title="Other interesting case studies"
               titleAs="h2"
               className="md:flex-1"
             />
