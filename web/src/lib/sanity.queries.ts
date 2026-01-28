@@ -601,6 +601,62 @@ export async function getProjectCategoryBySlug(slug: string): Promise<'relevant-
   return result;
 }
 
+/**
+ * Fetches up to two suggested projects from the same category,
+ * excluding the current project.
+ */
+export async function getSuggestedProjectsByCategory(
+  category: 'relevant-work' | 'lab',
+  excludeSlug: string,
+): Promise<ProjectCardData[]> {
+  const orderField = category === 'relevant-work' ? 'relevantWorkOrder' : 'labOrder';
+  const query = `
+    *[_type == "project" && category == $category]
+      | order(coalesce(${orderField}, 9999) asc, _createdAt desc) {
+      _id,
+      slug,
+      cardTitle,
+      cardDescription,
+      cardImage,
+      attributePills
+    }
+  `;
+  const projects = await fetchSanity<any[]>(query, { category });
+
+  const currentIndex = projects.findIndex((project) => project.slug?.current === excludeSlug);
+  const orderedProjects = currentIndex === -1
+    ? projects
+    : [...projects.slice(currentIndex + 1), ...projects.slice(0, currentIndex)];
+  const suggestedProjects = orderedProjects
+    .filter((project) => project.slug?.current !== excludeSlug)
+    .slice(0, 2);
+
+  return suggestedProjects.map((project) => {
+    const tags = project.attributePills
+      ? project.attributePills.split(',').map((tag: string) => tag.trim()).filter((tag: string) => tag.length > 0)
+      : undefined;
+
+    const imageUrl = project.cardImage
+      ? urlForImage(project.cardImage, {
+          width: 1640,
+          height: 1040,
+          fit: 'crop',
+          quality: 90,
+          dpr: 2,
+          auto: 'format',
+        })
+      : null;
+
+    return {
+      slug: project.slug.current,
+      title: project.cardTitle || project.slug.current,
+      excerpt: project.cardDescription || '',
+      tags,
+      image: imageUrl ? { src: imageUrl, alt: project.cardTitle || '' } : null,
+    };
+  });
+}
+
 export async function getSelectedProjects(): Promise<ProjectCardData[]> {
   const query = `
     *[_type == "project" && showOnHomepage == true] | order(selectedWorkOrder asc, _createdAt desc) {

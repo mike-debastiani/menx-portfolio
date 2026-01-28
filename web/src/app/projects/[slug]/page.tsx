@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
-import { getCaseStudyBySlug, getWorkflowAtlasProjectData } from '@/lib/sanity.queries';
-import { CaseStudyHeader, ContentBlocksRenderer, WorkflowAtlasSection } from '@/components/organisms';
+import { getCaseStudyBySlug, getProjectCategoryBySlug, getSuggestedProjectsByCategory, getWorkflowAtlasProjectData } from '@/lib/sanity.queries';
+import { CaseStudyHeader, ContentBlocksRenderer, SuggestedCaseStudiesSection, WorkflowAtlasSection } from '@/components/organisms';
 import FooterSection from '@/components/organisms/FooterSection';
 import { notFound } from 'next/navigation';
 
@@ -28,6 +28,11 @@ export default async function CaseStudy({ params }: { params: Promise<{ slug: st
   const { slug } = await params;
   const caseStudyData = await getCaseStudyBySlug(slug);
   const workflowAtlasData = await getWorkflowAtlasProjectData(slug);
+  const projectCategory = await getProjectCategoryBySlug(slug);
+  const suggestedProjects = projectCategory
+    ? await getSuggestedProjectsByCategory(projectCategory, slug)
+    : [];
+  const archiveHref = projectCategory === 'lab' ? '/lab-projects' : '/relevant-work';
 
   if (!caseStudyData) {
     notFound();
@@ -47,6 +52,9 @@ export default async function CaseStudy({ params }: { params: Promise<{ slug: st
           showStats={false}
           showProjectLink={false}
         />
+      )}
+      {projectCategory && suggestedProjects.length > 0 && (
+        <SuggestedCaseStudiesSection projects={suggestedProjects} archiveHref={archiveHref} />
       )}
       <FooterSection />
     </main>
