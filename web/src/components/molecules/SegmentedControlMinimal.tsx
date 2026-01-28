@@ -40,7 +40,7 @@ const stateStyles = {
     hover: 'hover:text-primary-950',
   },
   inactive: {
-    base: 'text-primary-300 font-normal',
+    base: 'text-primary-350 font-normal',
     hover: 'hover:text-primary-950',
   },
 };

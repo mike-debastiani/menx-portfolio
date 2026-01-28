@@ -36,7 +36,7 @@ export default function ImpressionDetailCard({
         {/* Title Container */}
         <div className="flex flex-col gap-1 items-start w-full">
           {/* Project Label */}
-          <p className="font-mono font-normal text-sm md:text-base leading-[1.25] text-primary-300">
+          <p className="font-mono font-normal text-sm md:text-base leading-[1.25] text-primary-350">
             Project: {projectLabel}
           </p>
           {/* Title */}

@@ -14,7 +14,7 @@ export interface StatItemProps {
 const sectionStyles = {
   container: 'flex flex-col items-start gap-2',
   value: 'font-sans font-normal text-4xl md:text-5xl leading-none text-primary-950',
-  label: 'font-mono font-normal text-base leading-[1.25] text-primary-300',
+  label: 'font-mono font-normal text-base leading-[1.25] text-primary-350',
 };
 
 const metaStyles: Record<
@@ -27,12 +27,12 @@ const metaStyles: Record<
 > = {
   lg: {
     container: 'flex flex-col items-start gap-1',
-    metaLabel: 'font-mono font-normal text-lg leading-[1.4] text-primary-300',
+    metaLabel: 'font-mono font-normal text-lg leading-[1.4] text-primary-350',
     metaValue: 'font-sans font-medium text-lg leading-[1.4] text-primary-950',
   },
   base: {
     container: 'flex flex-col items-start gap-1',
-    metaLabel: 'font-mono font-normal text-base leading-[1.4] text-primary-300',
+    metaLabel: 'font-mono font-normal text-base leading-[1.4] text-primary-350',
     metaValue: 'font-sans font-medium text-base leading-[1.4] text-primary-950',
   },
 };

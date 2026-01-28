@@ -75,9 +75,9 @@ const variantStyles: Record<
     base: 'bg-white text-primary-950 border-[1px] border-primary-200 box-border',
     hover: 'hover:bg-primary-50',
     active: 'active:border-primary-950',
-    disabled: 'bg-white border-[1.5px] border-primary-200 text-primary-300 cursor-not-allowed box-border',
+    disabled: 'bg-white border-[1.5px] border-primary-200 text-primary-350 cursor-not-allowed box-border',
     text: 'text-primary-950',
-    textDisabled: 'text-primary-300',
+    textDisabled: 'text-primary-350',
   },
 };
 

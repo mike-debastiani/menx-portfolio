@@ -53,7 +53,7 @@ export default function AboutDescription({
       <div className="flex flex-col gap-2 items-start w-full">
         {/* Greeting */}
         {greeting && (
-          <p className="text-2xl leading-[1.25] font-normal text-primary-300 w-full">
+          <p className="text-2xl leading-[1.25] font-normal text-primary-350 w-full">
             {greeting}
           </p>
         )}
@@ -65,7 +65,7 @@ export default function AboutDescription({
       </div>
 
       {/* Description */}
-      <p className="text-base leading-[1.5] font-normal text-primary-300 w-full">
+      <p className="text-base leading-[1.5] font-normal text-primary-350 w-full">
         {description}
       </p>
 

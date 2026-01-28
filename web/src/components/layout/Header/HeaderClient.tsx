@@ -360,7 +360,7 @@ export default function HeaderClient({
                   key={item.href}
                   href={item.href}
                   className={`font-mono text-base font-medium transition-colors ${
-                    isActive(item.href) ? 'text-primary-950' : 'text-primary-300 hover:text-primary-950'
+                    isActive(item.href) ? 'text-primary-950' : 'text-primary-350 hover:text-primary-950'
                   }`}
                 >
                   {item.label}
@@ -429,7 +429,7 @@ export default function HeaderClient({
                     type="button"
                     onClick={closeQuickInfo}
                     aria-label="Close quick info"
-                    className="flex items-center gap-2 text-primary-300 hover:text-primary-950 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-950 focus-visible:ring-offset-2 rounded"
+                    className="flex items-center gap-2 text-primary-350 hover:text-primary-950 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-950 focus-visible:ring-offset-2 rounded"
                   >
                     <Image
                       src="/icons/close-icon-primary400.svg"
@@ -466,14 +466,14 @@ export default function HeaderClient({
 
                   <div className={`${aboutImage ? 'col-span-3' : 'col-span-6'} flex flex-col gap-6`}>
                     <div className="flex flex-col gap-2 items-start w-full">
-                      <p className="text-2xl leading-[1.25] font-normal text-primary-300 w-full">
+                      <p className="text-2xl leading-[1.25] font-normal text-primary-350 w-full">
                         {quickInfoCopy.greeting}
                       </p>
                       <p className="text-3xl leading-[1.2] font-medium text-primary-950 w-full">
                         {quickInfoCopy.leading}
                       </p>
                     </div>
-                    <p className="text-base leading-[1.4] font-normal text-primary-300 w-full">
+                    <p className="text-base leading-[1.4] font-normal text-primary-350 w-full">
                       {quickInfoCopy.description}
                     </p>
                     {!!aboutSubInfoItems?.length && (
@@ -491,7 +491,7 @@ export default function HeaderClient({
                   {/* NavigationBlock: Columns 10-12 */}
                   <nav className="col-start-10 col-span-3" aria-label="Sitemap">
                     <div className="border-b border-primary-200 pt-0 pb-2" style={{ borderBottomWidth: '0.5px' }}>
-                      <div className="font-mono font-normal text-base leading-[1.4] text-primary-300">Sitemap</div>
+                    <div className="font-mono font-normal text-base leading-[1.4] text-primary-350">Sitemap</div>
                     </div>
 
                     <div className="pt-4 flex flex-col">
@@ -501,7 +501,7 @@ export default function HeaderClient({
                           href={item.href}
                           onClick={closeQuickInfo}
                           className={`font-sans font-medium text-4xl leading-[1.1] transition-colors ${
-                            isActive(item.href) ? 'text-primary-950' : 'text-primary-300 hover:text-primary-950'
+                            isActive(item.href) ? 'text-primary-950' : 'text-primary-350 hover:text-primary-950'
                           } ${idx === quickInfoNavItems.length - 1 ? '' : 'mb-4'}`}
                         >
                           {item.label}
@@ -555,7 +555,7 @@ export default function HeaderClient({
               type="button"
               onClick={closeMenu}
               aria-label="Close menu"
-              className="flex items-center gap-2 text-primary-300 hover:text-primary-950 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-950 focus-visible:ring-offset-2 rounded"
+              className="flex items-center gap-2 text-primary-350 hover:text-primary-950 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-950 focus-visible:ring-offset-2 rounded"
             >
               <Image
                 src="/icons/close-icon-primary400.svg"
@@ -583,7 +583,7 @@ export default function HeaderClient({
                       href={item.href}
                       onClick={closeMenu}
                       className={`block font-mono font-medium text-3xl leading-[1.4] transition-colors ${
-                        isActive(item.href) ? 'text-primary-950' : 'text-primary-300 hover:text-primary-950'
+                        isActive(item.href) ? 'text-primary-950' : 'text-primary-350 hover:text-primary-950'
                       }`}
                     >
                       {item.label}
@@ -605,7 +605,7 @@ export default function HeaderClient({
                       className="info-rows-row border-t border-primary-200 pt-3 grid grid-cols-2 gap-3 md:gap-6"
                       style={{ borderTopWidth: '0.5px' }}
                     >
-                      <div className="info-rows-label font-mono font-normal text-base leading-[1.4] text-primary-300">
+                      <div className="info-rows-label font-mono font-normal text-base leading-[1.4] text-primary-350">
                         {row.label}
                       </div>
 
@@ -655,7 +655,7 @@ export default function HeaderClient({
                   {footerRows.map((row, rowIndex) => (
                     <div key={rowIndex} className="contents">
                       <div className="col-span-2 border-t border-primary-200" style={{ borderTopWidth: '0.5px' }} />
-                      <div className="info-rows-label min-w-0 pt-3 font-mono font-normal text-base leading-[1.4] text-primary-300">
+                      <div className="info-rows-label min-w-0 pt-3 font-mono font-normal text-base leading-[1.4] text-primary-350">
                         {row.label}
                       </div>
                       <div className="pt-3 flex flex-col">

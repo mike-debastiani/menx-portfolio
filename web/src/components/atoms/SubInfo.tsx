@@ -16,15 +16,15 @@ const sizeStyles: Record<
   }
 > = {
   lg: {
-    label: 'font-mono font-medium text-lg leading-[1.4] text-primary-300',
+    label: 'font-mono font-medium text-lg leading-[1.4] text-primary-350',
     value: 'font-sans font-normal text-lg leading-[1.4] text-primary-950',
   },
   base: {
-    label: 'font-mono font-medium text-base leading-[1.4] text-primary-300',
+    label: 'font-mono font-medium text-base leading-[1.4] text-primary-350',
     value: 'font-sans font-normal text-base leading-[1.4] text-primary-950',
   },
   sm: {
-    label: 'font-mono font-medium text-sm leading-[1.4] text-primary-300',
+    label: 'font-mono font-medium text-sm leading-[1.4] text-primary-350',
     value: 'font-sans font-normal text-sm leading-[1.4] text-primary-950',
   },
 };

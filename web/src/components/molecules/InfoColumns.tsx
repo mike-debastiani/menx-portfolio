@@ -38,13 +38,13 @@ const sizeStyles: Record<
   }
 > = {
   lg: {
-    description: 'font-sans font-normal text-base leading-[1.4] text-primary-300',
-    title: 'font-mono font-normal text-base leading-[1.4] text-primary-300',
+    description: 'font-sans font-normal text-base leading-[1.4] text-primary-350',
+    title: 'font-mono font-normal text-base leading-[1.4] text-primary-350',
     item: 'font-sans font-medium text-base leading-[1.4] text-primary-950',
   },
   base: {
-    description: 'font-sans font-normal text-base leading-[1.4] text-primary-300',
-    title: 'font-mono font-normal text-base leading-[1.4] text-primary-300',
+    description: 'font-sans font-normal text-base leading-[1.4] text-primary-350',
+    title: 'font-mono font-normal text-base leading-[1.4] text-primary-350',
     item: 'font-sans font-medium text-base leading-[1.4] text-primary-950',
   },
 };
