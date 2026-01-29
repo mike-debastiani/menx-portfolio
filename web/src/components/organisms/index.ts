@@ -9,6 +9,7 @@ export { default as ImpressionItem, type ImpressionItemProps } from './Impressio
 export { default as ImpressionGallery, type ImpressionGalleryProps, type ImpressionGalleryItem, type ImpressionGalleryRef } from './ImpressionGallery';
 export { default as WorkflowAtlasTimeline, type WorkflowAtlasTimelineProps, type WorkflowSegment, type WorkflowPhaseKey } from './WorkflowAtlasTimeline';
 export { default as WorkflowAtlasSection, type WorkflowAtlasSectionProps } from './WorkflowAtlasSection';
+export { default as TestimonialSection, type TestimonialSectionProps } from './TestimonialSection';
 export { default as FooterSection, type FooterSectionProps } from './FooterSection';
 export { default as CaseStudyHeader, type CaseStudyHeaderProps, type CaseStudyHeaderData } from './CaseStudyHeader';
 export { default as ContentBlocksRenderer, type ContentBlocksRendererProps, type ContentBlock } from './ContentBlocksRenderer';

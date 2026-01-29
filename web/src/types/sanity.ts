@@ -121,7 +121,17 @@ export interface HomeRole {
   codeLines?: HomeRoleCodeLine[];
 }
 
+export interface HomeTestimonial {
+  quote: string;
+  personName: string;
+  personRole: string;
+  personImage?: SanityImage;
+}
+
 export interface Home extends SanityDocument {
   _type: 'home';
   roles?: HomeRole[];
+  testimonialSectionTitle?: string;
+  testimonials?: HomeTestimonial[];
+  showTestimonialSection?: boolean;
 }

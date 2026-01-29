@@ -177,6 +177,69 @@ export default defineType({
       ],
       validation: (Rule) => Rule.min(1).error('Mindestens eine Rolle ist erforderlich'),
     }),
+    defineField({
+      name: 'testimonialSectionTitle',
+      title: 'Testimonial Section Titel',
+      type: 'string',
+      description: 'Titel der Testimonial-Sektion auf der Homepage',
+      validation: (Rule) => Rule.required().max(80),
+    }),
+    defineField({
+      name: 'showTestimonialSection',
+      title: 'Testimonial Section einblenden',
+      type: 'boolean',
+      description: 'Steuert, ob die Testimonial-Sektion auf der Homepage sichtbar ist',
+      initialValue: true,
+    }),
+    defineField({
+      name: 'testimonials',
+      title: 'Testimonials',
+      type: 'array',
+      description: 'Drei Testimonials für die Homepage',
+      of: [
+        {
+          type: 'object',
+          fields: [
+            defineField({
+              name: 'quote',
+              title: 'Testimonial Text',
+              type: 'text',
+              validation: (Rule) => Rule.required().max(500),
+            }),
+            defineField({
+              name: 'personName',
+              title: 'Name',
+              type: 'string',
+              validation: (Rule) => Rule.required().max(80),
+            }),
+            defineField({
+              name: 'personRole',
+              title: 'Rolle',
+              type: 'string',
+              validation: (Rule) => Rule.required().max(80),
+            }),
+            defineField({
+              name: 'personImage',
+              title: 'Bild',
+              type: 'image',
+              options: {hotspot: true},
+            }),
+          ],
+          preview: {
+            select: {
+              title: 'personName',
+              subtitle: 'personRole',
+              media: 'personImage',
+            },
+          },
+        },
+      ],
+      validation: (Rule) =>
+        Rule.required()
+          .min(3)
+          .max(3)
+          .error('Genau 3 Testimonials sind erforderlich'),
+    }),
   ],
   preview: {
     select: {

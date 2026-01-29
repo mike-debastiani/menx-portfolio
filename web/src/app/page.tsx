@@ -3,6 +3,7 @@ import { Container } from '@/components/layout';
 import HomeHeroSection from '@/components/organisms/HomeHeroSection';
 import SelectedWorkSection from '@/components/organisms/SelectedWorkSection';
 import WorkflowAtlasSection from '@/components/organisms/WorkflowAtlasSection';
+import TestimonialSection from '@/components/organisms/TestimonialSection';
 import FooterSection from '@/components/organisms/FooterSection';
 import { getWorkflowAtlasData, getSelectedProjects, getHomeData, getAboutData } from '@/lib/sanity.queries';
 
@@ -35,6 +36,13 @@ export default async function Home() {
       <SelectedWorkSection projects={selectedProjects} />
       
       <WorkflowAtlasSection data={workflowAtlasData} />
+      
+      {homeData?.showTestimonialSection !== false && (
+        <TestimonialSection
+          title={homeData?.testimonialSectionTitle}
+          testimonials={homeData?.testimonials}
+        />
+      )}
       
       <FooterSection />
     </main>

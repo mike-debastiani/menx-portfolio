@@ -3,7 +3,7 @@ import { sanityClient, urlForImage } from './sanity.client';
 const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID;
 const dataset = process.env.NEXT_PUBLIC_SANITY_DATASET;
 import { fetchSanity } from './sanity.fetch';
-import type { Phase, Method, Project, Impression, About, Home } from '@/types/sanity';
+import type { Phase, Method, Project, Impression, About, Home, SanityImage } from '@/types/sanity';
 import type { ProjectCardData } from '@/components/organisms/ProjectCard';
 import type { CaseStudyHeaderData } from '@/components/organisms/CaseStudyHeader';
 import type { SubInfoGroupItem } from '@/components/molecules/SubInfoGroup';
@@ -1725,6 +1725,14 @@ export interface HomeData {
       }>;
     }>;
   }>;
+  testimonialSectionTitle?: string;
+  testimonials?: Array<{
+    quote: string;
+    personName: string;
+    personRole: string;
+    personImage?: SanityImage;
+  }>;
+  showTestimonialSection?: boolean;
 }
 
 /**
@@ -1746,6 +1754,14 @@ export async function getHomeData(): Promise<HomeData | null> {
             tone
           }
         }
+      },
+      testimonialSectionTitle,
+      showTestimonialSection,
+      testimonials[] {
+        quote,
+        personName,
+        personRole,
+        personImage
       }
     }
   `;
@@ -1757,5 +1773,8 @@ export async function getHomeData(): Promise<HomeData | null> {
   
   return {
     roles: home.roles || [],
+    testimonialSectionTitle: home.testimonialSectionTitle,
+    testimonials: home.testimonials || [],
+    showTestimonialSection: home.showTestimonialSection,
   };
 }
