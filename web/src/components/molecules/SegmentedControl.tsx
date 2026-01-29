@@ -40,7 +40,7 @@ const stateStyles = {
     hover: 'hover:bg-primary-200 hover:text-primary-950',
   },
   inactive: {
-    base: 'bg-transparent text-primary-350',
+    base: 'bg-transparent text-primary-400',
     hover: 'hover:bg-primary-50 hover:text-primary-700',
   },
 };

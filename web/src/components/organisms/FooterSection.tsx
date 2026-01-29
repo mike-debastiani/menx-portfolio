@@ -157,7 +157,7 @@ export default function FooterSection({
                   style={{ borderTopWidth: '0.5px' }}
                 >
                   {/* Label - always takes 50% of width */}
-                  <div className="info-rows-label font-mono font-normal text-base leading-[1.4] text-primary-350">
+                  <div className="info-rows-label font-mono font-normal text-base leading-[1.4] text-primary-400">
                     {row.label}
                   </div>
 
@@ -217,7 +217,7 @@ export default function FooterSection({
                     style={{ borderTopWidth: '0.5px' }}
                   />
                   {/* Label - always takes 50% of width */}
-                  <div className="info-rows-label min-w-0 pt-3 font-mono font-normal text-base leading-[1.4] text-primary-350">
+                  <div className="info-rows-label min-w-0 pt-3 font-mono font-normal text-base leading-[1.4] text-primary-400">
                     {row.label}
                   </div>
 

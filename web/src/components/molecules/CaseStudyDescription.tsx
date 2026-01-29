@@ -20,7 +20,7 @@ export default function CaseStudyDescription({
       {/* UpperInfo: Project Title + Statement */}
       <div className="flex flex-col gap-2 items-start w-full">
         {/* Project Title */}
-        <p className="text-2xl leading-[1.25] font-normal text-primary-350 w-full">
+        <p className="text-2xl leading-[1.25] font-normal text-primary-400 w-full">
           {projectTitle}
         </p>
         
@@ -31,7 +31,7 @@ export default function CaseStudyDescription({
       </div>
 
       {/* Description */}
-      <p className="text-base leading-[1.5] font-normal text-primary-350 w-full">
+      <p className="text-base leading-[1.5] font-normal text-primary-400 w-full">
         {description}
       </p>
 

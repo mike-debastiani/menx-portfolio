@@ -363,7 +363,7 @@ export default function WorkflowAtlasSection({
               <h2 className="font-sans font-medium text-3xl min-[450px]:text-3xl leading-[1.2] text-primary-950">
                 {sectionTitle}
               </h2>
-              <p className="font-sans font-normal text-sm min-[450px]:text-base leading-[1.5] text-primary-350 max-w-3xl">
+              <p className="font-sans font-normal text-sm min-[450px]:text-base leading-[1.5] text-primary-400 max-w-3xl">
                 {sectionDescription}
               </p>
             </div>

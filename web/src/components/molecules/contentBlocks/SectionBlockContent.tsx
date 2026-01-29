@@ -117,7 +117,7 @@ export function renderSectionBlockContent(block: SectionBlockContent) {
             <div key={columnIndex} className="flex flex-col gap-6">
               {column.title && (
                 <div className="border-b border-primary-200 pt-0 pb-2" style={{ borderBottomWidth: '0.5px' }}>
-                  <div className="font-mono font-normal text-base leading-[1.4] text-primary-350">{column.title}</div>
+                  <div className="font-mono font-normal text-base leading-[1.4] text-primary-400">{column.title}</div>
                 </div>
               )}
               <div className="flex flex-col">
@@ -150,7 +150,7 @@ export function renderSectionBlockContent(block: SectionBlockContent) {
                 className="info-rows-row border-t border-primary-200 pt-3 grid grid-cols-2 gap-3 md:gap-6"
                 style={{ borderTopWidth: '0.5px' }}
               >
-                <div className="info-rows-label font-mono font-normal text-base leading-[1.4] text-primary-350 max-[449px]:!text-base">
+                <div className="info-rows-label font-mono font-normal text-base leading-[1.4] text-primary-400 max-[449px]:!text-base">
                   {row.label}
                 </div>
                 <div className="flex flex-col">
@@ -198,7 +198,7 @@ export function renderSectionBlockContent(block: SectionBlockContent) {
             {rows.map((row, rowIndex) => (
               <div key={rowIndex} className="contents">
                 <div className="col-span-2 border-t border-primary-200" style={{ borderTopWidth: '0.5px' }} />
-                <div className="info-rows-label min-w-0 pt-3 font-mono font-normal text-base leading-[1.4] text-primary-350 max-[449px]:!text-base">
+                <div className="info-rows-label min-w-0 pt-3 font-mono font-normal text-base leading-[1.4] text-primary-400 max-[449px]:!text-base">
                   {row.label}
                 </div>
                 <div className="pt-3 flex flex-col">

@@ -54,7 +54,7 @@ function TestimonialItem({ quote, personName, personRole, personImage }: Testimo
             <span className="font-sans font-medium text-base text-primary-950">
               {personName}
             </span>
-            <span className="font-mono font-normal text-base text-primary-350">
+            <span className="font-mono font-normal text-base text-primary-400">
               {personRole}
             </span>
           </div>

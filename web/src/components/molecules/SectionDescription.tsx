@@ -34,7 +34,7 @@ export default function SectionDescription({
       </TitleTag>
 
       {description && (
-        <p className="font-sans font-normal text-sm min-[450px]:text-base leading-[1.5] text-primary-350">
+        <p className="font-sans font-normal text-sm min-[450px]:text-base leading-[1.5] text-primary-400">
           {description}
         </p>
       )}
