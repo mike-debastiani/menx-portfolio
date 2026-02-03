@@ -47,7 +47,8 @@ export default defineType({
     defineField({
       name: 'team',
       title: 'Team',
-      type: 'string',
+      type: 'text',
+      description: 'Mehrere Zeilen möglich (z.B. ein Name pro Zeile)',
     }),
     defineField({
       name: 'outcome',

@@ -22,7 +22,13 @@ export default function CaseStudyMeta({
       <StatItem variant="meta" size="base" label="Role" value={role} />
       <StatItem variant="meta" size="base" label="Context" value={context} />
       <StatItem variant="meta" size="base" label="Timeline" value={timeline} />
-      <StatItem variant="meta" size="base" label="Team" value={team} />
+      <StatItem
+        variant="meta"
+        size="base"
+        label="Team"
+        value={team}
+        valueClassName="whitespace-pre-line"
+      />
       <StatItem variant="meta" size="base" label="Outcome" value={outcome} />
     </div>
   );

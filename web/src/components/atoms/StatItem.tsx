@@ -9,6 +9,7 @@ export interface StatItemProps {
   variant?: StatItemVariant;
   size?: StatItemSize;
   className?: string;
+  valueClassName?: string;
 }
 
 const sectionStyles = {
@@ -45,12 +46,13 @@ export default function StatItem({
   variant = 'section',
   size = 'base',
   className = '',
+  valueClassName = '',
 }: StatItemProps) {
   if (variant === 'section') {
     return (
       <div className={`${sectionStyles.container} ${className}`}>
         <div className="h-9 md:h-12">
-          <p className={sectionStyles.value}>{value}</p>
+          <p className={`${sectionStyles.value} ${valueClassName}`}>{value}</p>
         </div>
         <div className="h-6">
           <p className={sectionStyles.label}>{label}</p>
@@ -67,7 +69,7 @@ export default function StatItem({
   return (
     <div className={`${metaStyle.container} ${className}`}>
       <p className={metaStyle.metaLabel}>{displayLabel}</p>
-      <p className={metaStyle.metaValue}>{displayValue}</p>
+      <p className={`${metaStyle.metaValue} ${valueClassName}`}>{displayValue}</p>
     </div>
   );
 }
