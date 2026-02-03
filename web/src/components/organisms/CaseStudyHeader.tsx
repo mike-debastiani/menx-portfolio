@@ -1,6 +1,7 @@
 import Container from '@/components/layout/Container';
 import Grid from '@/components/layout/Grid';
 import { CaseStudyDescription, CaseStudyMeta } from '@/components/molecules';
+import type { PortableTextBlock } from '@portabletext/types';
 
 export interface CaseStudyHeaderData {
   projectTitle?: string;
@@ -11,7 +12,7 @@ export interface CaseStudyHeaderData {
   context?: string;
   timeframe?: string;
   year?: number;
-  team?: string;
+  team?: string | PortableTextBlock[];
   outcome?: string;
 }
 

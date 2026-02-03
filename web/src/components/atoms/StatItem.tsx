@@ -1,3 +1,5 @@
+import type { ReactNode } from 'react';
+
 export type StatItemVariant = 'section' | 'meta';
 export type StatItemSize = 'lg' | 'base';
 
@@ -10,6 +12,7 @@ export interface StatItemProps {
   size?: StatItemSize;
   className?: string;
   valueClassName?: string;
+  renderValue?: (className: string) => ReactNode;
 }
 
 const sectionStyles = {
@@ -47,12 +50,17 @@ export default function StatItem({
   size = 'base',
   className = '',
   valueClassName = '',
+  renderValue,
 }: StatItemProps) {
   if (variant === 'section') {
     return (
       <div className={`${sectionStyles.container} ${className}`}>
         <div className="h-9 md:h-12">
-          <p className={`${sectionStyles.value} ${valueClassName}`}>{value}</p>
+          {renderValue ? (
+            renderValue(`${sectionStyles.value} ${valueClassName}`)
+          ) : (
+            <p className={`${sectionStyles.value} ${valueClassName}`}>{value}</p>
+          )}
         </div>
         <div className="h-6">
           <p className={sectionStyles.label}>{label}</p>
@@ -69,7 +77,11 @@ export default function StatItem({
   return (
     <div className={`${metaStyle.container} ${className}`}>
       <p className={metaStyle.metaLabel}>{displayLabel}</p>
-      <p className={`${metaStyle.metaValue} ${valueClassName}`}>{displayValue}</p>
+      {renderValue ? (
+        renderValue(`${metaStyle.metaValue} ${valueClassName}`)
+      ) : (
+        <p className={`${metaStyle.metaValue} ${valueClassName}`}>{displayValue}</p>
+      )}
     </div>
   );
 }

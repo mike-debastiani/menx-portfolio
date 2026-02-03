@@ -1,3 +1,5 @@
+import type { PortableTextBlock } from '@portabletext/types';
+
 export interface SanitySlug {
   current: string;
   _type: 'slug';
@@ -54,7 +56,7 @@ export interface Project extends SanityDocument {
   timeframe?: string;
   context?: string;
   role?: string;
-  team?: string;
+  team?: string | PortableTextBlock[];
   outcome?: string;
 }
 

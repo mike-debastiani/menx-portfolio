@@ -47,8 +47,33 @@ export default defineType({
     defineField({
       name: 'team',
       title: 'Team',
-      type: 'text',
-      description: 'Mehrere Zeilen möglich (z.B. ein Name pro Zeile)',
+      type: 'array',
+      description: 'Mehrere Zeilen und Links möglich (z.B. ein Name pro Zeile)',
+      of: [
+        defineArrayMember({
+          type: 'block',
+          marks: {
+            decorators: [
+              { title: 'Strong', value: 'strong' },
+              { title: 'Emphasis', value: 'em' },
+            ],
+            annotations: [
+              defineArrayMember({
+                name: 'link',
+                title: 'Link',
+                type: 'object',
+                fields: [
+                  defineField({
+                    name: 'href',
+                    title: 'URL',
+                    type: 'url',
+                  }),
+                ],
+              }),
+            ],
+          },
+        }),
+      ],
     }),
     defineField({
       name: 'outcome',
