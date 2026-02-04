@@ -1,5 +1,6 @@
 import fullImage from './fullImage'
 import imageGallery from './imageGallery'
+import cardsBlock from './cardsBlock'
 import sectionBlock from './sectionBlock'
 import sectionBlockAccordion from './sectionBlockAccordion'
 import sectionBlockColumns from './sectionBlockColumns'
@@ -15,6 +16,7 @@ import video from './video'
 export const contentBlocks = [
   fullImage,
   imageGallery,
+  cardsBlock,
   sectionBlock,
   sectionBlockText,
   sectionBlockColumns,

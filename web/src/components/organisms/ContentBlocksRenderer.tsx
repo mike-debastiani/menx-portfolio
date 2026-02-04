@@ -1,4 +1,5 @@
 import {
+  CardsBlock,
   FullImageBlock,
   ImageGalleryBlock,
   SectionBlock,
@@ -11,6 +12,7 @@ import {
 import type { SectionBlockContent } from '@/components/molecules/contentBlocks/SectionBlockContent'
 
 export type ContentBlock =
+  | ({ _type: 'cardsBlock' } & Parameters<typeof CardsBlock>[0])
   | ({ _type: 'fullImage' } & Parameters<typeof FullImageBlock>[0])
   | ({ _type: 'imageGallery' } & Parameters<typeof ImageGalleryBlock>[0])
   | ({ _type: 'sectionBlock' } & Parameters<typeof SectionBlock>[0])
@@ -36,6 +38,8 @@ export default function ContentBlocksRenderer({ blocks }: ContentBlocksRendererP
         const key = block._key || `block-${Math.random()}`
 
         switch (block._type) {
+          case 'cardsBlock':
+            return <CardsBlock key={key} {...block} />
           case 'fullImage':
             return <FullImageBlock key={key} {...block} />
           case 'imageGallery':

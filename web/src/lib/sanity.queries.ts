@@ -188,6 +188,26 @@ export async function getCaseStudyBySlug(slug: string): Promise<CaseStudyData | 
         },
         gridPlacement
       },
+      _type == "cardsBlock" => {
+        title,
+        cardsPerRow {
+          base,
+          md,
+          xl
+        },
+        cards[] {
+          _key,
+          image,
+          alt,
+          content
+        },
+        padding {
+          base { pt, pb },
+          md { pt, pb },
+          xl { pt, pb }
+        },
+        gridPlacement
+      },
       _type == "sectionBlock" => {
         sectionTitle,
         padding {
@@ -1189,6 +1209,26 @@ export async function getAboutData(): Promise<AboutData | null> {
           },
           layout,
           bentoLayout,
+          padding {
+            base { pt, pb },
+            md { pt, pb },
+            xl { pt, pb }
+          },
+          gridPlacement
+        },
+        _type == "cardsBlock" => {
+          title,
+          cardsPerRow {
+            base,
+            md,
+            xl
+          },
+          cards[] {
+            _key,
+            image,
+            alt,
+            content
+          },
           padding {
             base { pt, pb },
             md { pt, pb },

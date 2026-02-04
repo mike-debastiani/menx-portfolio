@@ -174,6 +174,7 @@ export default defineType({
       of: [
         defineArrayMember({ type: 'fullImage' }),
         defineArrayMember({ type: 'imageGallery' }),
+        defineArrayMember({ type: 'cardsBlock' }),
         defineArrayMember({ type: 'sectionBlock' }),
         defineArrayMember({ type: 'sectionBlockText' }),
         defineArrayMember({ type: 'sectionBlockColumns' }),

@@ -1,3 +1,4 @@
+export { default as CardsBlock } from './CardsBlock'
 export { default as FullImageBlock } from './FullImageBlock'
 export { default as ImageGalleryBlock } from './ImageGalleryBlock'
 export { default as SectionBlock } from './SectionBlock'
