@@ -301,6 +301,7 @@ export function renderSectionBlockContent(block: SectionBlockContent) {
       const items = block.items ?? []
       if (items.length === 0) return null
       const baseId = block._key || 'section-block-accordion'
+      const defaultOpenId = `${baseId}-0`
       return (
         <div className="mb-4">
           <AccordionGroup
@@ -314,6 +315,7 @@ export function renderSectionBlockContent(block: SectionBlockContent) {
               ) : null,
               content: item.content && item.content.length > 0 ? <PortableText content={item.content} /> : null,
             }))}
+            defaultOpenId={defaultOpenId}
           />
         </div>
       )
