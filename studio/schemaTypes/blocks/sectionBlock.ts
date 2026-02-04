@@ -28,6 +28,7 @@ export default defineType({
         defineArrayMember({ type: 'sectionBlockDetailedRows' }),
         defineArrayMember({ type: 'sectionBlockAccordion' }),
         defineArrayMember({ type: 'sectionBlockImage' }),
+        defineArrayMember({ type: 'sectionBlockBuildingView' }),
       ],
     }),
     paddingField,

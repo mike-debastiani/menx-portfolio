@@ -3,6 +3,7 @@ import imageGallery from './imageGallery'
 import cardsBlock from './cardsBlock'
 import sectionBlock from './sectionBlock'
 import sectionBlockAccordion from './sectionBlockAccordion'
+import sectionBlockBuildingView from './sectionBlockBuildingView'
 import sectionBlockColumns from './sectionBlockColumns'
 import sectionBlockDetailedRows from './sectionBlockDetailedRows'
 import sectionBlockImage from './sectionBlockImage'
@@ -23,6 +24,7 @@ export const contentBlocks = [
   sectionBlockRows,
   sectionBlockDetailedRows,
   sectionBlockAccordion,
+  sectionBlockBuildingView,
   sectionBlockImage,
   textBlock,
   twoColumn,

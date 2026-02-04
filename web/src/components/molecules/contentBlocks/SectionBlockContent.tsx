@@ -4,7 +4,8 @@ import type { PortableTextBlock } from '@portabletext/types'
 import Container from '@/components/layout/Container'
 import Grid from '@/components/layout/Grid'
 import PortableText from '@/components/atoms/PortableText'
-import { urlForImage } from '@/lib/sanity.client'
+import { urlForFile, urlForImage } from '@/lib/sanity.client'
+import type { SanityFile } from '@/types/sanity'
 import AccordionGroup from '@/components/organisms/AccordionGroup'
 import { getBlockPaddingClasses, type BlockPadding } from './padding'
 import { getGridPlacementProps, type GridPlacement } from './gridPlacement'
@@ -74,6 +75,21 @@ export type SectionBlockAccordion = {
   gridPlacement?: GridPlacement | string
 }
 
+export type SectionBlockBuildingView = {
+  _key?: string
+  _type: 'sectionBlockBuildingView'
+  title?: PortableTextBlock[]
+  cards?: Array<{
+    _key?: string
+    backgroundColor?: string
+    icon?: SanityFile
+    iconAlt?: string
+    content?: PortableTextBlock[]
+  }>
+  padding?: BlockPadding
+  gridPlacement?: GridPlacement | string
+}
+
 export type SectionBlockContent =
   | SectionBlockText
   | SectionBlockColumns
@@ -81,6 +97,16 @@ export type SectionBlockContent =
   | SectionBlockImage
   | SectionBlockDetailedRows
   | SectionBlockAccordion
+  | SectionBlockBuildingView
+
+const hasPortableText = (content?: PortableTextBlock[]) => {
+  if (!content || !Array.isArray(content) || content.length === 0) return false
+  return content.some((block: any) =>
+    block?._type === 'block' && Array.isArray(block.children)
+      ? block.children.some((child: any) => typeof child?.text === 'string' && child.text.trim().length > 0)
+      : false,
+  )
+}
 
 function isExternalUrl(url: string): boolean {
   try {
@@ -317,6 +343,49 @@ export function renderSectionBlockContent(block: SectionBlockContent) {
             }))}
             defaultOpenId={defaultOpenId}
           />
+        </div>
+      )
+    }
+    case 'sectionBlockBuildingView': {
+      const cards = block.cards ?? []
+      if ((!block.title || block.title.length === 0) && cards.length === 0) return null
+      return (
+        <div className="flex flex-col gap-4">
+          {hasPortableText(block.title) && (
+            <div className="[&_*]:!mb-0">
+              <PortableText content={block.title as PortableTextBlock[]} />
+            </div>
+          )}
+          {cards.length > 0 && (
+            <div className="grid grid-cols-1 gap-3">
+              {cards.map((card, cardIndex) => {
+                const iconUrl = card.icon ? urlForFile(card.icon) : null
+                return (
+                  <article
+                    key={card._key || `section-block-building-view-card-${cardIndex}`}
+                    className="rounded-lg p-4 xl:p-6"
+                    style={{ backgroundColor: card.backgroundColor || undefined }}
+                  >
+                    <div className="flex items-start gap-4">
+                      {iconUrl && (
+                        <img
+                          src={iconUrl}
+                          alt={card.iconAlt || ''}
+                          className="h-8 w-8 shrink-0 md:h-10 md:w-10 xl:h-12 xl:w-12"
+                          loading="lazy"
+                        />
+                      )}
+                      {hasPortableText(card.content) && (
+                        <div className="[&_*]:!mt-0">
+                          <PortableText content={card.content as PortableTextBlock[]} />
+                        </div>
+                      )}
+                    </div>
+                  </article>
+                )
+              })}
+            </div>
+          )}
         </div>
       )
     }

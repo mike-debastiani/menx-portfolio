@@ -52,6 +52,7 @@ export default function ContentBlocksRenderer({ blocks }: ContentBlocksRendererP
           case 'sectionBlockDetailedRows':
           case 'sectionBlockAccordion':
           case 'sectionBlockImage':
+          case 'sectionBlockBuildingView':
             return <SectionBlockContentBlock key={key} {...block} />
           case 'textBlock':
             return <TextBlock key={key} {...block} />

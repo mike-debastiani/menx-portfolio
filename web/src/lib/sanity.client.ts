@@ -69,3 +69,35 @@ export function urlForImage(source: any, options?: { width?: number; height?: nu
     return `https://cdn.sanity.io/images/${projectId}/${dataset}/${id}-${dimensions}.${format}${query ? `?${query}` : ''}`;
   }
 }
+
+/**
+ * Builds a Sanity file URL from a file reference.
+ */
+export function urlForFile(source: any): string | null {
+  if (!source?.asset) {
+    return null;
+  }
+
+  const asset = source.asset as { _ref?: string; url?: string };
+  if (asset.url) {
+    return asset.url;
+  }
+
+  if (!asset._ref) {
+    return null;
+  }
+
+  const parts = asset._ref.split('-');
+  if (parts.length < 3 || parts[0] !== 'file') {
+    return null;
+  }
+
+  const extension = parts.pop();
+  const id = parts.slice(1).join('-');
+
+  if (!extension || !id) {
+    return null;
+  }
+
+  return `https://cdn.sanity.io/files/${projectId}/${dataset}/${id}.${extension}`;
+}

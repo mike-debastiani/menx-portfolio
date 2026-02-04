@@ -288,6 +288,22 @@ export async function getCaseStudyBySlug(slug: string): Promise<CaseStudyData | 
               xl { pt, pb }
             },
             gridPlacement
+          },
+          _type == "sectionBlockBuildingView" => {
+            title,
+            cards[] {
+              _key,
+              backgroundColor,
+              icon,
+              iconAlt,
+              content
+            },
+            padding {
+              base { pt, pb },
+              md { pt, pb },
+              xl { pt, pb }
+            },
+            gridPlacement
           }
         }
       },
@@ -353,6 +369,22 @@ export async function getCaseStudyBySlug(slug: string): Promise<CaseStudyData | 
       _type == "sectionBlockAccordion" => {
         items[] {
           title,
+          content
+        },
+        padding {
+          base { pt, pb },
+          md { pt, pb },
+          xl { pt, pb }
+        },
+        gridPlacement
+      },
+      _type == "sectionBlockBuildingView" => {
+        title,
+        cards[] {
+          _key,
+          backgroundColor,
+          icon,
+          iconAlt,
           content
         },
         padding {
@@ -486,6 +518,22 @@ export async function getCaseStudyBySlug(slug: string): Promise<CaseStudyData | 
               xl { pt, pb }
             },
             gridPlacement
+          },
+          _type == "sectionBlockBuildingView" => {
+            title,
+            cards[] {
+              _key,
+              backgroundColor,
+              icon,
+              iconAlt,
+              content
+            },
+            padding {
+              base { pt, pb },
+              md { pt, pb },
+              xl { pt, pb }
+            },
+            gridPlacement
           }
         },
         rightBlock[] {
@@ -553,6 +601,22 @@ export async function getCaseStudyBySlug(slug: string): Promise<CaseStudyData | 
           _type == "sectionBlockAccordion" => {
             items[] {
               title,
+              content
+            },
+            padding {
+              base { pt, pb },
+              md { pt, pb },
+              xl { pt, pb }
+            },
+            gridPlacement
+          },
+          _type == "sectionBlockBuildingView" => {
+            title,
+            cards[] {
+              _key,
+              backgroundColor,
+              icon,
+              iconAlt,
               content
             },
             padding {
@@ -1316,6 +1380,22 @@ export async function getAboutData(): Promise<AboutData | null> {
               xl { pt, pb }
             },
             gridPlacement
+          },
+          _type == "sectionBlockBuildingView" => {
+          title,
+            cards[] {
+              _key,
+              backgroundColor,
+              icon,
+              iconAlt,
+              content
+            },
+            padding {
+              base { pt, pb },
+              md { pt, pb },
+              xl { pt, pb }
+            },
+            gridPlacement
             }
           }
         },
@@ -1381,6 +1461,22 @@ export async function getAboutData(): Promise<AboutData | null> {
         _type == "sectionBlockAccordion" => {
           items[] {
             title,
+            content
+          },
+          padding {
+            base { pt, pb },
+            md { pt, pb },
+            xl { pt, pb }
+          },
+          gridPlacement
+        },
+        _type == "sectionBlockBuildingView" => {
+          title,
+          cards[] {
+            _key,
+            backgroundColor,
+            icon,
+            iconAlt,
             content
           },
           padding {
@@ -1508,6 +1604,22 @@ export async function getAboutData(): Promise<AboutData | null> {
                 xl { pt, pb }
               },
               gridPlacement
+            },
+            _type == "sectionBlockBuildingView" => {
+              title,
+              cards[] {
+                _key,
+                backgroundColor,
+                icon,
+                iconAlt,
+                content
+              },
+              padding {
+                base { pt, pb },
+                md { pt, pb },
+                xl { pt, pb }
+              },
+              gridPlacement
             }
           },
           rightBlock[] {
@@ -1575,6 +1687,22 @@ export async function getAboutData(): Promise<AboutData | null> {
             _type == "sectionBlockAccordion" => {
               items[] {
                 title,
+                content
+              },
+              padding {
+                base { pt, pb },
+                md { pt, pb },
+                xl { pt, pb }
+              },
+              gridPlacement
+            },
+            _type == "sectionBlockBuildingView" => {
+              title,
+              cards[] {
+                _key,
+                backgroundColor,
+                icon,
+                iconAlt,
                 content
               },
               padding {
