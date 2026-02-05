@@ -18,6 +18,15 @@ export default defineType({
       validation: (Rule) => Rule.required(),
     }),
     defineField({
+      name: 'mobileImage',
+      title: 'Bild (Mobil <800px)',
+      type: 'image',
+      description: 'Optionales Bild fuer kleine Screens. Falls leer, wird das normale Bild genutzt.',
+      options: {
+        hotspot: true,
+      },
+    }),
+    defineField({
       name: 'alt',
       title: 'Alt-Text',
       type: 'string',
