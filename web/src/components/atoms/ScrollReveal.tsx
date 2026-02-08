@@ -1,11 +1,11 @@
 'use client'
 
-import type { CSSProperties, HTMLAttributes, ReactNode, Ref } from 'react'
+import type { CSSProperties, ElementType, HTMLAttributes, ReactNode, Ref } from 'react'
 import { useEffect, useState } from 'react'
 import { cn } from '@/lib'
 import { useScrollReveal } from '@/lib/useScrollReveal'
 
-type ScrollRevealElement = keyof JSX.IntrinsicElements
+type ScrollRevealElement = ElementType
 
 export interface ScrollRevealProps extends HTMLAttributes<HTMLElement> {
   children: ReactNode
