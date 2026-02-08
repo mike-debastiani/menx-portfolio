@@ -17,8 +17,8 @@ export const sanityClient = createClient({
   projectId,
   dataset,
   apiVersion: '2025-01-01',
-  useCdn: false, // Must be false to access draft documents (CDN doesn't serve drafts)
-  perspective: 'raw', // Include both published and draft documents
+  useCdn: true, // CDN is fine for published-only content
+  perspective: 'published', // Only include published documents
   token, // Optional token for authenticated requests
 });
 
