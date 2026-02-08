@@ -246,12 +246,39 @@ export default function RoleBasedHero({
 }: RoleBasedHeroProps) {
   const [internalActiveRoleId, setInternalActiveRoleId] = useState<RoleId>(defaultRoleId);
   const activeRoleId = externalActiveRoleId ?? internalActiveRoleId;
+  const [displayRoleId, setDisplayRoleId] = useState<RoleId>(activeRoleId);
+  const [isContentVisible, setIsContentVisible] = useState(true);
+  const fadeTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const FADE_DURATION_MS = 150;
 
   const handleRoleChange = (id: string) => {
     const newRoleId = id as RoleId;
     setInternalActiveRoleId(newRoleId);
     onRoleChange?.(newRoleId);
   };
+
+  useEffect(() => {
+    if (activeRoleId === displayRoleId) {
+      return;
+    }
+
+    setIsContentVisible(false);
+
+    if (fadeTimeoutRef.current) {
+      clearTimeout(fadeTimeoutRef.current);
+    }
+
+    fadeTimeoutRef.current = setTimeout(() => {
+      setDisplayRoleId(activeRoleId);
+      setIsContentVisible(true);
+    }, FADE_DURATION_MS);
+
+    return () => {
+      if (fadeTimeoutRef.current) {
+        clearTimeout(fadeTimeoutRef.current);
+      }
+    };
+  }, [activeRoleId, displayRoleId]);
 
   // Render only controls
   if (showControlsOnly) {
@@ -269,9 +296,67 @@ export default function RoleBasedHero({
 
   // Render only content
   if (showContentOnly) {
-    const contentToShow = contentByRole[activeRoleId];
+    const contentToShow = contentByRole[displayRoleId];
     return (
       <div className={className}>
+        <div
+          className={`transition-opacity duration-200 ease-in-out will-change-opacity ${
+            isContentVisible ? 'opacity-100' : 'opacity-0'
+          }`}
+        >
+          {contentToShow.type === 'headline' ? (
+            <div className="flex items-center pl-0 md:pl-[0px] pr-0 py-0 w-full min-[1200px]:w-[1000px]">
+              <p className="flex-1 font-sans font-medium leading-[1.25] text-2xl min-[375px]:text-3xl md:text-4xl text-primary-950 whitespace-pre-wrap">
+                {contentToShow.text}
+              </p>
+            </div>
+          ) : contentToShow.type === 'code' ? (
+            <div className="flex gap-[10px] h-full items-start overflow-hidden pl-0 md:pl-[0px] pr-0 py-0 w-full max-w-full min-w-0">
+              {/* Line Numbers */}
+              <div className="flex flex-col h-full items-end overflow-hidden shrink-0">
+                <div className="font-mono font-medium leading-[2] text-[20px] max-[1010px]:text-[2.2vw] text-primary-950 whitespace-nowrap pr-4 max-[1010px]:pr-1">
+                  {contentToShow.lines.map((line, idx) => (
+                    <p 
+                      key={line.lineNumber} 
+                      className="block"
+                      style={{ 
+                        margin: 0, 
+                        fontFamily: 'inherit',
+                      }}
+                    >
+                      {line.lineNumber}
+                    </p>
+                  ))}
+                </div>
+              </div>
+
+              {/* Code */}
+              <AutoScaleCode lines={contentToShow.lines} className="min-w-0" />
+            </div>
+          ) : null}
+        </div>
+      </div>
+    );
+  }
+
+  // Render both (default behavior)
+  const contentToShow = contentByRole[displayRoleId];
+  return (
+    <div className={`flex flex-col gap-8 items-start ${className}`}>
+      {/* SegmentedControl */}
+      <SegmentedControlMinimal
+        items={tabs}
+        value={activeRoleId}
+        onChange={handleRoleChange}
+        size="base"
+      />
+
+      {/* Content */}
+      <div
+        className={`transition-opacity duration-200 ease-in-out will-change-opacity ${
+          isContentVisible ? 'opacity-100' : 'opacity-0'
+        }`}
+      >
         {contentToShow.type === 'headline' ? (
           <div className="flex items-center pl-0 md:pl-[0px] pr-0 py-0 w-full min-[1200px]:w-[1000px]">
             <p className="flex-1 font-sans font-medium leading-[1.25] text-2xl min-[375px]:text-3xl md:text-4xl text-primary-950 whitespace-pre-wrap">
@@ -303,52 +388,6 @@ export default function RoleBasedHero({
           </div>
         ) : null}
       </div>
-    );
-  }
-
-  // Render both (default behavior)
-  const contentToShow = contentByRole[activeRoleId];
-  return (
-    <div className={`flex flex-col gap-8 items-start ${className}`}>
-      {/* SegmentedControl */}
-      <SegmentedControlMinimal
-        items={tabs}
-        value={activeRoleId}
-        onChange={handleRoleChange}
-        size="base"
-      />
-
-      {/* Content */}
-      {contentToShow.type === 'headline' ? (
-        <div className="flex items-center pl-0 md:pl-[0px] pr-0 py-0 w-full min-[1200px]:w-[1000px]">
-          <p className="flex-1 font-sans font-medium leading-[1.25] text-2xl min-[375px]:text-3xl md:text-4xl text-primary-950 whitespace-pre-wrap">
-            {contentToShow.text}
-          </p>
-        </div>
-      ) : contentToShow.type === 'code' ? (
-        <div className="flex gap-[10px] h-full items-start overflow-hidden pl-0 md:pl-[0px] pr-0 py-0 w-full max-w-full min-w-0">
-          {/* Line Numbers */}
-          <div className="flex flex-col h-full items-end overflow-hidden shrink-0">
-            <div className="font-mono font-medium leading-[2] text-[20px] max-[1010px]:text-[2.2vw] text-primary-950 whitespace-nowrap pr-4 max-[1010px]:pr-1">
-              {contentToShow.lines.map((line, idx) => (
-                <p 
-                  key={line.lineNumber} 
-                  className="block"
-                  style={{ 
-                    margin: 0, 
-                    fontFamily: 'inherit',
-                  }}
-                >
-                  {line.lineNumber}
-                </p>
-              ))}
-            </div>
-          </div>
-
-          {/* Code */}
-          <AutoScaleCode lines={contentToShow.lines} className="min-w-0" />
-        </div>
-      ) : null}
     </div>
   );
 }
