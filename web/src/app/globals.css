@@ -379,3 +379,9 @@ main {
   }
 }
 
+@media (max-width: 1099px) {
+  .quick-info-button {
+    display: none !important;
+  }
+}
+

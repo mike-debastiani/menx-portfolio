@@ -10,6 +10,9 @@ import { type ReactNode } from 'react';
 
 export interface FooterSectionProps {
   className?: string;
+  containerClassName?: string;
+  containerGapClassName?: string;
+  infoRowsGapClassName?: string;
   // Optional props for About page custom footer
   customCtaTitle?: string | ReactNode;
   primaryButtonText?: string;
@@ -30,6 +33,9 @@ interface FooterRow {
 
 export default function FooterSection({ 
   className = '',
+  containerClassName = '',
+  containerGapClassName,
+  infoRowsGapClassName,
   customCtaTitle,
   primaryButtonText,
   primaryButtonFileUrl,
@@ -83,7 +89,13 @@ export default function FooterSection({
 
   return (
     <section className={cn('pt-20 flex', className)}>
-      <Container className="flex flex-col gap-20 md:gap-30">
+      <Container
+        className={cn(
+          'flex flex-col',
+          containerGapClassName ?? 'gap-20 md:gap-30',
+          containerClassName
+        )}
+      >
         {/* SectionDescription and InfoRows wrapper */}
         <Grid>
           {/* SectionDescription - 6 columns on desktop, full width on mobile */}
@@ -149,7 +161,12 @@ export default function FooterSection({
           {/* InfoRows - 6 columns on desktop, full width on mobile */}
           <div className="footer-col-mobile mt-12 md:mt-0">
             {/* >=450px: regular 50/50 layout */}
-            <div className="flex flex-col gap-16 md:gap-[88px] max-[449px]:hidden">
+            <div
+              className={cn(
+                'flex flex-col max-[449px]:hidden',
+                infoRowsGapClassName ?? 'gap-16 md:gap-[88px]'
+              )}
+            >
               {footerRows.map((row, rowIndex) => (
                 <div
                   key={rowIndex}

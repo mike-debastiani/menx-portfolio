@@ -65,9 +65,9 @@ function isExternalUrl(url: string): boolean {
 const quickInfoCopy = {
   greeting: 'Hello,',
   leading:
-    "I’m Mike De Bastiani",
+    "I’m Mike De Bastiani, a UX-focused Product Designer based in Switzerland. ",
   description:
-    'Currently studying Digital Ideation, I work end‑to‑end: from framing problems and research to prototypes, design systems and polished UI.',
+    "Currently studying Digital Ideation at the Lucerne University of Applied Sciences and Arts, my work is driven by an interest in how products are shaped by constraints, user needs, and team decisions. I work best in structured, collaborative environments where problems are explored thoughtfully and solutions are built with care.",
 };
 
 export default function HeaderClient({
@@ -403,131 +403,119 @@ export default function HeaderClient({
       </header>
 
       {/* Tablet/Desktop Quick Info Overlay */}
-      {isQuickInfoOpen && (
-        <div
-          ref={quickInfoRef}
-          className="fixed inset-0 z-[60] bg-white hidden md:block overflow-hidden"
-          role="dialog"
-          aria-modal="true"
-          aria-label="Quick info"
-        >
-          <div className="flex flex-col h-full">
-            {/* Overlay Header (Logo + Close) */}
-            <header className="flex-shrink-0 border-none" style={{ borderBottomWidth: '0.5px' }}>
-              <Container as="div">
-                <div className="flex h-16 items-center justify-between">
-                  <Link
-                    href="/"
-                    onClick={closeQuickInfo}
-                    className="font-sans text-lg font-medium text-primary-950 hover:text-primary-700 transition-colors"
-                  >
-                    Mike De Bastiani
-                  </Link>
+      <div
+        ref={quickInfoRef}
+        className={`fixed inset-0 z-[60] bg-white hidden md:block h-screen overflow-y-auto transition-opacity duration-300 ease-out ${
+          isQuickInfoOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
+        }`}
+        role="dialog"
+        aria-modal={isQuickInfoOpen}
+        aria-label="Quick info"
+        aria-hidden={!isQuickInfoOpen}
+      >
+        <div className="flex flex-col min-h-full">
+          {/* Overlay Header (Logo + Close) */}
+          <header className="flex-shrink-0 border-none" style={{ borderBottomWidth: '0.5px' }}>
+            <Container as="div">
+              <div className="flex h-16 items-center justify-between">
+                <Link
+                  href="/"
+                  onClick={closeQuickInfo}
+                  className="font-sans text-lg font-medium text-primary-950 hover:text-primary-700 transition-colors"
+                >
+                  Mike De Bastiani
+                </Link>
 
-                  <button
-                    ref={quickInfoButtonRef}
-                    type="button"
-                    onClick={closeQuickInfo}
-                    aria-label="Close quick info"
+                <button
+                  ref={quickInfoButtonRef}
+                  type="button"
+                  onClick={closeQuickInfo}
+                  aria-label="Close quick info"
                   className="flex items-center gap-2 text-primary-400 hover:text-primary-950 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-950 focus-visible:ring-offset-2 rounded"
-                  >
-                    <Image
-                      src="/icons/close-icon-primary400.svg"
-                      alt=""
-                      width={11}
-                      height={11}
-                      className="shrink-0"
-                      aria-hidden="true"
-                    />
-                    <span className="font-mono font-normal text-base uppercase tracking-normal">CLOSE</span>
-                  </button>
-                </div>
-              </Container>
-            </header>
+                >
+                  <Image
+                    src="/icons/close-icon-primary400.svg"
+                    alt=""
+                    width={11}
+                    height={11}
+                    className="shrink-0"
+                    aria-hidden="true"
+                  />
+                  <span className="font-mono font-normal text-base uppercase tracking-normal">CLOSE</span>
+                </button>
+              </div>
+            </Container>
+          </header>
 
-            {/* Main content */}
-            <div className="flex-1 min-h-0 flex flex-col">
-              <Container className="flex-1 min-h-0">
-                <Grid columns={12} className="pt-8 pb-10">
-                  {/* SmallAboutBlock: Image (3 cols) + Text (3 cols) => total 6 cols */}
-                  {aboutImage && (
-                    <div className="col-span-3">
-                      <div className="relative w-full aspect-square rounded-lg overflow-hidden">
-                        <Image
-                          src={aboutImage.src}
-                          alt={aboutImage.alt}
-                          fill
-                          className="object-cover grayscale"
-                          sizes="(min-width: 1200px) 25vw, 33vw"
-                        />
-                      </div>
+          {/* Main content */}
+          <div className="flex-1 flex flex-col">
+            <Container className="flex-1">
+              <Grid columns={12} className="pt-8 pb-10">
+                <div className="col-span-6 2xl:col-span-5 flex flex-col gap-6">
+                  <div className="flex flex-col gap-2 items-start w-full">
+                    <p className="text-2xl leading-[1.25] font-normal text-primary-400 w-full">
+                      {quickInfoCopy.greeting}
+                    </p>
+                    <p className="text-3xl leading-[1.2] font-medium text-primary-950 w-full">
+                      {quickInfoCopy.leading}
+                    </p>
+                  </div>
+                  <p className="text-base leading-[1.5] font-normal text-primary-500 w-full">
+                    {quickInfoCopy.description}
+                  </p>
+                  {!!aboutSubInfoItems?.length && (
+                    <div className="mt-4 max-[475px]:mt-10 max-[480px]:mt-8 w-full">
+                      <SubInfoGroup
+                        items={aboutSubInfoItems}
+                        variant="row"
+                        size="base"
+                        className="flex-nowrap whitespace-nowrap"
+                      />
                     </div>
                   )}
+                </div>
 
-                  <div className={`${aboutImage ? 'col-span-3' : 'col-span-6'} flex flex-col gap-6`}>
-                    <div className="flex flex-col gap-2 items-start w-full">
-                      <p className="text-2xl leading-[1.25] font-normal text-primary-400 w-full">
-                        {quickInfoCopy.greeting}
-                      </p>
-                      <p className="text-3xl leading-[1.2] font-medium text-primary-950 w-full">
-                        {quickInfoCopy.leading}
-                      </p>
-                    </div>
-                    <p className="text-base leading-[1.4] font-normal text-primary-400 w-full">
-                      {quickInfoCopy.description}
-                    </p>
-                    {!!aboutSubInfoItems?.length && (
-                      <div className="pt-3 overflow-visible">
-                        <SubInfoGroup
-                          items={aboutSubInfoItems}
-                          variant="column"
-                          size="base"
-                          className="whitespace-nowrap w-max"
-                        />
-                      </div>
-                    )}
+                {/* NavigationBlock: Columns 10-12 */}
+                <nav className="col-start-10 col-span-3" aria-label="Sitemap">
+                  <div className="border-b border-primary-200 pt-0 pb-2" style={{ borderBottomWidth: '0.5px' }}>
+                    <div className="font-mono font-normal text-base leading-[1.4] text-primary-400">Sitemap</div>
                   </div>
 
-                  {/* NavigationBlock: Columns 10-12 */}
-                  <nav className="col-start-10 col-span-3" aria-label="Sitemap">
-                    <div className="border-b border-primary-200 pt-0 pb-2" style={{ borderBottomWidth: '0.5px' }}>
-                    <div className="font-mono font-normal text-base leading-[1.4] text-primary-400">Sitemap</div>
-                    </div>
+                  <div className="pt-4 flex flex-col">
+                    {quickInfoNavItems.map((item, idx) => (
+                      <Link
+                        key={item.href}
+                        href={item.href}
+                        onClick={closeQuickInfo}
+                        className={`font-sans font-medium text-4xl leading-[1.1] transition-colors ${
+                          isActive(item.href) ? 'text-primary-950' : 'text-primary-350 hover:text-primary-950'
+                        } ${idx === quickInfoNavItems.length - 1 ? '' : 'mb-4'}`}
+                      >
+                        {item.label}
+                      </Link>
+                    ))}
+                  </div>
+                </nav>
+              </Grid>
+            </Container>
 
-                    <div className="pt-4 flex flex-col">
-                      {quickInfoNavItems.map((item, idx) => (
-                        <Link
-                          key={item.href}
-                          href={item.href}
-                          onClick={closeQuickInfo}
-                          className={`font-sans font-medium text-4xl leading-[1.1] transition-colors ${
-                            isActive(item.href) ? 'text-primary-950' : 'text-primary-350 hover:text-primary-950'
-                          } ${idx === quickInfoNavItems.length - 1 ? '' : 'mb-4'}`}
-                        >
-                          {item.label}
-                        </Link>
-                      ))}
-                    </div>
-                  </nav>
-                </Grid>
-              </Container>
-
-              {/* Reduced FooterSection (About CTA with 2 buttons) */}
-              <div className="mt-auto pb-10">
-                <FooterSection
-                  // 1:1 footer like About page, but without the bottom copyright footer
-                  showBottomFooter={false}
-                  customCtaTitle={footerCtaTitle}
-                  primaryButtonText={footerPrimaryButtonText}
-                  primaryButtonFileUrl={footerPrimaryButtonFileUrl}
-                  secondaryButtonText={footerSecondaryButtonText}
-                  secondaryButtonLink={footerSecondaryButtonLink}
-                />
-              </div>
+            {/* Reduced FooterSection (About CTA with 2 buttons) */}
+            <div className="mt-4 pb-10">
+              <FooterSection
+                // 1:1 footer like About page, but without the bottom copyright footer
+                showBottomFooter={false}
+                containerGapClassName="gap-10 md:gap-10"
+                infoRowsGapClassName="gap-10 md:gap-10"
+                customCtaTitle={footerCtaTitle}
+                primaryButtonText={footerPrimaryButtonText}
+                primaryButtonFileUrl={footerPrimaryButtonFileUrl}
+                secondaryButtonText={footerSecondaryButtonText}
+                secondaryButtonLink={footerSecondaryButtonLink}
+              />
             </div>
           </div>
         </div>
-      )}
+      </div>
 
       {/* Fullscreen Mobile Menu Overlay */}
       <div
