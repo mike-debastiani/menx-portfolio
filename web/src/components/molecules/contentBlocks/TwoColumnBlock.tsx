@@ -2,6 +2,7 @@ import Image from 'next/image'
 import Container from '@/components/layout/Container'
 import Grid from '@/components/layout/Grid'
 import PortableText from '@/components/atoms/PortableText'
+import ScrollReveal from '@/components/atoms/ScrollReveal'
 import { urlForImage } from '@/lib/sanity.client'
 import { stegaClean } from '@sanity/client/stega'
 import type { CSSProperties } from 'react'
@@ -158,7 +159,7 @@ export default function TwoColumnBlock({
         <Grid>
           <div className={placementProps.className} style={placementProps.style}>
             <div className="layout-grid gap-y-4">
-              <div
+              <ScrollReveal
                 className="two-column-span"
                 style={buildRangeStyle(
                   ranges.base.left.start,
@@ -170,8 +171,8 @@ export default function TwoColumnBlock({
                 )}
               >
                 {renderColumn(leftColumn)}
-              </div>
-              <div
+              </ScrollReveal>
+              <ScrollReveal
                 className="two-column-span"
                 style={buildRangeStyle(
                   ranges.base.right.start,
@@ -181,9 +182,10 @@ export default function TwoColumnBlock({
                   ranges.lg.right.start,
                   ranges.lg.right.end
                 )}
+                delay={120}
               >
                 {renderColumn(rightColumn)}
-              </div>
+              </ScrollReveal>
             </div>
           </div>
         </Grid>

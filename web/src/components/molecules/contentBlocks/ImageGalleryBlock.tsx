@@ -1,6 +1,7 @@
 import Image from 'next/image'
 import Container from '@/components/layout/Container'
 import Grid from '@/components/layout/Grid'
+import ScrollReveal from '@/components/atoms/ScrollReveal'
 import { urlForImage } from '@/lib/sanity.client'
 import { stegaClean } from '@sanity/client/stega'
 import { getGridPlacementProps, type GridPlacement } from './gridPlacement'
@@ -91,7 +92,12 @@ export default function ImageGalleryBlock({
                     if (!imageUrl) return null
 
                     return (
-                      <figure key={index} className="min-w-[80%] flex-shrink-0 md:min-w-[60%] xl:min-w-[40%]">
+                      <ScrollReveal
+                        as="figure"
+                        key={index}
+                        className="min-w-[80%] flex-shrink-0 md:min-w-[60%] xl:min-w-[40%]"
+                        delay={index * 80}
+                      >
                         <div className="relative aspect-video w-full overflow-hidden rounded-lg">
                           <Image
                             src={imageUrl}
@@ -105,7 +111,7 @@ export default function ImageGalleryBlock({
                         {item.caption && (
                           <figcaption className="mt-2 text-sm text-primary-600">{item.caption}</figcaption>
                         )}
-                      </figure>
+                      </ScrollReveal>
                     )
                   })}
                 </div>
@@ -138,7 +144,12 @@ export default function ImageGalleryBlock({
                   const bentoClass = getBentoItemClass(cleanBentoLayout, index)
 
                   return (
-                    <figure key={index} className={`w-full ${bentoClass}`}>
+                    <ScrollReveal
+                      as="figure"
+                      key={index}
+                      className={`w-full ${bentoClass}`}
+                      delay={index * 80}
+                    >
                       <div className="relative aspect-video w-full overflow-hidden rounded-lg md:aspect-auto md:h-full">
                         <Image
                           src={imageUrl}
@@ -152,7 +163,7 @@ export default function ImageGalleryBlock({
                       {item.caption && (
                         <figcaption className="mt-2 text-sm text-primary-600">{item.caption}</figcaption>
                       )}
-                    </figure>
+                    </ScrollReveal>
                   )
                 })}
               </div>
@@ -183,7 +194,12 @@ export default function ImageGalleryBlock({
                   if (!imageUrl) return null
 
                   return (
-                    <figure key={index} className="mb-4 break-inside-avoid">
+                    <ScrollReveal
+                      as="figure"
+                      key={index}
+                      className="mb-4 break-inside-avoid"
+                      delay={index * 80}
+                    >
                       <div className="relative w-full overflow-hidden rounded-lg">
                         <Image
                           src={imageUrl}
@@ -198,7 +214,7 @@ export default function ImageGalleryBlock({
                       {item.caption && (
                         <figcaption className="mt-2 text-sm text-primary-600">{item.caption}</figcaption>
                       )}
-                    </figure>
+                    </ScrollReveal>
                   )
                 })}
               </div>
@@ -228,7 +244,12 @@ export default function ImageGalleryBlock({
                 if (!imageUrl) return null
 
                 return (
-                  <figure key={index} className="w-full">
+                  <ScrollReveal
+                    as="figure"
+                    key={index}
+                    className="w-full"
+                    delay={index * 80}
+                  >
                     <div className="relative aspect-video w-full overflow-hidden rounded-lg">
                       <Image
                         src={imageUrl}
@@ -242,7 +263,7 @@ export default function ImageGalleryBlock({
                     {item.caption && (
                       <figcaption className="mt-2 text-sm text-primary-600">{item.caption}</figcaption>
                     )}
-                  </figure>
+                  </ScrollReveal>
                 )
               })}
             </div>

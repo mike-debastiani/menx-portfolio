@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import FooterSection from '@/components/organisms/FooterSection';
+import ScrollReveal from '@/components/atoms/ScrollReveal';
 
 export const metadata: Metadata = {
   title: 'Archive - Mike De Bastiani',
@@ -9,8 +10,10 @@ export const metadata: Metadata = {
 export default function Archive() {
   return (
     <main>
-      <h1>Archive</h1>
-      <p>This is the archive page placeholder.</p>
+      <ScrollReveal>
+        <h1>Archive</h1>
+        <p>This is the archive page placeholder.</p>
+      </ScrollReveal>
       <FooterSection />
     </main>
   );

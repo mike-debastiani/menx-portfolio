@@ -2,6 +2,7 @@ import type { PortableTextBlock } from '@portabletext/types'
 import Container from '@/components/layout/Container'
 import Grid from '@/components/layout/Grid'
 import PortableText from '@/components/atoms/PortableText'
+import ScrollReveal from '@/components/atoms/ScrollReveal'
 import { getBlockPaddingClasses, type BlockPadding } from './padding'
 import { SectionBlockContentItem, type SectionBlockContent } from './SectionBlockContent'
 
@@ -23,11 +24,11 @@ export default function SectionBlock({ sectionTitle, contentBlocks, padding }: S
     <section className={`${paddingClasses} flex`}>
       <Container className="flex flex-col gap-30">
         <Grid>
-          <div className="col-span-4 skills-col-lg mb-6">
+          <ScrollReveal className="col-span-4 skills-col-lg mb-6">
             {sectionTitle && sectionTitle.length > 0 && (
               <PortableText content={sectionTitle} />
             )}
-          </div>
+          </ScrollReveal>
 
           <div className="col-span-4 info-col-single">
             {contentBlocks && contentBlocks.length > 0 && (

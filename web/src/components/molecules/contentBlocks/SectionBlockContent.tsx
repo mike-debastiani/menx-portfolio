@@ -4,6 +4,7 @@ import type { PortableTextBlock } from '@portabletext/types'
 import Container from '@/components/layout/Container'
 import Grid from '@/components/layout/Grid'
 import PortableText from '@/components/atoms/PortableText'
+import ScrollReveal from '@/components/atoms/ScrollReveal'
 import { urlForFile, urlForImage } from '@/lib/sanity.client'
 import type { SanityFile } from '@/types/sanity'
 import AccordionGroup from '@/components/organisms/AccordionGroup'
@@ -129,9 +130,9 @@ export function renderSectionBlockContent(block: SectionBlockContent) {
     case 'sectionBlockText': {
       if (!block.content || block.content.length === 0) return null
       return (
-        <div className="text-block-content [&_p]:!font-sans [&_p]:!text-base [&_p]:!text-primary-500 [&_p]:!leading-[1.5]">
+        <ScrollReveal className="text-block-content [&_p]:!font-sans [&_p]:!text-base [&_p]:!text-primary-500 [&_p]:!leading-[1.5]">
           <PortableText content={block.content} />
-        </div>
+        </ScrollReveal>
       )
     }
     case 'sectionBlockColumns': {
@@ -140,7 +141,11 @@ export function renderSectionBlockContent(block: SectionBlockContent) {
       return (
         <div className={`mb-4 grid ${getColumnGridClasses(columns.length)} gap-x-4 gap-y-10 xl:gap-x-8`}>
           {columns.map((column, columnIndex) => (
-            <div key={columnIndex} className="flex flex-col gap-6">
+            <ScrollReveal
+              key={columnIndex}
+              delay={columnIndex * 80}
+              className="flex flex-col gap-6"
+            >
               {column.title && (
                 <div className="border-b border-primary-200 pt-0 pb-2" style={{ borderBottomWidth: '0.5px' }}>
                   <div className="font-mono font-normal text-base leading-[1.4] text-primary-400">{column.title}</div>
@@ -159,7 +164,7 @@ export function renderSectionBlockContent(block: SectionBlockContent) {
                   )
                 })}
               </div>
-            </div>
+            </ScrollReveal>
           ))}
         </div>
       )
@@ -171,8 +176,9 @@ export function renderSectionBlockContent(block: SectionBlockContent) {
         <div className="mb-4">
           <div className="flex flex-col gap-16 max-[449px]:hidden">
             {rows.map((row, rowIndex) => (
-              <div
+              <ScrollReveal
                 key={rowIndex}
+                delay={rowIndex * 80}
                 className="info-rows-row border-t border-primary-200 pt-3 grid grid-cols-2 gap-3 md:gap-6"
                 style={{ borderTopWidth: '0.5px' }}
               >
@@ -216,11 +222,11 @@ export function renderSectionBlockContent(block: SectionBlockContent) {
                     )
                   })}
                 </div>
-              </div>
+              </ScrollReveal>
             ))}
           </div>
 
-          <div className="hidden max-[449px]:grid grid-cols-[minmax(0,1fr)_max-content] gap-x-3">
+          <ScrollReveal className="hidden max-[449px]:grid grid-cols-[minmax(0,1fr)_max-content] gap-x-3">
             {rows.map((row, rowIndex) => (
               <div key={rowIndex} className="contents">
                 <div className="col-span-2 border-t border-primary-200" style={{ borderTopWidth: '0.5px' }} />
@@ -267,7 +273,7 @@ export function renderSectionBlockContent(block: SectionBlockContent) {
                 {rowIndex < rows.length - 1 && <div className="col-span-2 h-16 md:h-[88px]" aria-hidden="true" />}
               </div>
             ))}
-          </div>
+          </ScrollReveal>
         </div>
       )
     }
@@ -281,7 +287,7 @@ export function renderSectionBlockContent(block: SectionBlockContent) {
       })
       if (!imageUrl) return null
       return (
-        <figure className="w-full">
+        <ScrollReveal as="figure" className="w-full">
           <div className="relative w-full overflow-hidden rounded-lg">
             <Image
               src={imageUrl}
@@ -294,7 +300,7 @@ export function renderSectionBlockContent(block: SectionBlockContent) {
             />
           </div>
           {block.caption && <figcaption className="mt-4 text-sm text-primary-600">{block.caption}</figcaption>}
-        </figure>
+        </ScrollReveal>
       )
     }
     case 'sectionBlockDetailedRows': {
@@ -303,20 +309,21 @@ export function renderSectionBlockContent(block: SectionBlockContent) {
       return (
         <div className="mb-4 flex flex-col gap-3">
           {block.title && block.title.length > 0 && (
-            <div className="[&_*]:!mb-0">
+            <ScrollReveal className="[&_*]:!mb-0">
               <PortableText content={block.title} />
-            </div>
+            </ScrollReveal>
           )}
           {rows.length > 0 && (
             <div className="flex flex-col gap-3">
               {rows.map((row, rowIndex) => (
-                <div
+                <ScrollReveal
                   key={rowIndex}
+                  delay={rowIndex * 80}
                   className="border-t border-primary-200 pt-3"
                   style={{ borderTopWidth: '0.5px' }}
                 >
                   {row.content && row.content.length > 0 && <PortableText content={row.content} />}
-                </div>
+                </ScrollReveal>
               ))}
             </div>
           )}
@@ -352,19 +359,21 @@ export function renderSectionBlockContent(block: SectionBlockContent) {
       return (
         <div className="flex flex-col gap-4">
           {hasPortableText(block.title) && (
-            <div className="[&_*]:!mb-0">
+            <ScrollReveal className="[&_*]:!mb-0">
               <PortableText content={block.title as PortableTextBlock[]} />
-            </div>
+            </ScrollReveal>
           )}
           {cards.length > 0 && (
             <div className="grid grid-cols-1 gap-3">
               {cards.map((card, cardIndex) => {
                 const iconUrl = card.icon ? urlForFile(card.icon) : null
                 return (
-                  <article
+                  <ScrollReveal
+                    as="article"
                     key={card._key || `section-block-building-view-card-${cardIndex}`}
                     className="rounded-lg p-4 xl:p-6"
                     style={{ backgroundColor: card.backgroundColor || undefined }}
+                    delay={cardIndex * 80}
                   >
                     <div className="flex items-start gap-4">
                       {iconUrl && (
@@ -381,7 +390,7 @@ export function renderSectionBlockContent(block: SectionBlockContent) {
                         </div>
                       )}
                     </div>
-                  </article>
+                  </ScrollReveal>
                 )
               })}
             </div>

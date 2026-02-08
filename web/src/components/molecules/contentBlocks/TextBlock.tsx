@@ -1,6 +1,7 @@
 import Container from '@/components/layout/Container'
 import Grid from '@/components/layout/Grid'
 import PortableText from '@/components/atoms/PortableText'
+import ScrollReveal from '@/components/atoms/ScrollReveal'
 import { stegaClean } from '@sanity/client/stega'
 import type { PortableTextBlock } from '@portabletext/types'
 import { getGridPlacementProps, type GridPlacement } from './gridPlacement'
@@ -34,7 +35,7 @@ export default function TextBlock({ content, alignment, padding, gridPlacement }
       <Container>
         <Grid>
           <div className={placementProps.className} style={placementProps.style}>
-            <div
+            <ScrollReveal
               className={[
                 alignmentClasses[cleanAlignment as keyof typeof alignmentClasses] || alignmentClasses.left,
                 // Case Study TextBlock paragraphs should be primary-500
@@ -42,7 +43,7 @@ export default function TextBlock({ content, alignment, padding, gridPlacement }
               ].join(' ')}
             >
               <PortableText content={content} />
-            </div>
+            </ScrollReveal>
           </div>
         </Grid>
       </Container>

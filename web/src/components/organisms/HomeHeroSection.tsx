@@ -4,6 +4,7 @@ import { useState, useMemo, useEffect } from 'react';
 import RoleBasedHero, { type RoleBasedHeroProps, type RoleId, type RoleTab, type RoleHeroContent } from './RoleBasedHero';
 import SubInfoGroup, { type SubInfoGroupProps, type SubInfoGroupItem } from '@/components/molecules/SubInfoGroup';
 import Grid from '@/components/layout/Grid';
+import ScrollReveal from '@/components/atoms/ScrollReveal';
 import type { HomeData } from '@/lib/sanity.queries';
 
 // Hook to detect screen size
@@ -140,7 +141,10 @@ export default function HomeHeroSection({
   };
 
   return (
-    <section className={`pt-12 md:pt-20 pb-12 md:pb-20 max-[475px]:pb-10 overflow-x-hidden max-w-full ${className}`}>
+    <ScrollReveal
+      as="section"
+      className={`pt-12 md:pt-20 pb-12 md:pb-20 max-[475px]:pb-10 overflow-x-hidden max-w-full ${className}`}
+    >
       <div className="flex flex-col gap-4 max-[480px]:gap-4 w-full">
         {/* SegmentedControls - full width */}
         <div className="w-full">
@@ -175,6 +179,6 @@ export default function HomeHeroSection({
           </div>
         </Grid>
       </div>
-    </section>
+    </ScrollReveal>
   );
 }

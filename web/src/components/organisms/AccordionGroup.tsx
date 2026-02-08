@@ -2,6 +2,7 @@
 
 import { useState, ReactNode } from 'react';
 import AccordionItem from '@/components/molecules/AccordionItem';
+import ScrollReveal from '@/components/atoms/ScrollReveal';
 
 export interface AccordionGroupItem {
   id: string;
@@ -48,17 +49,18 @@ export default function AccordionGroup({
 
   return (
     <div className={`flex flex-col gap-1 ${className}`}>
-      {items.map((item) => {
+      {items.map((item, itemIndex) => {
         const isOpen = currentOpenId === item.id;
         return (
-          <AccordionItem
-            key={item.id}
-            title={item.title}
-            open={isOpen}
-            onOpenChange={(newOpen) => handleOpenChange(item.id, newOpen)}
-          >
-            {item.content}
-          </AccordionItem>
+          <ScrollReveal key={item.id} delay={itemIndex * 80}>
+            <AccordionItem
+              title={item.title}
+              open={isOpen}
+              onOpenChange={(newOpen) => handleOpenChange(item.id, newOpen)}
+            >
+              {item.content}
+            </AccordionItem>
+          </ScrollReveal>
         );
       })}
     </div>

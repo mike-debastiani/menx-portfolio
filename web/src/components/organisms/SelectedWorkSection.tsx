@@ -3,6 +3,7 @@
 import { Container } from '@/components/layout';
 import ProjectArchive, { type ProjectArchiveProps } from './ProjectArchive';
 import Button from '@/components/atoms/Button';
+import ScrollReveal from '@/components/atoms/ScrollReveal';
 import { cn } from '@/lib';
 
 export interface SelectedWorkSectionProps {
@@ -24,17 +25,19 @@ export default function SelectedWorkSection({ projects, className = '' }: Select
       <Container>
         <div className="flex flex-col gap-10">
           {/* Section Header */}
-          <div className="flex flex-col min-[500px]:flex-row min-[500px]:items-center min-[500px]:justify-between gap-4 sm:gap-6">
-            <h2 className="font-sans font-medium text-3xl min-[450px]:text-3xl leading-[1.25] text-primary-950 min-[500px]:flex-1">
-              Selected Work
-            </h2>
-            <Button variant="secondary" size="sm" href="/relevant-work" className="shrink-0 self-start">
-              VIEW ALL CASE STUDIES
-            </Button>
-          </div>
+          <ScrollReveal>
+            <div className="flex flex-col min-[500px]:flex-row min-[500px]:items-center min-[500px]:justify-between gap-4 sm:gap-6">
+              <h2 className="font-sans font-medium text-3xl min-[450px]:text-3xl leading-[1.25] text-primary-950 min-[500px]:flex-1">
+                Selected Work
+              </h2>
+              <Button variant="secondary" size="sm" href="/relevant-work" className="shrink-0 self-start">
+                VIEW ALL CASE STUDIES
+              </Button>
+            </div>
+          </ScrollReveal>
 
           {/* Project Archive */}
-          <ProjectArchive projects={projects} maxColumns={2} />
+          <ProjectArchive projects={projects} maxColumns={2} firstRowRevealThreshold={0.1} />
         </div>
       </Container>
     </section>

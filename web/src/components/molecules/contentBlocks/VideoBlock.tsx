@@ -1,5 +1,6 @@
 import Container from '@/components/layout/Container'
 import Grid from '@/components/layout/Grid'
+import ScrollReveal from '@/components/atoms/ScrollReveal'
 import { stegaClean } from '@sanity/client/stega'
 import { getGridPlacementProps, type GridPlacement } from './gridPlacement'
 import { getBlockPaddingClasses, type BlockPadding } from './padding'
@@ -116,10 +117,14 @@ export default function VideoBlock({
     <section className={paddingClasses}>
       <Container>
         <Grid>
-          <figure className={`${placementProps.className} w-full`} style={placementProps.style}>
+          <ScrollReveal
+            as="figure"
+            className={`${placementProps.className} w-full`}
+            style={placementProps.style}
+          >
             {videoElement}
             {caption && <figcaption className="mt-4 text-sm text-primary-600">{caption}</figcaption>}
-          </figure>
+          </ScrollReveal>
         </Grid>
       </Container>
     </section>

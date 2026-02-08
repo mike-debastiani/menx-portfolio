@@ -4,6 +4,7 @@ import type { PortableTextBlock } from '@portabletext/types'
 import Container from '@/components/layout/Container'
 import Grid from '@/components/layout/Grid'
 import PortableText from '@/components/atoms/PortableText'
+import ScrollReveal from '@/components/atoms/ScrollReveal'
 import { urlForImage } from '@/lib/sanity.client'
 import { getGridPlacementProps, type GridPlacement } from './gridPlacement'
 import { getBlockPaddingClasses, type BlockPadding } from './padding'
@@ -83,9 +84,9 @@ export default function CardsBlock({
         <Grid>
           <div className={placementProps.className} style={placementProps.style}>
             {hasPortableText(title) && (
-              <div className="mb-6">
+              <ScrollReveal className="mb-6">
                 <PortableText content={title as PortableTextBlock[]} />
-              </div>
+              </ScrollReveal>
             )}
             <div className="cards-grid" style={gridVars}>
               {cards.map((card, index) => {
@@ -100,7 +101,12 @@ export default function CardsBlock({
                 if (!imageUrl) return null
 
                 return (
-                  <article key={card._key || `cards-block-card-${index}`} className="cards-grid-item">
+                  <ScrollReveal
+                    as="article"
+                    key={card._key || `cards-block-card-${index}`}
+                    className="cards-grid-item"
+                    delay={index * 80}
+                  >
                     <div className="relative aspect-[4/3] w-full overflow-hidden rounded-[12px]">
                       <Image
                         src={imageUrl}
@@ -116,7 +122,7 @@ export default function CardsBlock({
                         <PortableText content={card.content as PortableTextBlock[]} />
                       </div>
                     )}
-                  </article>
+                  </ScrollReveal>
                 )
               })}
             </div>

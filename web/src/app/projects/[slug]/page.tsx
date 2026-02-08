@@ -42,7 +42,10 @@ export default async function CaseStudy({ params }: { params: Promise<{ slug: st
     <main>
       <CaseStudyHeader data={caseStudyData} />
       {caseStudyData.contentBlocks && caseStudyData.contentBlocks.length > 0 && (
-        <ContentBlocksRenderer blocks={caseStudyData.contentBlocks as any} />
+        <ContentBlocksRenderer
+          blocks={caseStudyData.contentBlocks as any}
+          firstBlockRevealThreshold={0.05}
+        />
       )}
       {workflowAtlasData.impressions.length > 0 && (
         <WorkflowAtlasSection

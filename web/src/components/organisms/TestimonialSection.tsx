@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import { Container, Grid } from '@/components/layout';
 import SectionDescription from '@/components/molecules/SectionDescription';
+import ScrollReveal from '@/components/atoms/ScrollReveal';
 import { urlForImage } from '@/lib/sanity.client';
 import type { SanityImage } from '@/types/sanity';
 
@@ -77,15 +78,18 @@ export default function TestimonialSection({
     <section className={`py-12 md:py-20 ${className}`}>
       <Container>
         <div className="flex flex-col gap-14 md:gap-16">
-          <SectionDescription title={title} />
+          <ScrollReveal>
+            <SectionDescription title={title} />
+          </ScrollReveal>
           <Grid className="items-stretch gap-y-20 lg:gap-y-10 xl:gap-y-8">
             {testimonials.map((testimonial, index) => (
-              <div
+              <ScrollReveal
                 key={`${testimonial.personName}-${index}`}
+                delay={index * 80}
                 className="col-span-4 md:col-span-3 xl:col-span-4 h-full pr-4"
               >
                 <TestimonialItem {...testimonial} />
-              </div>
+              </ScrollReveal>
             ))}
           </Grid>
         </div>

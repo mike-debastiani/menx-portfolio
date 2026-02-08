@@ -2,6 +2,7 @@
 
 import { useState, useRef, useCallback, useMemo, useEffect, useLayoutEffect } from 'react';
 import { Container } from '@/components/layout';
+import ScrollReveal from '@/components/atoms/ScrollReveal';
 import StatsGroup from './StatsGroup';
 import ImpressionGallery, { type ImpressionGalleryRef, type ImpressionGalleryItem } from './ImpressionGallery';
 import WorkflowAtlasTimeline, { type WorkflowSegment, type WorkflowPhaseKey } from './WorkflowAtlasTimeline';
@@ -353,7 +354,11 @@ export default function WorkflowAtlasSection({
   }, [data.phases]);
 
   return (
-    <section id="workflow" className={`py-12 md:py-20 overflow-visible ${className}`}>
+    <ScrollReveal
+      as="section"
+      id="workflow"
+      className={`py-12 md:py-20 overflow-visible ${className}`}
+    >
       <Container>
         <div className="flex flex-col overflow-visible">
           {/* Section Header, Stats Group, and Impression Gallery with gap-20 (80px) */}
@@ -423,6 +428,6 @@ export default function WorkflowAtlasSection({
           </div>
         </div>
       </Container>
-    </section>
+    </ScrollReveal>
   );
 }

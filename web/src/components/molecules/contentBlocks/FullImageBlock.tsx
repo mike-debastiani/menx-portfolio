@@ -1,6 +1,7 @@
 import Image from 'next/image'
 import Container from '@/components/layout/Container'
 import Grid from '@/components/layout/Grid'
+import ScrollReveal from '@/components/atoms/ScrollReveal'
 import { urlForImage } from '@/lib/sanity.client'
 import { getGridPlacementProps, getGridPlacementSizes, type GridPlacement } from './gridPlacement'
 import { getBlockPaddingClasses, type BlockPadding } from './padding'
@@ -66,7 +67,11 @@ export default function FullImageBlock({
     <section className={paddingClasses}>
       <Container>
         <Grid>
-          <figure className={`${placementProps.className} w-full`} style={placementProps.style}>
+          <ScrollReveal
+            as="figure"
+            className={`${placementProps.className} w-full`}
+            style={placementProps.style}
+          >
             <div className="relative w-full overflow-hidden rounded-lg">
               {hasMobileImage && mobileImageUrl ? (
                 <>
@@ -107,7 +112,7 @@ export default function FullImageBlock({
             {caption && (
               <figcaption className="mt-4 text-sm text-primary-600">{caption}</figcaption>
             )}
-          </figure>
+          </ScrollReveal>
         </Grid>
       </Container>
     </section>

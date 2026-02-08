@@ -1,6 +1,7 @@
 import Container from '@/components/layout/Container';
 import Grid from '@/components/layout/Grid';
 import { CaseStudyDescription, CaseStudyMeta } from '@/components/molecules';
+import ScrollReveal from '@/components/atoms/ScrollReveal';
 import type { PortableTextBlock } from '@portabletext/types';
 
 export interface CaseStudyHeaderData {
@@ -37,17 +38,17 @@ export default function CaseStudyHeader({ data, className = '' }: CaseStudyHeade
       <Container>
         <Grid className="pt-12 pb-6 md:pt-20 md:pb-14">
           {/* CaseStudyDescription: Mobile full width (span 4), Tablet columns 1-3 (span 3), Desktop columns 1-6 (span 6) */}
-          <div className="col-span-4 md:col-span-6 xl:col-span-6">
+          <ScrollReveal className="col-span-4 md:col-span-6 xl:col-span-6">
             <CaseStudyDescription
               projectTitle={data.projectTitle || ''}
               statement={data.projectStatement || ''}
               description={data.projectDescription || ''}
               attributes={attributes}
             />
-          </div>
+          </ScrollReveal>
 
           {/* CaseStudyMeta: Mobile full width below description (span 4), Tablet columns 5-6 (col-start-5 span 2), Desktop columns 10-12 (col-start-10 span 3) */}
-          <div className="col-span-4 md:col-start-10 md:col-span-3 xl:col-start-10 xl:col-span-3 mt-8 md:mt-0">
+          <ScrollReveal className="col-span-4 md:col-start-10 md:col-span-3 xl:col-start-10 xl:col-span-3 mt-8 md:mt-0">
             <CaseStudyMeta
               role={data.role || ''}
               context={data.context || ''}
@@ -55,7 +56,7 @@ export default function CaseStudyHeader({ data, className = '' }: CaseStudyHeade
               team={data.team || ''}
               outcome={data.outcome || ''}
             />
-          </div>
+          </ScrollReveal>
         </Grid>
       </Container>
     </section>

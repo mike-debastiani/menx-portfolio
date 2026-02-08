@@ -1,5 +1,6 @@
 import SectionDescription from './SectionDescription';
 import SubInfoGroup, { type SubInfoGroupItem } from './SubInfoGroup';
+import ScrollReveal from '@/components/atoms/ScrollReveal';
 
 export interface ProjectArchiveHeaderProps {
   title: string;
@@ -38,13 +39,11 @@ export default function ProjectArchiveHeader({
   ];
 
   return (
-    <>
-      <div className={`col-span-4 md:col-span-6 xl:col-span-5 ${className}`}>
-        <div className="flex flex-col gap-8">
-          <SectionDescription title={title} description={description} titleAs="h1" />
-          <SubInfoGroup items={subInfoItems} variant="row" size="base" />
-        </div>
+    <ScrollReveal className={`col-span-4 md:col-span-6 xl:col-span-5 ${className}`}>
+      <div className="flex flex-col gap-8">
+        <SectionDescription title={title} description={description} titleAs="h1" />
+        <SubInfoGroup items={subInfoItems} variant="row" size="base" />
       </div>
-    </>
+    </ScrollReveal>
   );
 }

@@ -4,6 +4,7 @@ import { Container, Grid } from '@/components/layout';
 import SectionDescription from '@/components/molecules/SectionDescription';
 import Footer from '@/components/layout/Footer';
 import { Button } from '@/components/atoms';
+import ScrollReveal from '@/components/atoms/ScrollReveal';
 import { cn } from '@/lib';
 import Link from 'next/link';
 import { type ReactNode } from 'react';
@@ -99,7 +100,7 @@ export default function FooterSection({
         {/* SectionDescription and InfoRows wrapper */}
         <Grid>
           {/* SectionDescription - 6 columns on desktop, full width on mobile */}
-          <div className="footer-col-mobile">
+          <ScrollReveal className="footer-col-mobile">
             {isCustomFooter ? (
               <div className="flex flex-col gap-4 items-start">
                 <h2 className="font-sans font-medium text-2xl md:text-3xl leading-[1.2] text-primary-950">
@@ -156,7 +157,7 @@ export default function FooterSection({
                 }}
               />
             )}
-          </div>
+          </ScrollReveal>
 
           {/* InfoRows - 6 columns on desktop, full width on mobile */}
           <div className="footer-col-mobile mt-12 md:mt-0">
@@ -168,8 +169,9 @@ export default function FooterSection({
               )}
             >
               {footerRows.map((row, rowIndex) => (
-                <div
+                <ScrollReveal
                   key={rowIndex}
+                  delay={rowIndex * 80}
                   className="info-rows-row border-t border-primary-200 pt-3 grid grid-cols-2 gap-3 md:gap-6"
                   style={{ borderTopWidth: '0.5px' }}
                 >
@@ -221,12 +223,12 @@ export default function FooterSection({
                       );
                     })}
                   </div>
-                </div>
+                </ScrollReveal>
               ))}
             </div>
 
             {/* <450px: width determined by widest right content */}
-            <div className="hidden max-[449px]:grid grid-cols-[minmax(0,1fr)_max-content] gap-x-3">
+            <ScrollReveal className="hidden max-[449px]:grid grid-cols-[minmax(0,1fr)_max-content] gap-x-3">
               {footerRows.map((row, rowIndex) => (
                 <div key={rowIndex} className="contents">
                   <div
@@ -286,7 +288,7 @@ export default function FooterSection({
                   )}
                 </div>
               ))}
-            </div>
+            </ScrollReveal>
           </div>
         </Grid>
 

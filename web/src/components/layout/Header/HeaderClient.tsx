@@ -405,15 +405,20 @@ export default function HeaderClient({
       {/* Tablet/Desktop Quick Info Overlay */}
       <div
         ref={quickInfoRef}
-        className={`fixed inset-0 z-[60] bg-white hidden md:block h-screen overflow-y-auto transition-opacity duration-300 ease-out ${
-          isQuickInfoOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
+        className={`fixed inset-0 z-[60] bg-white hidden md:block h-screen overflow-y-auto scroll-reveal ${
+          isQuickInfoOpen ? 'scroll-reveal--visible pointer-events-auto' : 'pointer-events-none'
         }`}
         role="dialog"
         aria-modal={isQuickInfoOpen}
         aria-label="Quick info"
         aria-hidden={!isQuickInfoOpen}
       >
-        <div className="flex flex-col min-h-full">
+        <div
+          className={`flex flex-col min-h-full scroll-reveal ${
+            isQuickInfoOpen ? 'scroll-reveal--visible' : ''
+          }`}
+          style={{ ['--reveal-delay' as string]: '140ms' }}
+        >
           {/* Overlay Header (Logo + Close) */}
           <header className="flex-shrink-0 border-none" style={{ borderBottomWidth: '0.5px' }}>
             <Container as="div">
