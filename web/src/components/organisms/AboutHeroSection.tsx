@@ -42,10 +42,10 @@ export default function AboutHeroSection({
             />
           </div>
 
-          {/* Image: Mobile full width above (span 4), Tablet (>=768px): 3 columns (col-start-4 span 3), Desktop (>=1200px): 4 columns (col-start-9 span 4), Large screens (>=1536px): 3 columns (col-start-10 span 3) right-aligned */}
+          {/* Image: Mobile full width above (span 4), Tablet (>=768px): 3 columns (col-start-4 span 3), Desktop (>=1200px): 3 columns (col-start-10 span 3) right-aligned */}
           {/* Order: 1 on mobile (above description), 2 on tablet/desktop (right side) */}
           {image && (
-            <div className="about-hero-image col-span-4 md:col-start-4 md:col-span-3 lg:col-start-9 lg:col-span-4 xl:col-start-9 xl:col-span-4 2xl:col-start-10 2xl:col-span-3 order-1 md:order-2">
+            <div className="about-hero-image col-span-4 md:col-start-4 md:col-span-3 lg:col-start-10 lg:col-span-3 xl:col-start-10 xl:col-span-3 2xl:col-start-10 2xl:col-span-3 order-1 md:order-2">
               <div className="relative w-full aspect-square rounded-lg overflow-hidden">
                 <Image
                   src={image.src}

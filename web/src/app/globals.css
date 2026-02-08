@@ -257,15 +257,15 @@ main {
       grid-column: span 6 / span 6;
     }
     
-    /* AboutHeroSection: 1200px - 1279px (12-col grid) */
+  /* AboutHeroSection: 1200px+ (12-col grid) */
     .about-hero-description {
       grid-column: span 6 / span 6 !important;
       grid-column-start: 1 !important;
     }
     
     .about-hero-image {
-      grid-column: span 4 / span 4 !important;
-      grid-column-start: 9 !important;
+    grid-column: span 3 / span 3 !important;
+    grid-column-start: 10 !important;
     }
     
     /* SectionDescription: Column 1-5 (1 Column Abstand zu InfoColumns) */
