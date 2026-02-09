@@ -159,7 +159,7 @@ export default function HomeHeroSection({
         {/* Content area - limited to 7 columns on desktop */}
         <Grid>
           {/* Container that spans 7 columns and contains both RoleBasedHero and SubInfoGroup vertically */}
-          <div className="col-span-4 md:col-span-12 xl:col-span-7 flex flex-col">
+          <div className="col-span-4 md:col-span-12 xl:col-span-12 flex flex-col">
             {/* Fixed height container to ensure SubInfoGroup stays in same position */}
             {/* Height set to accommodate all content types (headlines and code block) */}
             <div className="min-h-[220px] md:min-h-[240px] flex items-start relative">
