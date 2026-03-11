@@ -10,7 +10,17 @@ export interface VideoBlockProps {
   videoType?: string
   youtubeId?: string
   vimeoId?: string
-  sanityVideo?: any
+  sanityVideo?: {
+    asset?: {
+      url?: string
+      metadata?: {
+        dimensions?: {
+          width?: number
+          height?: number
+        }
+      }
+    }
+  }
   videoUrl?: string
   caption?: string
   autoplay?: boolean
@@ -39,6 +49,8 @@ export default function VideoBlock({
   const cleanMuted = stegaClean(muted) || false
   const placementProps = getGridPlacementProps(gridPlacement)
   const paddingClasses = getBlockPaddingClasses(padding)
+  const videoWidth = Number(stegaClean(sanityVideo?.asset?.metadata?.dimensions?.width) || 0)
+  const videoHeight = Number(stegaClean(sanityVideo?.asset?.metadata?.dimensions?.height) || 0)
 
   const renderVideo = () => {
     if (cleanVideoType === 'youtube' && youtubeId) {
@@ -77,31 +89,29 @@ export default function VideoBlock({
 
     if (cleanVideoType === 'sanity' && sanityVideo?.asset?.url) {
       return (
-        <div className="relative aspect-video w-full overflow-hidden rounded-lg">
-          <video
-            src={sanityVideo.asset.url}
-            controls
-            autoPlay={cleanAutoplay}
-            loop={cleanLoop}
-            muted={cleanMuted}
-            className="h-full w-full object-cover"
-          />
-        </div>
+        <video
+          src={sanityVideo.asset.url}
+          controls
+          autoPlay={cleanAutoplay}
+          loop={cleanLoop}
+          muted={cleanMuted}
+          width={videoWidth > 0 ? videoWidth : undefined}
+          height={videoHeight > 0 ? videoHeight : undefined}
+          className="block h-auto w-full rounded-lg"
+        />
       )
     }
 
     if (cleanVideoType === 'url' && videoUrl) {
       return (
-        <div className="relative aspect-video w-full overflow-hidden rounded-lg">
-          <video
-            src={videoUrl}
-            controls
-            autoPlay={cleanAutoplay}
-            loop={cleanLoop}
-            muted={cleanMuted}
-            className="h-full w-full object-cover"
-          />
-        </div>
+        <video
+          src={videoUrl}
+          controls
+          autoPlay={cleanAutoplay}
+          loop={cleanLoop}
+          muted={cleanMuted}
+          className="block h-auto w-full rounded-lg"
+        />
       )
     }
 

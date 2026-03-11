@@ -664,7 +664,13 @@ export async function getCaseStudyBySlug(slug: string): Promise<CaseStudyData | 
         vimeoId,
         "sanityVideo": sanityVideo {
           asset-> {
-            url
+            url,
+            metadata {
+              dimensions {
+                width,
+                height
+              }
+            }
           }
         },
         videoUrl,
@@ -1760,7 +1766,13 @@ export async function getAboutData(): Promise<AboutData | null> {
           vimeoId,
           "sanityVideo": sanityVideo {
             asset-> {
-              url
+              url,
+              metadata {
+                dimensions {
+                  width,
+                  height
+                }
+              }
             }
           },
           videoUrl,
