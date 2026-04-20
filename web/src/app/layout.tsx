@@ -19,9 +19,27 @@ const geistMono = Geist_Mono({
   weight: ['400', '500'],
 });
 
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://mikedebastiani.ch';
+
 export const metadata: Metadata = {
+  metadataBase: new URL(siteUrl),
   title: 'Mike De Bastiani - Digital Product Designer',
   description: 'Portfolio von Mike De Bastiani - Student und Digital Product Designer',
+  openGraph: {
+    type: 'website',
+    images: [
+      {
+        url: '/icon.svg',
+        width: 512,
+        height: 512,
+        alt: 'Mike De Bastiani',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary',
+    images: ['/icon.svg'],
+  },
 };
 
 export default function RootLayout({
