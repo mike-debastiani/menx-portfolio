@@ -88,7 +88,7 @@ export default defineType({
       name: 'autoplay',
       title: 'Automatisch abspielen',
       type: 'boolean',
-      description: 'Video automatisch abspielen (nur bei eingebetteten Videos)',
+      description: 'Video automatisch abspielen (Browser erlauben das in der Regel nur stumm)',
       initialValue: false,
     }),
     defineField({

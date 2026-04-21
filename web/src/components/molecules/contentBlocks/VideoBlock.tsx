@@ -47,6 +47,8 @@ export default function VideoBlock({
   const cleanAutoplay = stegaClean(autoplay) || false
   const cleanLoop = stegaClean(loop) || false
   const cleanMuted = stegaClean(muted) || false
+  // Browsers only allow reliable autoplay when media is muted.
+  const shouldMuteForAutoplay = cleanAutoplay || cleanMuted
   const placementProps = getGridPlacementProps(gridPlacement)
   const paddingClasses = getBlockPaddingClasses(padding)
   const videoWidth = Number(stegaClean(sanityVideo?.asset?.metadata?.dimensions?.width) || 0)
@@ -94,7 +96,8 @@ export default function VideoBlock({
           controls
           autoPlay={cleanAutoplay}
           loop={cleanLoop}
-          muted={cleanMuted}
+          muted={shouldMuteForAutoplay}
+          playsInline
           width={videoWidth > 0 ? videoWidth : undefined}
           height={videoHeight > 0 ? videoHeight : undefined}
           className="block h-auto w-full rounded-lg"
@@ -109,7 +112,8 @@ export default function VideoBlock({
           controls
           autoPlay={cleanAutoplay}
           loop={cleanLoop}
-          muted={cleanMuted}
+          muted={shouldMuteForAutoplay}
+          playsInline
           className="block h-auto w-full rounded-lg"
         />
       )
